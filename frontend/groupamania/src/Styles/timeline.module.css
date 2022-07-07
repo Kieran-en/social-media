@@ -1,0 +1,56 @@
+
+.textInput {
+    width: 100%;
+    border-radius: 15px;
+    border: 1px solid rgba(0,0,0,0.5);
+    padding: 5px;
+}
+
+.post{
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    border: 1px solid black;
+    justify-content: flex-start;
+    width: 80%;
+}
+
+.img{
+    object-fit: cover;
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.multimediaInput{
+    display: none;
+} 
+
+.multimediaLabel{
+    border: 2px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 15px;
+    color: white;
+}
+
+.profileImg {
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+}
+
+.icons {
+    font-size: 20px;
+    margin: 0px 5px;
+    cursor: pointer;
+}
+
+.commentSection{
+    display: flex;
+    margin-bottom: 15px;
+    align-items: center;
+    padding: 10px;
+}

@@ -1,0 +1,51 @@
+.modal{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: clamp(50%, 500px, 90%);
+    align-items: center;
+    background-color: #242526;
+    border-radius: 15px;
+    height: min(50%, 150px);
+}
+
+.top{
+    display: flex;
+    justify-content: flex-end;
+    color: #A8ABAF;
+    width: 90%;
+}
+
+.middleText{
+    display: grid;
+    place-items: center;
+    width: 90%;
+    color: white;
+    font-size: 16px;
+}
+
+.buttons{
+    display: flex;
+    width: 90%;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.deleteButton{
+    width: 25%;
+    background-color: #DC3545;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    padding: 3px;
+    margin-left: 15px;
+}
+
+.cancelButton{
+    width: 25%;
+    background-color: white;
+    color: #DC3545;
+    border-radius: 5px;
+    border: none;
+    padding: 3px;
+}

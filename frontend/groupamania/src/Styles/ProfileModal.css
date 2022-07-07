@@ -1,0 +1,40 @@
+.modall {
+width: clamp(50%, 500px, 90%);
+height: min(55%, 550px);
+display: flex;
+flex-direction: column;
+align-items: center;
+background-color: #242526;
+padding: 10px;
+border-radius: 10px;
+z-index: 99;
+}
+
+.topModalll{
+    display: flex;
+    justify-content: space-between;
+    color: #A8ABAF;
+    width: 90%;
+    margin-bottom: 20px;
+}
+
+.textAreas{
+    width: 90%;
+}
+
+.uplaod-profileLabel{
+    color: #A8ABAF;
+    font-size: 14px;
+    margin-left: 15px;
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.uplaod-profileInput{
+    display: none;
+}
+
+.modifyImage:hover{
+    color: rgb(202, 202, 202);
+}
