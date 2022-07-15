@@ -12,10 +12,8 @@ import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
 import { useParams } from "react-router-dom";
 
-const Profile = ({email, profileImg, changeModalState}) => {
+const Profile = ({email, profileImg, changeModalState, userlogged}) => {
     const navigate = useNavigate();
-    const {userlogged} = useParams();
-
   
     return (
     <div style={{backgroundColor: '#18191A'}}>

@@ -1,6 +1,5 @@
 import React from "react";
-import navStyle from '../Styles/timeline.module.css'
-import navImg from '../Images/icon-above-font.png';
+import navStyle from '../Styles/timeline.module.css';
 import dayjs from 'dayjs';
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime)

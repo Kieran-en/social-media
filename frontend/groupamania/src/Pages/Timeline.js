@@ -38,7 +38,7 @@ const Timeline = () => {
    const [userProfile, setUserProfile] = useState();
 
     const getUser = () => {
-        axios.get(`http://localhost:3000/api/auth/${userlogged}`)
+        axios.get(`http://localhost:3000/api/auth/${JSON.parse(localStorage.getItem('userData')).userId}`)
         .then(response => response.data)
         .then(user => setUserProfile(user.profileImg))
         .catch(err => console.log(err)) 

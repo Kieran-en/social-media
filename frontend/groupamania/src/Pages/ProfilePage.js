@@ -7,27 +7,23 @@ import ProfileModal from "../Components/ProfileModal";
 const ProfilePage = () => {
 
     const [user, setUser] = useState([]);
-    const {userlogged} = useParams();
-    const [modalOpen, setModalOpen] = useState(false);
-
-    useEffect(() => {
-        getUser()
-    }, [])
-    
+    const [modalOpen, setModalOpen] = useState(false);    
      
       function getUser(){
-        fetch(`http://localhost:3000/api/auth/${userlogged}`)
-        .then(response => {
-           return response.json()
-        })
+        fetch(`http://localhost:3000/api/auth/${JSON.parse(localStorage.getItem('userData')).userId}`)
+        .then(response => response.json())
         .then(data => {
-            setUser(data)
             console.log(user)
+            setUser(data)
         })
         .catch(err => {
             console.log(err);
         });
     }
+
+    useEffect(() => {
+        getUser()
+    }, [])
     
 
     return (

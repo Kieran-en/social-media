@@ -4,13 +4,10 @@ const User = require('../models/User');
 const fs = require('fs');
 
 exports.displayPosts = (req, res, next) => {
-    console.log(req.query)
-    console.log('AHAHAHAHHAHA!')
     const page = parseInt(req.query.page);
     const limit = 2;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
-    //const postLimit = parseInt(req.query.limit, 10);
     Post.findAll({ include: User, 
         order: [['updatedAt', 'DESC']], 
         limit: limit, 

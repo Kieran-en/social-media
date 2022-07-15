@@ -5,7 +5,7 @@ import '../Styles/ProfileModal.css';
 import style from '../Styles/profile.module.css';
 import { useState } from 'react';
 import axios from "axios";
-import { getAccessToken } from "../accessToken";
+import { useParams } from "react-router-dom";
 import {Tooltip,} from 'react-tippy';
 
 function ProfileModal({closeModal, username, email, updateUser, profileImg, getUserData}) {
@@ -66,11 +66,11 @@ function ProfileModal({closeModal, username, email, updateUser, profileImg, getU
         userData.append('email', values.email);
         userData.append('image', file);
         if (validateForm()){
-          axios.put(`http://localhost:3000/api/auth/${username}`, userData)
+          axios.put(`http://localhost:3000/api/auth/${JSON.parse(localStorage.getItem('userData')).userId}`, userData)
     .then((response) => {
         console.log(response)
         closeModal()
-        //updateUser(values)
+        updateUser(values)
         getUserData()
     })
     .catch(error => console.log(error))
