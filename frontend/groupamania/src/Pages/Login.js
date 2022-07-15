@@ -39,9 +39,8 @@ const Login = () => {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                console.log(data.hasOwnProperty('token'));
                 setAccessToken(data.token);
-                console.log(getAccessToken())
+                localStorage.setItem("userData", JSON.stringify(data))
                 if (data.hasOwnProperty('token')){
                  navigate(`/timeline/${data.username}`);
                 }

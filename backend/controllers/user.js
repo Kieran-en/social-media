@@ -45,8 +45,9 @@ exports.login = (req, res, next) => {
                     ) 
             })
         })
-        .catch()
+        .catch(error => res.status(500).json({error}))
     })
+    .catch(error => res.status(500).json({error}))
 }
 
 exports.getUser = (req, res, next) => {

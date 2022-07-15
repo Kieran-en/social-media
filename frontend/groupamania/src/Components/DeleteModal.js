@@ -9,7 +9,7 @@ export default function DeleteModal({closeModal, postToDelete, allPosts}) {
 
   axios.interceptors.request.use(
     config => {
-        config.headers.authorization = `Bearer ${getAccessToken()}`;
+        config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
         return config;
     },
     error => {

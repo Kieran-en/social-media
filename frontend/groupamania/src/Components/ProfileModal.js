@@ -19,7 +19,7 @@ function ProfileModal({closeModal, username, email, updateUser, profileImg, getU
 
     axios.interceptors.request.use(
         config => {
-            config.headers.authorization = `Bearer ${getAccessToken()}`;
+            config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
             return config;
         },
         error => {

@@ -1,27 +1,31 @@
 import React, {memo} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import {MdDelete, MdBorderColor} from "react-icons/md";
-import navImg from '../Images/icon-above-font.png';
 import navStyle from '../Styles/timeline.module.css';
 import {FaThumbsUp, FaThumbsDown, FaRegThumbsUp, FaRegThumbsDown} from "react-icons/fa";
 import style from '../Styles/timeline.module.css';
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 import { getAccessToken } from "../accessToken";
 import Comment from "./Comment";
-import { useContext } from "react";
 import { CommentContext } from "../Context/CommentContext";
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
 
-const Post = ({picture, profileImg, content, likes, dislikes, username, userLoggedIn, postId, changeModalState, allComments, changeDeleteModalState}) => {
+const Post = ({picture, profileImg, content, likes, dislikes, username, userLoggedIn, postId, userId, changeModalState, allComments, changeDeleteModalState}) => {
 
     const [commentText, setComment] = useState('');
     const {comments, setComments} = useContext(CommentContext);
-    const [liked, setLiked] = useState(false);
-    const [disliked, setDisliked] = useState(false);
-    //console.log(comments)
-    const [hasImage, setHasImage] = useState(false);
+    const [postLiked, setPostLiked] = useState(false);
+    const [numLikes, setNumLikes] = useState();
+
+    const getNumLikes = () => {
+        axios.get(`http://localhost:3000/api/like/${postId}`)
+        .then(response => {
+            setNumLikes(response.data)
+        })
+        .catch(error => console.log(error))  
+    }
 
     const handleChange = (event) => {
         setComment(event.target.value)
@@ -29,7 +33,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
 
     axios.interceptors.request.use(
         config => {
-            config.headers.authorization = `Bearer ${getAccessToken}`;
+            config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
             return config;
         },
         error => {
@@ -55,45 +59,56 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
     }
 
     const handleLike = () => {
-        if (!liked){
+        if (!postLiked){
             axios.post('http://localhost:3000/api/like', {
                like: 1,
                postId: postId,
-               userId: 1
+               userId: JSON.parse(localStorage.getItem('userData')).userId
            })
-           .then(res => console.log(res))
+           .then(res => {
+            getNumLikes()
+            console.log(res)
+        })
            .catch(error => console.log(error))
-            setLiked(true)
+            setPostLiked(true)
         } else {
             axios.post('http://localhost:3000/api/like', {
                like: 0,
-               PostId: postId,
-               userId: 1
+               postId: postId,
+               userId: JSON.parse(localStorage.getItem('userData')).userId
            })
-           .then(res => console.log(res))
+           .then(res => {
+            getNumLikes()
+            console.log(res)
+        })
            .catch(error => console.log(error))
-            setLiked(false)
+            setPostLiked(false)
         }
+        console.log('clicked')
     }
 
-    const handleDislike = () => {
-        if (!disliked){
-            axios.post('http://localhost:3000/api/like', {
-               like: -1,
-               PostId: postId
-           })
-           .then(res => console.log(res))
-           .catch(error => console.log(error))  
-            setDisliked(true)
-        } else {
-            axios.post('http://localhost:3000/api/like', {
-               like: 0,
-               PostId: postId
-           })
-           .then(res => console.log(res))
-           .catch(error => console.log(error))
-            setDisliked(false)
-        }
+
+    useEffect(() => {
+        getNumLikes();
+    }, [])
+
+    useEffect(() => {
+        axios.post('http://localhost:3000/api/like/postLiked', {
+            postId: postId,
+            userId: JSON.parse(localStorage.getItem('userData')).userId
+        })
+        .then(res => {
+            if (res.data.message === 'true'){
+                setPostLiked(true)
+            }
+        })
+        .catch(error => console.log(error)) 
+    }, [])
+
+    //Checks if file is a video
+    const checkFile = (file) => {
+        const fileArray = file.split('.');
+        return fileArray[fileArray.length - 1] === 'mp4';
     }
 
 
@@ -126,12 +141,17 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
                 <p>{content}</p>
             </div>
             {picture && <div className="border border-dark">
-                <img src={picture} className={navStyle.img} alt={content}/>
+                { checkFile(picture) ? <video controls width="100%" height='450'>
+                            <source src={picture}
+                             type="video/mp4" />
+                           Sorry, your browser doesn't support embedded videos.
+                        </video> 
+                : <img src={picture} className={navStyle.img} alt={content}/>
+                }
             </div>}
             <div>
                 <div className="d-flex row p-2">
-                    <div className="col-sm-2" onClick={handleLike}>{liked ? <FaThumbsUp /> : <FaRegThumbsUp />} {likes}</div>
-                    <div className="col-sm-2" onClick={handleDislike}>{disliked ? <FaThumbsDown /> : <FaRegThumbsDown />} {dislikes}</div>
+                    <div className="col-sm-2" onClick={handleLike}><FaThumbsUp style={{color : postLiked ? '#BB2D3B' : 'white'}}/> {numLikes} </div>
                 </div>
                 <hr className="m-2"/>
             </div>
@@ -147,4 +167,4 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
     )
 }
 
-export default memo(Post);
+export default Post;

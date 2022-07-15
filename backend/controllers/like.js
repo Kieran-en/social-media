@@ -1,7 +1,7 @@
 const Like = require('../models/Like');
 const User = require('../models/User');
 const Post = require('../models/Post');
-const { Op } = require("sequelize");
+const { Op, json } = require("sequelize");
 
 
 exports.likeOrDislike = (req, res, next) => {
@@ -72,8 +72,41 @@ exports.likeOrDislike = (req, res, next) => {
                 }
         })
         .catch(error => {
-            console.log('Are you the fucking error?')
             res.status(500).json({error})
         })
     }
+}
+
+
+//This function checks whether a post is liked. It returns true if the post il liked and false if not.
+exports.postLiked = (req, res, next) => {
+    const {userId, postId} = req.body;
+    Like.findOne({
+        where: {
+            [Op.and] : [{
+                userId : userId,
+                postId: postId
+            }]
+        }
+    })
+    .then(like => {
+        if(!like){
+            return res.status(404).json({message: 'false'})
+        }
+        else {
+            return res.status(200).json({message: 'true'})
+        }
+    })
+    .catch(error => res.status(500).json({error}))
+}
+
+exports.getNumLikes = (req, res, next) => {
+    console.log(req.params.id)
+    Like.count({
+        where: {
+                postId: req.params.id
+        }
+    })
+    .then(number => res.status(200).json(number))
+    .catch(error => res.status(500).json({error}))
 }

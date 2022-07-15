@@ -9,6 +9,9 @@ module.exports = (req, res, next) => {
         req.auth = {userId}
 
         if (req.body.userId && req.body.userId !== userId){
+            console.log('AHAHAHA!')
+            console.log(req.body.userId)
+            console.log(userId)
             res.status(403).json({message: 'Invalid Request!'});
         }
         else {

@@ -27,15 +27,15 @@ const Timeline = () => {
     const {userlogged} = useParams();
     const [modalOpen, setModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [page , setPage] = useState(2);
+    const [hasMore, setHasMore] = useState(true);
     /** 
     Intermediate varile to store the postId send from post inorder to transfer it as a prop to Modal Component
     This will enable the modal to send to the server the modification of a specific post 
     */
    const [postToModify, setPostToModify] = useState();
    const [postToDelete, setPostToDelete] = useState();
-
-
-    const [userProfile, setUserProfile] = useState();
+   const [userProfile, setUserProfile] = useState();
 
     const getUser = () => {
         axios.get(`http://localhost:3000/api/auth/${userlogged}`)
@@ -49,13 +49,12 @@ const Timeline = () => {
     }, [])
     
     const handleChange = (event) => {
-        console.log(event.target.value);
         setText(event.target.value);
     }
 
     axios.interceptors.request.use(
         config => {
-            config.headers.authorization = `Bearer ${getAccessToken()}`;
+            config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
             return config;
         },
         error => {
@@ -77,43 +76,49 @@ const Timeline = () => {
             .catch(error => console.log(error)) 
     }
 
+    const getPosts = async () => {
+        const res = await fetch(`http://localhost:3000/api/post?page=1`);
+        const data = await res.json();
+        setPosts([...data]);
+        console.log('exec')
+        return data;
+      }
 
-    const getPosts = () => {
-        fetch('http://localhost:3000/api/post')
-        .then(response => response.json())
-         .then(data => {
-            setPosts([...data])
-            console.log(posts)
-            postsRef.current = data;
-        })
-        .catch(err => {
-            console.log(err);
-        });
+      const fetchPosts = async () => {
+        const res = await fetch(`http://localhost:3000/api/post?page=${page}`);
+        const data = await res.json();
+        return data;
+      } 
+     
+    useEffect(() => {
+        getPosts();
+      }, [])
+
+      console.log(posts)
+
+    const fetchData = async () => {
+        //Fetching new posts
+        const postsFromServer = await fetchPosts();
+        console.log(postsFromServer)
+         setPosts([...posts, ...postsFromServer]);
+
+         if (postsFromServer.length === 0 || postsFromServer.length < 2){
+            setHasMore(false)
+         }
+
+         setPage(page + 1);
       }
 
     const getComments = useCallback(() => {
         fetch('http://localhost:3000/api/comment')
-        .then(response => response.json())
+        .then(response =>response.json())
         .then(data => {
-            setComments(data)
+            setComments([...data])
         })
         .catch(err => {
             console.log(err);
         });
-      }, []) 
-
-      
-    useEffect(() => {
-        getPosts();
-      }, [posts.length])
-
-    const fetchPosts = async () => {
-        //Fetching new posts
-        const res = await fetch('http://localhost:3000/api/post/?limit=4');
-        const postsFromServer = await res.json();
-
-         setPosts([...posts, ...postsFromServer])
-      }
+      }, [])
 
     useEffect(() => {
         getComments();
@@ -154,13 +159,13 @@ const Timeline = () => {
         </Container>
         <CommentContext.Provider value={{comments, setComments}}>
 
-        <InfiniteScroll
+         <InfiniteScroll
         dataLength={posts.length}
-        next={fetchPosts}
-        hasMore={true}
+        next={fetchData}
+        hasMore={hasMore}
         loader={<h4 style={{color: 'white', textAlign: 'center'}}>Loading...</h4>}
         endMessage={
-                     <p style={{ textAlign: 'center', color: 'white'}}>
+                     <p style={{ textAlign: 'center', color: 'white', fontSize: '16px'}}>
                       <b>Yay! You have seen it all</b>
                      </p>
                    }
@@ -183,11 +188,11 @@ const Timeline = () => {
             username={post.User.name}
             key={post.id}
             postId={post.id} 
-            userId={post.userId}
+            userId={post.UserId}
             allComments = {getComments}
-            userLoggedIn = {userlogged}/>
+            userLoggedIn = {userlogged} />
         ))}
-        </InfiniteScroll>
+       </InfiniteScroll> 
         </CommentContext.Provider>
 
         {modalOpen && <Modal 
