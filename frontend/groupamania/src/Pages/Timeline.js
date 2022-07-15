@@ -189,6 +189,7 @@ const Timeline = () => {
             key={post.id}
             postId={post.id} 
             userId={post.UserId}
+            date={post.createdAt}
             allComments = {getComments}
             userLoggedIn = {userlogged} />
         ))}

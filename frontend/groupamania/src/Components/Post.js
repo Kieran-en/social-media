@@ -6,13 +6,15 @@ import {FaThumbsUp, FaThumbsDown, FaRegThumbsUp, FaRegThumbsDown} from "react-ic
 import style from '../Styles/timeline.module.css';
 import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
-import { getAccessToken } from "../accessToken";
 import Comment from "./Comment";
 import { CommentContext } from "../Context/CommentContext";
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
+import dayjs from 'dayjs';
+var relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime);
 
-const Post = ({picture, profileImg, content, likes, dislikes, username, userLoggedIn, postId, userId, changeModalState, allComments, changeDeleteModalState}) => {
+const Post = ({picture, profileImg, content, likes, dislikes, username, userLoggedIn, postId, userId, changeModalState, allComments, changeDeleteModalState, date}) => {
 
     const [commentText, setComment] = useState('');
     const {comments, setComments} = useContext(CommentContext);
@@ -111,14 +113,16 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
         return fileArray[fileArray.length - 1] === 'mp4';
     }
 
-
     return (
         <div className='container mt-5 mb-5' style={{backgroundColor: '#242526', color: 'white', borderRadius: '10px', width: 'clamp(50%, 800px, 85%)'}}>
             <div className="row d-flex align-items-center justify-content-between">
                 <div className="col-sm-7 d-flex align-items-center mt-2">
-                <div className="col-sm-3 d-flex align-items-center">
+                <div className="col-sm-4 d-flex align-items-center">
                     <img src={profileImg} onClick={() => console.log('This is the PostID' + postId)} className={navStyle.profileImg}/>
-                    <div style={{marginLeft: '10px', fontWeight: 'bold'}} ><p>{username}</p></div>
+                    <div style={{marginLeft: '10px', fontWeight: 'bold', display: 'flex', flexDirection:'column'}} >
+                        <span>{username}</span>
+                        <span style={{fontSize: '10px', whiteSpace: 'nowrap', color: '#A8ABAF'}}>{dayjs(date).fromNow()}</span>
+                    </div>
                 </div>
             
                 </div>
@@ -160,7 +164,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
                 <button type="submit" className="btn btn-danger mr-1" onClick={handleComment}>Comment</button>
                 </div>
                 {comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
-                    <Comment text={filteredComment.text} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
+                    <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
                 ))}
                 
         </div>
