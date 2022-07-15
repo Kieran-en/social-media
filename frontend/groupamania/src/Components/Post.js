@@ -161,7 +161,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
             </div>
             <div id="comment" className="p-2 row">
                 <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.textInput}></input>
-                <button type="submit" className="btn btn-danger mr-1" onClick={handleComment}>Comment</button>
+                <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={handleComment}>Comment</button>
                 </div>
                 {comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
                     <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
