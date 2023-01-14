@@ -99,7 +99,6 @@ const Timeline = () => {
     const fetchData = async () => {
         //Fetching new posts
         const postsFromServer = await fetchPosts();
-        console.log(postsFromServer)
          setPosts([...posts, ...postsFromServer]);
 
          if (postsFromServer.length === 0 || postsFromServer.length < 2){

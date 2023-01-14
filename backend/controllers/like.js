@@ -7,7 +7,6 @@ const { Op, json } = require("sequelize");
 exports.likeOrDislike = (req, res, next) => {
     console.log(req.body)
     const {postId, userId, like} = req.body;
-    console.log(userId)
     if (like === 1){
         Like.create({
             like: like,

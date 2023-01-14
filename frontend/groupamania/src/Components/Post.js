@@ -24,6 +24,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
     const getNumLikes = () => {
         axios.get(`http://localhost:3000/api/like/${postId}`)
         .then(response => {
+            console.log(response.data)
             setNumLikes(response.data)
         })
         .catch(error => console.log(error))  
@@ -69,7 +70,6 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
            })
            .then(res => {
             getNumLikes()
-            console.log(res)
         })
            .catch(error => console.log(error))
             setPostLiked(true)
@@ -81,12 +81,10 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
            })
            .then(res => {
             getNumLikes()
-            console.log(res)
         })
            .catch(error => console.log(error))
             setPostLiked(false)
         }
-        console.log('clicked')
     }
 
 
@@ -95,6 +93,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
     }, [])
 
     useEffect(() => {
+        //Checking if post is liked by verifying if there's a pair user & post Id's in the like table
         axios.post('http://localhost:3000/api/like/postLiked', {
             postId: postId,
             userId: JSON.parse(localStorage.getItem('userData')).userId
