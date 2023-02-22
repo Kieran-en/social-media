@@ -9,7 +9,7 @@ import navStyle from '../Styles/navbar.module.css';
 import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
 import { useState, useRef } from "react";
 import {useNavigate, useParams } from "react-router-dom";
-import axios from 'axios';
+import http from '../services/httpService';
 import { useEffect, useCallback } from "react";
 import { getAccessToken } from "../accessToken";
 import { CommentContext } from "../Context/CommentContext";
@@ -38,7 +38,7 @@ const Timeline = () => {
    const [userProfile, setUserProfile] = useState();
 
     const getUser = () => {
-        axios.get(`http://localhost:3000/api/auth/${JSON.parse(localStorage.getItem('userData')).userId}`)
+        http.get(`http://localhost:3000/api/auth/${JSON.parse(localStorage.getItem('userData')).userId}`)
         .then(response => response.data)
         .then(user => setUserProfile(user.profileImg))
         .catch(err => console.log(err)) 
@@ -52,7 +52,7 @@ const Timeline = () => {
         setText(event.target.value);
     }
 
-    axios.interceptors.request.use(
+    http.interceptors.request.use(
         config => {
             config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
             return config;
@@ -68,7 +68,7 @@ const Timeline = () => {
         post.append('text', text)
         post.append('image', file);
 
-           axios.post('http://localhost:3000/api/post', post)
+           http.post('http://localhost:3000/api/post', post)
             .then(res => {
                 console.log(res)
                 getPosts()
