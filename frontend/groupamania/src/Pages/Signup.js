@@ -5,6 +5,7 @@ import { Container } from 'react-bootstrap';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import config from '../config.json'
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -59,7 +60,7 @@ const SignUp = () => {
         if (validate(values)){
             console.log(values);
            // setShowMessage(true);
-            fetch('http://localhost:3000/api/auth/signup', {
+            fetch(`${config.apiEndpoint}/auth/signup`, {
                 method: 'POST',
                 headers: {
                 'Accept': 'application/json', 

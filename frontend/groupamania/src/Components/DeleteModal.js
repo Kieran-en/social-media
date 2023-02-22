@@ -3,7 +3,6 @@ import Backdrop from './Backdrop';
 import { IoCloseCircleOutline } from "react-icons/io5";
 import style from '../Styles/deletemodal.module.css';
 import http from '../services/httpService';
-import { getAccessToken } from '../accessToken';
 import config from '../config.json'
 
 export default function DeleteModal({closeModal, postToDelete, allPosts}) {

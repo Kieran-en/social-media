@@ -22,6 +22,9 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
     const [postLiked, setPostLiked] = useState(false);
     const [numLikes, setNumLikes] = useState();
 
+    console.log(postLiked)
+    console.log(numLikes)
+
     const getNumLikes = () => {
         http.get(`${config.apiEndpoint}/like/${postId}`)
         .then(response => {
@@ -53,18 +56,27 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
     }
 
     const handleLike = () => {
+        const originalNumberOfLikes = numLikes
         if (!postLiked){
+            setNumLikes(numLikes + 1)
+            console.log(numLikes)
+            
             http.post(`${config.apiEndpoint}/like`, {
                like: 1,
                postId: postId,
                userId: JSON.parse(localStorage.getItem('userData')).userId
            })
            .then(res => {
-            getNumLikes()
+            //getNumLikes()
         })
-           .catch(error => console.log(error))
+           .catch(error => {
+            if(error) setNumLikes(originalNumberOfLikes)
+           })
             setPostLiked(true)
+
         } else {
+            const originalNumberOfLikes = numLikes
+            setNumLikes(numLikes - 1)
             http.post(`${config.apiEndpoint}/like`, {
                like: 0,
                postId: postId,
@@ -73,7 +85,9 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
            .then(res => {
             getNumLikes()
         })
-           .catch(error => console.log(error))
+           .catch(error => {
+            if(error) setNumLikes(originalNumberOfLikes)
+           })
             setPostLiked(false)
         }
     }
@@ -86,7 +100,6 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
     useEffect(() => {
         //Checking if post is liked by verifying if there's a pair user & post Id's in the like table
         const originalLikeState = postLiked
-        setPostLiked(true)
         //Optimistic rendering
         try {
             http.post(`${config.apiEndpoint}/like/postLiked`, {
@@ -96,18 +109,6 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
         } catch (error) {
             if(error) setPostLiked(originalLikeState)
         }
-      /** 
-        http.post('${config.apiEndpoint}/like/postLiked', {
-            postId: postId,
-            userId: JSON.parse(localStorage.getItem('userData')).userId
-        })
-        .then(res => {
-            if (res.data.message === 'true'){
-                setPostLiked(true)
-            }
-        })
-        .catch(error => console.log(error)) 
-        */
 
     }, [])
 
@@ -127,6 +128,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
                         <span>{username}</span>
                         <span style={{fontSize: '10px', whiteSpace: 'nowrap', color: '#A8ABAF'}}>{dayjs(date).fromNow()}</span>
                     </div>
+                    
                 </div>
             
                 </div>

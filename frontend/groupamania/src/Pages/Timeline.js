@@ -138,14 +138,22 @@ const Timeline = () => {
         </Navbar>
         <Container className='shadow' style={{backgroundColor: '#242526', color: 'white', marginTop: '20px', borderRadius: '10px'}}>
             <form action={`${config.apiEndpoint}/post/`} method="post" encType="multipart/form-data" onSubmit={handlePost}>
-            <Row className="p-2 mb-1 d-flex align-items-center">
+              <Row className="p-2 mb-1 d-flex align-items-center gap-3">
                 <Col xs={1} className = 'p-2'><img src={userProfile} alt='Profile Image' style={{width: '50px', height: '50px', borderRadius: '50%'}}/></Col>
-                <Col xs={7} className = 'p-2'><input type='text' name="text" value={text} onChange={handleChange} className={style.textInput} placeholder="What's New!"></input></Col>
+                <Col xs={11} className = 'p-2'><textarea type='text' name="text" value={text} onChange={handleChange} className={style.textarea} placeholder="What's New!"></textarea></Col>
+                <Col xs={2} className = 'p-2'>
+                  {file && <img alt='preview-img' src={URL.createObjectURL(file)} style={{width: '90px', height: '90px', objectFit: 'cover'}}/>}
+                </Col>
+              </Row>
+
+              <Row className="p-2 mb-1 d-flex align-items-center">
                 <Col xs={2} className = 'p-2 d-flex justify-content-center'><label htmlFor='file-uplaod' className={style.multimediaLabel}>Media  <FaImages /></label>
-                <input id='file-uplaod' name='image' type='file' className={style.multimediaInput} onChange={handleFileChange}></input></Col>
+                <input id='file-uplaod' name='image' type='file' className={style.multimediaInput} onChange={handleFileChange}></input>
+                </Col>
                 <Col xs={2} className = 'p-2 d-flex align-items-start'><button type="submit" className="btn btn-danger " onClick={getPosts}>Submit</button></Col>
-                </Row>
-                </form>
+              </Row>
+            </form>
+
         </Container>
         <CommentContext.Provider value={{comments, setComments}}>
 
@@ -160,7 +168,7 @@ const Timeline = () => {
                      </p>
                    }
         >
-        {posts.map((post, id) => (
+        {posts.map((post) => (
             <Post 
             changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
                 setModalOpen(true)

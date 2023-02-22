@@ -2,7 +2,6 @@ import React from 'react';
 import { IoCloseCircleOutline } from "react-icons/io5";
 import http from '../services/httpService';
 import Backdrop from './Backdrop';
-import { getAccessToken } from '../accessToken';
 import '../Styles/Modal.css'
 import { useState } from 'react';
 import style from '../Styles/timeline.module.css';

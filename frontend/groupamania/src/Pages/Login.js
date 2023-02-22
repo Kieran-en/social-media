@@ -3,7 +3,8 @@ import Nav from './Nav';
 import { Form } from 'react-bootstrap';
 import { useState, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAccessToken, setAccessToken } from '../accessToken';
+import { setAccessToken } from '../accessToken';
+import config from '../config.json'
 
 const Login = () => {
 
@@ -29,7 +30,7 @@ const Login = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        fetch('http://localhost:3000/api/auth/login', {
+        fetch(`${config.apiEndpoint}/auth/login`, {
                 method: 'POST',
                 headers: {
                  'Content-Type': 'application/json',
