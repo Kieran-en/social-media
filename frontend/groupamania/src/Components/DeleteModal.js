@@ -2,20 +2,12 @@ import React from 'react';
 import Backdrop from './Backdrop';
 import { IoCloseCircleOutline } from "react-icons/io5";
 import style from '../Styles/deletemodal.module.css';
-import axios from 'axios';
+import http from '../services/httpService';
 import { getAccessToken } from '../accessToken';
+import config from '../config.json'
 
 export default function DeleteModal({closeModal, postToDelete, allPosts}) {
 
-  axios.interceptors.request.use(
-    config => {
-        config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-);
 
   function handleDelete(event){
     event.preventDefault();
@@ -26,7 +18,7 @@ export default function DeleteModal({closeModal, postToDelete, allPosts}) {
 
     console.log(postToDelete)
 
-    axios.delete(`http://localhost:3000/api/post`, {data : {postId: postToDelete}})
+    http.delete(`${config.apiEndpoint}/post`, {data : {postId: postToDelete}})
     .then(res => {
       console.log(res)
       allPosts()

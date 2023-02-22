@@ -72,7 +72,6 @@ const Timeline = () => {
         const res = await fetch(`${config.apiEndpoint}/post?page=1`);
         const data = await res.json();
         setPosts([...data]);
-        console.log('exec')
         return data;
       }
 

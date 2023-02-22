@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoCloseCircleOutline } from "react-icons/io5";
-import axios from 'axios';
+import http from '../services/httpService';
 import Backdrop from './Backdrop';
 import { getAccessToken } from '../accessToken';
 import '../Styles/Modal.css'
@@ -8,6 +8,7 @@ import { useState } from 'react';
 import style from '../Styles/timeline.module.css';
 import { FaImages } from "react-icons/fa";
 import { useParams } from 'react-router-dom';
+import config from '../config.json'
 
 export default function Modal({closeModal, postToModify, allPosts}) {
   const [text, setText] = useState('')
@@ -19,17 +20,6 @@ export default function Modal({closeModal, postToModify, allPosts}) {
     setText(event.target.value)
   }
 
-  axios.interceptors.request.use(
-    config => {
-        config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-);
-
-
   const handleSubmit = (event) => {
     event.preventDefault();
         const post = new FormData();
@@ -38,7 +28,7 @@ export default function Modal({closeModal, postToModify, allPosts}) {
         post.append('postId', postToModify);
 
     if (validate(post)){
-     axios.put(`http://localhost:3000/api/post`, post)
+     http.put(`${config.apiEndpoint}/post`, post)
      .then(res => {
        console.log(res)
        allPosts()
