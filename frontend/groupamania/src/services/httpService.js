@@ -14,6 +14,16 @@ axios.interceptors.response.use(null, error => {
     return Promise.reject(error)
 })
 
+axios.interceptors.request.use(
+    config => {
+        config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
+
 export default {
     get: axios.get,
     put: axios.put,

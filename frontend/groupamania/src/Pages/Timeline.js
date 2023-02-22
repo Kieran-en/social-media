@@ -1,9 +1,12 @@
 import React from "react";
 import { Container, Row, Col, NavbarBrand } from "react-bootstrap";
 import { Navbar, Dropdown } from "react-bootstrap";
-import navImg2 from '../Images/icon-left-font-monochrome-white.png';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
+import navImg2 from '../Images/icon-left-font-monochrome-white.png';
 import Post from "../Components/Post";
+import Modal from "../Components/Modal";
+import DeleteModal from '../Components/DeleteModal';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import style from '../Styles/timeline.module.css';
 import navStyle from '../Styles/navbar.module.css';
 import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
@@ -13,9 +16,7 @@ import http from '../services/httpService';
 import { useEffect, useCallback } from "react";
 import { getAccessToken } from "../accessToken";
 import { CommentContext } from "../Context/CommentContext";
-import Modal from "../Components/Modal";
-import DeleteModal from '../Components/DeleteModal';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import config from '../config.json'
 
 const Timeline = () => {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ const Timeline = () => {
    const [userProfile, setUserProfile] = useState();
 
     const getUser = () => {
-        http.get(`http://localhost:3000/api/auth/${JSON.parse(localStorage.getItem('userData')).userId}`)
+        http.get(`${config.apiEndpoint}/auth/${JSON.parse(localStorage.getItem('userData')).userId}`)
         .then(response => response.data)
         .then(user => setUserProfile(user.profileImg))
         .catch(err => console.log(err)) 
@@ -52,15 +53,6 @@ const Timeline = () => {
         setText(event.target.value);
     }
 
-    http.interceptors.request.use(
-        config => {
-            config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
-            return config;
-        },
-        error => {
-            return Promise.reject(error);
-        }
-    );
 
     const handlePost = (event) => {
         event.preventDefault();
@@ -68,7 +60,7 @@ const Timeline = () => {
         post.append('text', text)
         post.append('image', file);
 
-           http.post('http://localhost:3000/api/post', post)
+           http.post(`${config.apiEndpoint}/post`, post)
             .then(res => {
                 console.log(res)
                 getPosts()
@@ -77,7 +69,7 @@ const Timeline = () => {
     }
 
     const getPosts = async () => {
-        const res = await fetch(`http://localhost:3000/api/post?page=1`);
+        const res = await fetch(`${config.apiEndpoint}/post?page=1`);
         const data = await res.json();
         setPosts([...data]);
         console.log('exec')
@@ -85,7 +77,7 @@ const Timeline = () => {
       }
 
       const fetchPosts = async () => {
-        const res = await fetch(`http://localhost:3000/api/post?page=${page}`);
+        const res = await fetch(`${config.apiEndpoint}/post?page=${page}`);
         const data = await res.json();
         return data;
       } 
@@ -109,7 +101,7 @@ const Timeline = () => {
       }
 
     const getComments = useCallback(() => {
-        fetch('http://localhost:3000/api/comment')
+        fetch(`${config.apiEndpoint}/comment`)
         .then(response =>response.json())
         .then(data => {
             setComments([...data])
@@ -146,7 +138,7 @@ const Timeline = () => {
          </Col>
         </Navbar>
         <Container className='shadow' style={{backgroundColor: '#242526', color: 'white', marginTop: '20px', borderRadius: '10px'}}>
-            <form action="http://localhost:3000/api/post/" method="post" encType="multipart/form-data" onSubmit={handlePost}>
+            <form action={`${config.apiEndpoint}/post/`} method="post" encType="multipart/form-data" onSubmit={handlePost}>
             <Row className="p-2 mb-1 d-flex align-items-center">
                 <Col xs={1} className = 'p-2'><img src={userProfile} alt='Profile Image' style={{width: '50px', height: '50px', borderRadius: '50%'}}/></Col>
                 <Col xs={7} className = 'p-2'><input type='text' name="text" value={text} onChange={handleChange} className={style.textInput} placeholder="What's New!"></input></Col>

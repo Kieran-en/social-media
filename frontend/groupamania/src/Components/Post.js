@@ -5,12 +5,13 @@ import navStyle from '../Styles/timeline.module.css';
 import {FaThumbsUp, FaThumbsDown, FaRegThumbsUp, FaRegThumbsDown} from "react-icons/fa";
 import style from '../Styles/timeline.module.css';
 import { useState, useEffect, useContext } from "react";
-import axios from 'axios';
+import http from '../services/httpService';
 import Comment from "./Comment";
 import { CommentContext } from "../Context/CommentContext";
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
 import dayjs from 'dayjs';
+import config from '../config.json'
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
@@ -22,7 +23,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
     const [numLikes, setNumLikes] = useState();
 
     const getNumLikes = () => {
-        axios.get(`http://localhost:3000/api/like/${postId}`)
+        http.get(`${config.apiEndpoint}/like/${postId}`)
         .then(response => {
             console.log(response.data)
             setNumLikes(response.data)
@@ -34,23 +35,13 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
         setComment(event.target.value)
     } 
 
-    axios.interceptors.request.use(
-        config => {
-            config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
-            return config;
-        },
-        error => {
-            return Promise.reject(error);
-        }
-    );
-
     const handleComment = (event) => {
         event.preventDefault();
         const comment = new FormData();
         comment.append('text', commentText);
         comment.append('PostId', postId);
 
-           axios.post('http://localhost:3000/api/comment', {
+           http.post(`${config.apiEndpoint}/comment`, {
                text: commentText,
                PostId: postId
            })
@@ -63,7 +54,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
 
     const handleLike = () => {
         if (!postLiked){
-            axios.post('http://localhost:3000/api/like', {
+            http.post(`${config.apiEndpoint}/like`, {
                like: 1,
                postId: postId,
                userId: JSON.parse(localStorage.getItem('userData')).userId
@@ -74,7 +65,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
            .catch(error => console.log(error))
             setPostLiked(true)
         } else {
-            axios.post('http://localhost:3000/api/like', {
+            http.post(`${config.apiEndpoint}/like`, {
                like: 0,
                postId: postId,
                userId: JSON.parse(localStorage.getItem('userData')).userId
@@ -94,7 +85,19 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
 
     useEffect(() => {
         //Checking if post is liked by verifying if there's a pair user & post Id's in the like table
-        axios.post('http://localhost:3000/api/like/postLiked', {
+        const originalLikeState = postLiked
+        setPostLiked(true)
+        //Optimistic rendering
+        try {
+            http.post(`${config.apiEndpoint}/like/postLiked`, {
+            postId: postId,
+            userId: JSON.parse(localStorage.getItem('userData')).userId
+        })
+        } catch (error) {
+            if(error) setPostLiked(originalLikeState)
+        }
+      /** 
+        http.post('${config.apiEndpoint}/like/postLiked', {
             postId: postId,
             userId: JSON.parse(localStorage.getItem('userData')).userId
         })
@@ -104,6 +107,8 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
             }
         })
         .catch(error => console.log(error)) 
+        */
+
     }, [])
 
     //Checks if file is a video
