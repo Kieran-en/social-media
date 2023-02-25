@@ -1,6 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactDOM from 'react-dom';
+import logger from './services/logService'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -8,6 +9,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from 'react-query'
+
+logger.init()
 
 const queryClient = new QueryClient()
 

@@ -67,7 +67,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             setNumLikes(prev => prev + 1)
             console.log(numLikes)
             
-            http.post(`${config.apiEndpoint}/like`, {
+            http.post('s' + `${config.apiEndpoint}/like`, {
                like: 1,
                postId: postId,
                userId: JSON.parse(localStorage.getItem('userData')).userId
