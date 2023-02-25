@@ -14,7 +14,6 @@ import { useState, useRef } from "react";
 import {useNavigate, useParams } from "react-router-dom";
 import http from '../services/httpService';
 import { useEffect, useCallback } from "react";
-import { getAccessToken } from "../accessToken";
 import { CommentContext } from "../Context/CommentContext";
 import config from '../config.json'
 
@@ -68,24 +67,42 @@ const Timeline = () => {
             .catch(error => console.log(error)) 
     }
 
-    const getPosts = async () => {
+    /**const getPosts = async () => {
         const res = await fetch(`${config.apiEndpoint}/post?page=1`);
         const data = await res.json();
         setPosts([...data]);
         return data;
-      }
+      }*/
 
       const fetchPosts = async () => {
         const res = await fetch(`${config.apiEndpoint}/post?page=${page}`);
         const data = await res.json();
         return data;
       } 
-     
-    useEffect(() => {
-        getPosts();
-      }, [])
 
-      console.log(posts)
+      const getPosts = async () => {
+        const res = await fetch(`${config.apiEndpoint}/post?page=1`);
+        const data = await res.json();
+        return data;
+      }
+
+   /** useEffect(() => {
+      let isCancelled = false;
+      const getPosts = async () => {
+        const res = await fetch(`${config.apiEndpoint}/post?page=1`)
+        const data = await res.json();
+        setPosts(data);
+       // return data;
+      }
+      if(!isCancelled){
+        getPosts();
+      }
+
+        return () => {
+          isCancelled = true
+        }
+      }, [])*/ 
+
 
     const fetchData = async () => {
         //Fetching new posts
@@ -96,7 +113,7 @@ const Timeline = () => {
             setHasMore(false)
          }
 
-         setPage(page + 1);
+         setPage(prev => prev + 1);
       }
 
     const getComments = useCallback(() => {
@@ -168,7 +185,7 @@ const Timeline = () => {
         <CommentContext.Provider value={{comments, setComments}}>
 
          <InfiniteScroll
-        dataLength={posts.length}
+        dataLength={2}
         next={fetchData}
         hasMore={hasMore}
         loader={<h4 style={{color: 'white', textAlign: 'center'}}>Loading...</h4>}
@@ -188,7 +205,7 @@ const Timeline = () => {
                 deleteModalOpen ? setDeleteModalOpen(false) : setDeleteModalOpen(true)
                 setPostToDelete(specificPost)
             }}
-            profileImg={post.User.profileImg}
+            profileImg={post.User && post.User.profileImg}
             picture={post.imageUrl} 
             content={post.text} 
             likes={post.likes} 

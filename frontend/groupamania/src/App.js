@@ -7,7 +7,6 @@ import Timeline from './Pages/Timeline';
 import ErrorPage from './Pages/ErrorPage'
 import ProfilePage from './Pages/ProfilePage'
 
-
 function App() {
 
   return ( 
@@ -22,7 +21,7 @@ function App() {
     </Routes>
     </BrowserRouter>
   </div>
-
+  
 )}
 
 export default App;

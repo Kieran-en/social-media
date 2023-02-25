@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {MdDelete, MdBorderColor} from "react-icons/md";
 import navStyle from '../Styles/timeline.module.css';
 import {FaThumbsUp, FaThumbsDown, FaRegThumbsUp, FaRegThumbsDown} from "react-icons/fa";
+import { MdOutlineComment } from "react-icons/md";
 import style from '../Styles/timeline.module.css';
 import { useState, useEffect, useContext } from "react";
 import http from '../services/httpService';
@@ -11,19 +12,24 @@ import { CommentContext } from "../Context/CommentContext";
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
 import dayjs from 'dayjs';
-import config from '../config.json'
+import config from '../config.json';
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
-const Post = ({picture, profileImg, content, likes, dislikes, username, userLoggedIn, postId, userId, changeModalState, allComments, changeDeleteModalState, date}) => {
+const Post = ({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, allComments, changeDeleteModalState, date}) => {
 
     const [commentText, setComment] = useState('');
     const {comments, setComments} = useContext(CommentContext);
     const [postLiked, setPostLiked] = useState(false);
     const [numLikes, setNumLikes] = useState();
+    const [showComment, setShowComemnt] = useState(false)
 
-    console.log(postLiked)
-    console.log(numLikes)
+    //console.log(postLiked)
+    //console.log(numLikes)
+
+    const toggleShowComment = () => {
+        setShowComemnt(!showComment)
+    }
 
     const getNumLikes = () => {
         http.get(`${config.apiEndpoint}/like/${postId}`)
@@ -58,7 +64,7 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
     const handleLike = () => {
         const originalNumberOfLikes = numLikes
         if (!postLiked){
-            setNumLikes(numLikes + 1)
+            setNumLikes(prev => prev + 1)
             console.log(numLikes)
             
             http.post(`${config.apiEndpoint}/like`, {
@@ -91,7 +97,6 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
             setPostLiked(false)
         }
     }
-
 
     useEffect(() => {
         getNumLikes();
@@ -159,19 +164,22 @@ const Post = ({picture, profileImg, content, likes, dislikes, username, userLogg
                 : <img src={picture} className={navStyle.img} alt={content}/>
                 }
             </div>}
-            <div>
-                <div className="d-flex row p-2">
-                    <div className="col-sm-2" onClick={handleLike}><FaThumbsUp style={{color : postLiked ? '#BB2D3B' : 'white'}}/> {numLikes} </div>
+            
+                <div className="d-flex gap-2 p-2 align-items-center gap-1">   
+                        <div><FaThumbsUp style={{color : postLiked ? '#BB2D3B' : 'white'}} onClick={handleLike}/> {numLikes} </div>
+                        <div><MdOutlineComment className="" onClick={toggleShowComment()}/></div>  
                 </div>
                 <hr className="m-2"/>
-            </div>
+
+             
             <div id="comment" className="p-2 row">
-                <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.textInput}></input>
-                <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={handleComment}>Comment</button>
-                </div>
-                {comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
-                    <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
-                ))}
+            <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.textInput}></input>
+            <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={handleComment}>Comment</button>
+            </div>
+            {comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
+                <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
+            ))}
+      
                 
         </div>
     )
