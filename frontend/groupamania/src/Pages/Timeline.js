@@ -12,17 +12,20 @@ import navStyle from '../Styles/navbar.module.css';
 import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
 import { useState, useRef } from "react";
 import {useNavigate, useParams } from "react-router-dom";
-import http from '../services/httpService';
 import { useEffect, useCallback } from "react";
 import { CommentContext } from "../Context/CommentContext";
 import config from '../config.json'
+import { useQuery, useMutation, QueryClient } from "react-query";
+import { getPosts, createPost, modifyPost, deletePost } from "../Services/postService";
+import { getComments, createComment, modifyComment, deleteComment } from "../Services/commentService";
+import { getUser, signup, modifyUser, login } from "../Services/userService";
 
 const Timeline = () => {
     const navigate = useNavigate();
     const [text, setText] = useState('');
     const [file, setFile] = useState();
-    const [posts, setPosts] = useState([]);
-    const [comments, setComments] = useState([]);
+    //const [posts, setPosts] = useState([]);
+   // const [comments, setComments] = useState([]);
     const postsRef = useRef([])
     const {userlogged} = useParams();
     const [modalOpen, setModalOpen] = useState(false);
@@ -35,9 +38,16 @@ const Timeline = () => {
     */
    const [postToModify, setPostToModify] = useState();
    const [postToDelete, setPostToDelete] = useState();
-   const [userProfile, setUserProfile] = useState();
+   //const [userProfile, setUserProfile] = useState();
+   const userId = JSON.parse(localStorage.getItem('userData')).userId
 
-    const getUser = () => {
+   const { status, data : posts, error } = useQuery('posts', getPosts)
+   const { status: commentStatus, data : comments, error: commentError } = useQuery('comments', getComments)
+   const { status: userStatus, data : user, error: userError} = useQuery(['user', userId], () => getUser(userId))
+   console.log(user)
+   // const userProfile = user?.profileImg
+
+    /**const getUser = () => {
         http.get(`${config.apiEndpoint}/auth/${JSON.parse(localStorage.getItem('userData')).userId}`)
         .then(response => response.data)
         .then(user => setUserProfile(user.profileImg))
@@ -46,12 +56,11 @@ const Timeline = () => {
 
     useEffect(() => {
         getUser()
-    }, [])
+    }, [])*/
     
     const handleChange = (event) => {
         setText(event.target.value);
     }
-
 
     const handlePost = (event) => {
         event.preventDefault();
@@ -59,51 +68,22 @@ const Timeline = () => {
         post.append('text', text)
         post.append('image', file);
 
-           http.post(`${config.apiEndpoint}/post`, post)
-            .then(res => {
-                console.log(res)
-                getPosts()
-            })
-            .catch(error => console.log(error)) 
+        mutation.mutate(post)
     }
 
-    /**const getPosts = async () => {
-        const res = await fetch(`${config.apiEndpoint}/post?page=1`);
-        const data = await res.json();
-        setPosts([...data]);
-        return data;
-      }*/
+    const mutation = useMutation(createPost, {
+      onSuccess: () => {
+        QueryClient.invalidateQueries('posts')
+      }
+    })
 
-      const fetchPosts = async () => {
+    /**   const fetchPosts = async () => {
         const res = await fetch(`${config.apiEndpoint}/post?page=${page}`);
         const data = await res.json();
         return data;
-      } 
+      } */
 
-      const getPosts = async () => {
-        const res = await fetch(`${config.apiEndpoint}/post?page=1`);
-        const data = await res.json();
-        return data;
-      }
-
-   /** useEffect(() => {
-      let isCancelled = false;
-      const getPosts = async () => {
-        const res = await fetch(`${config.apiEndpoint}/post?page=1`)
-        const data = await res.json();
-        setPosts(data);
-       // return data;
-      }
-      if(!isCancelled){
-        getPosts();
-      }
-
-        return () => {
-          isCancelled = true
-        }
-      }, [])*/ 
-
-
+/** 
     const fetchData = async () => {
         //Fetching new posts
         const postsFromServer = await fetchPosts();
@@ -114,9 +94,9 @@ const Timeline = () => {
          }
 
          setPage(prev => prev + 1);
-      }
+      }*/
 
-    const getComments = useCallback(() => {
+   /**  const getComments = useCallback(() => {
         fetch(`${config.apiEndpoint}/comment`)
         .then(response =>response.json())
         .then(data => {
@@ -129,10 +109,18 @@ const Timeline = () => {
 
     useEffect(() => {
         getComments();
-      }, [])  
+      }, [])  */
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
+    }
+
+    if (status === 'loading') {
+      return <span>Loading...</span>
+    }
+  
+    if (status === 'error') {
+      return <span>Error: {error.message}</span>
     }
 
     return ( 
@@ -164,9 +152,8 @@ const Timeline = () => {
         flexDirection: 'column',
        }}>
               <Row className="mb-1 d-flex align-items-center">
-                <Col lg={1} className=''><img src={userProfile} alt='Profile Image' style={{width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer'}}/></Col>
+              <Col lg={1} className=''><img src={user && user.profileImg} alt='Profile Image' style={{width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer'}}/></Col>
                 <Col lg={9} className=''><textarea type='text' name="text" value={text} onChange={handleChange} className={style.textarea} placeholder="What's New!"></textarea></Col>
-                
                 <Col lg={2} className='d-flex justify-content-center'>
                  {file &&<img alt='preview-img' src={URL.createObjectURL(file)} style={{width: '100px', height: '100px', objectFit: 'cover'}}/>}
                 </Col>
@@ -182,9 +169,9 @@ const Timeline = () => {
             </form>
 
         </Container>
-        <CommentContext.Provider value={{comments, setComments}}>
+        {/**<CommentContext.Provider value={comments}> */}
 
-         <InfiniteScroll
+         {/** <InfiniteScroll
         dataLength={2}
         next={fetchData}
         hasMore={hasMore}
@@ -195,7 +182,7 @@ const Timeline = () => {
                      </p>
                    }
         >
-        {posts.map((post) => (
+        {postss.map((post) => (
             <Post 
             changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
                 setModalOpen(true)
@@ -218,20 +205,43 @@ const Timeline = () => {
             allComments = {getComments}
             userLoggedIn = {userlogged} />
         ))}
-       </InfiniteScroll> 
-        </CommentContext.Provider>
+       </InfiniteScroll> */}
+
+       {/**{posts && posts.map((post) => (
+            <Post 
+            changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
+                setModalOpen(true)
+                setPostToModify(specificPost)
+            }}
+            changeDeleteModalState={(specificPost) => {
+                deleteModalOpen ? setDeleteModalOpen(false) : setDeleteModalOpen(true)
+                setPostToDelete(specificPost)
+            }}
+            profileImg={post.User && post.User.profileImg}
+            picture={post.imageUrl} 
+            content={post.text} 
+            likes={post.likes} 
+            dislikes={post.dislikes} 
+            username={post.User.name}
+            key={post.id}
+            postId={post.id} 
+            userId={post.UserId}
+            date={post.createdAt}
+            allComments = {comments}
+            userLoggedIn = {userlogged} 
+            comments = {comments}/>
+        ))} */}
+        {/**</CommentContext.Provider> */}
 
         {modalOpen && <Modal 
         closeModal={() => {setModalOpen(false)}}
         postToModify={postToModify}
-        allPosts={getPosts}
         />}
 
         {deleteModalOpen && 
         <DeleteModal 
         closeModal={() => {setDeleteModalOpen(false)}}
         postToDelete={postToDelete}
-        allPosts={getPosts}
         />}
 
         </div>

@@ -1,13 +1,13 @@
 import React from 'react';
 import { IoCloseCircleOutline } from "react-icons/io5";
-import http from '../services/httpService';
 import Backdrop from './Backdrop';
 import '../Styles/Modal.css'
 import { useState } from 'react';
 import style from '../Styles/timeline.module.css';
 import { FaImages } from "react-icons/fa";
 import { useParams } from 'react-router-dom';
-import config from '../config.json'
+import { modifyPost } from '../Services/postService';
+import { useMutation, QueryClient } from 'react-query';
 
 export default function Modal({closeModal, postToModify, allPosts}) {
   const [text, setText] = useState('')
@@ -19,6 +19,12 @@ export default function Modal({closeModal, postToModify, allPosts}) {
     setText(event.target.value)
   }
 
+  const updatePostMutation = useMutation(modifyPost,{
+    onSuccess: () => {
+      QueryClient.invalidateQueries('posts')
+    }
+  })
+
   const handleSubmit = (event) => {
     event.preventDefault();
         const post = new FormData();
@@ -27,13 +33,7 @@ export default function Modal({closeModal, postToModify, allPosts}) {
         post.append('postId', postToModify);
 
     if (validate(post)){
-     http.put(`${config.apiEndpoint}/post`, post)
-     .then(res => {
-       console.log(res)
-       allPosts()
-     })
-     .catch(error => console.log(error))
-     console.log(postToModify)
+      updatePostMutation.mutate(post)
     }
   }
 

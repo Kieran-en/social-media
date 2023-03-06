@@ -1,9 +1,7 @@
 import React from 'react';
 import Nav from './Nav';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container } from 'react-bootstrap';
 import { useState } from 'react';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import config from '../config.json'
 

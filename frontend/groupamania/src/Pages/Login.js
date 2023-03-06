@@ -1,7 +1,6 @@
 import React from 'react';
 import Nav from './Nav';
-import { Form } from 'react-bootstrap';
-import { useState, createContext } from 'react';
+import { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setAccessToken } from '../accessToken';
 import config from '../config.json'
@@ -22,10 +21,6 @@ const Login = () => {
             ...values, 
             [event.target.name] : event.target.value
         }));
-    }
-
-    const validate = () => {
-        
     }
 
     const handleSubmit = (event) => {

@@ -7,8 +7,10 @@ import { useState } from 'react';
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import {Tooltip,} from 'react-tippy';
+import { useMutation, QueryClient } from 'react-query';
+import { modifyUser } from '../Services/userService';
 
-function ProfileModal({closeModal, username, email, updateUser, profileImg, getUserData}) {
+function ProfileModal({closeModal, username, email, profileImg}) {
     const [values, setValues] = useState({
         name: username,
         email: email,
@@ -26,6 +28,8 @@ function ProfileModal({closeModal, username, email, updateUser, profileImg, getU
             return Promise.reject(error);
         }
     );
+
+    const userId = JSON.parse(localStorage.getItem('userData')).userId
 
     const handleChange = (event) => {
         setValues(values => ({
@@ -59,21 +63,32 @@ function ProfileModal({closeModal, username, email, updateUser, profileImg, getU
         }
     }
 
+    const updateUserMutation = useMutation(modifyUser, {
+            onSuccess: () => {
+                QueryClient.invalidateQueries(['user', userId])
+              }
+    })
+
     const handleSubmit = (event) => {
         event.preventDefault()
         const userData = new FormData();
         userData.append('name', values.name);
         userData.append('email', values.email);
         userData.append('image', file);
+
         if (validateForm()){
-          axios.put(`http://localhost:3000/api/auth/${JSON.parse(localStorage.getItem('userData')).userId}`, userData)
+            updateUserMutation.mutate(userData)
+            closeModal()
+          
+           /**axios.put(`http://localhost:3000/api/auth/${userId}`, userData)
+
     .then((response) => {
         console.log(response)
         closeModal()
         updateUser(values)
         getUserData()
     })
-    .catch(error => console.log(error))
+    .catch(error => console.log(error))*/
         }
     }
 

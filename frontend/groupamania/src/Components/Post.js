@@ -1,48 +1,54 @@
-import React, {memo} from "react";
+import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import {MdDelete, MdBorderColor} from "react-icons/md";
 import navStyle from '../Styles/timeline.module.css';
-import {FaThumbsUp, FaThumbsDown, FaRegThumbsUp, FaRegThumbsDown} from "react-icons/fa";
+import {FaThumbsUp} from "react-icons/fa";
 import { MdOutlineComment } from "react-icons/md";
 import style from '../Styles/timeline.module.css';
 import { useState, useEffect, useContext } from "react";
-import http from '../services/httpService';
 import Comment from "./Comment";
 import { CommentContext } from "../Context/CommentContext";
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
 import dayjs from 'dayjs';
-import config from '../config.json';
+import { createComment } from "../Services/commentService";
+import { like, getNumLikes, isPostLiked } from "../Services/likeService";
+import { useQuery, useMutation, QueryClient } from "react-query";
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
-const Post = ({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, allComments, changeDeleteModalState, date}) => {
+const Post = ({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, comments, changeDeleteModalState, date}) => {
 
     const [commentText, setComment] = useState('');
-    const {comments, setComments} = useContext(CommentContext);
+    //const {comments, setComments} = useContext(CommentContext);
     const [postLiked, setPostLiked] = useState(false);
-    const [numLikes, setNumLikes] = useState();
+    //const [numLikes, setNumLikes] = useState();
     const [showComment, setShowComemnt] = useState(false)
 
-    //console.log(postLiked)
-    //console.log(numLikes)
+    const {error, data : numLikes, status} = useQuery('numLikes', getNumLikes)
 
     const toggleShowComment = () => {
         setShowComemnt(!showComment)
     }
 
-    const getNumLikes = () => {
+    /**const getNumLikes = () => {
         http.get(`${config.apiEndpoint}/like/${postId}`)
         .then(response => {
             console.log(response.data)
             setNumLikes(response.data)
         })
         .catch(error => console.log(error))  
-    }
+    }*/
 
     const handleChange = (event) => {
         setComment(event.target.value)
     } 
+
+    const commentMutation = useMutation(createComment, {
+      onSuccess: () => {
+        QueryClient.invalidateQueries('comments')
+      }
+    })
 
     const handleComment = (event) => {
         event.preventDefault();
@@ -50,72 +56,44 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
         comment.append('text', commentText);
         comment.append('PostId', postId);
 
-           http.post(`${config.apiEndpoint}/comment`, {
-               text: commentText,
-               PostId: postId
-           })
-           .then(res => {
-               console.log(res)
-               allComments()
-            })
-           .catch(error => console.log(error))  
+        commentMutation.mutate(comment)  
     }
+
+    const likeMutation = useMutation(like, {
+        onSuccess: () => {
+          QueryClient.invalidateQueries('like')
+        }
+      })
+
+    const isPostLikedMutation = useMutation(isPostLiked, {
+        onSuccess: () => {
+            QueryClient.invalidateQueries('like')
+          }
+    })
 
     const handleLike = () => {
-        const originalNumberOfLikes = numLikes
         if (!postLiked){
-            setNumLikes(prev => prev + 1)
-            console.log(numLikes)
-            
-            http.post('s' + `${config.apiEndpoint}/like`, {
-               like: 1,
-               postId: postId,
-               userId: JSON.parse(localStorage.getItem('userData')).userId
-           })
-           .then(res => {
-            //getNumLikes()
-        })
-           .catch(error => {
-            if(error) setNumLikes(originalNumberOfLikes)
-           })
-            setPostLiked(true)
+
+            likeMutation.mutate({
+                like: 1,
+                postId: postId,
+                userId: JSON.parse(localStorage.getItem('userData')).userId
+            })
 
         } else {
-            const originalNumberOfLikes = numLikes
-            setNumLikes(numLikes - 1)
-            http.post(`${config.apiEndpoint}/like`, {
-               like: 0,
-               postId: postId,
-               userId: JSON.parse(localStorage.getItem('userData')).userId
-           })
-           .then(res => {
-            getNumLikes()
-        })
-           .catch(error => {
-            if(error) setNumLikes(originalNumberOfLikes)
-           })
-            setPostLiked(false)
+            likeMutation.mutate({
+                like: 0,
+                postId: postId,
+                userId: JSON.parse(localStorage.getItem('userData')).userId
+            })
         }
     }
 
-    useEffect(() => {
+    /**useEffect(() => {
         getNumLikes();
-    }, [])
+    }, [])*/
 
-    useEffect(() => {
-        //Checking if post is liked by verifying if there's a pair user & post Id's in the like table
-        const originalLikeState = postLiked
-        //Optimistic rendering
-        try {
-            http.post(`${config.apiEndpoint}/like/postLiked`, {
-            postId: postId,
-            userId: JSON.parse(localStorage.getItem('userData')).userId
-        })
-        } catch (error) {
-            if(error) setPostLiked(originalLikeState)
-        }
-
-    }, [])
+ 
 
     //Checks if file is a video
     const checkFile = (file) => {
@@ -176,7 +154,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.textInput}></input>
             <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={handleComment}>Comment</button>
             </div>
-            {comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
+            {comments && comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
                 <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
             ))}
       
