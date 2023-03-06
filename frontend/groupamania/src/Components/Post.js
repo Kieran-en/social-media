@@ -27,18 +27,10 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
 
     const {error, data : numLikes, status} = useQuery('numLikes', getNumLikes)
 
-    const toggleShowComment = () => {
+  const toggleShowComment = () => {
         setShowComemnt(!showComment)
     }
 
-    /**const getNumLikes = () => {
-        http.get(`${config.apiEndpoint}/like/${postId}`)
-        .then(response => {
-            console.log(response.data)
-            setNumLikes(response.data)
-        })
-        .catch(error => console.log(error))  
-    }*/
 
     const handleChange = (event) => {
         setComment(event.target.value)
@@ -71,6 +63,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
           }
     })
 
+    
     const handleLike = () => {
         if (!postLiked){
 
@@ -87,12 +80,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
                 userId: JSON.parse(localStorage.getItem('userData')).userId
             })
         }
-    }
-
-    /**useEffect(() => {
-        getNumLikes();
-    }, [])*/
-
+    } 
  
 
     //Checks if file is a video
@@ -144,15 +132,15 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             </div>}
             
                 <div className="d-flex gap-2 p-2 align-items-center gap-1">   
-                        <div><FaThumbsUp style={{color : postLiked ? '#BB2D3B' : 'white'}} onClick={handleLike}/> {numLikes} </div>
-                        <div><MdOutlineComment className="" onClick={toggleShowComment()}/></div>  
+                        <div><FaThumbsUp style={{color : postLiked ? '#BB2D3B' : 'white'}} onClick={() => handleLike()}/> {numLikes} </div>
+                        <div><MdOutlineComment className="" onClick={() => toggleShowComment()}/></div>  
                 </div>
                 <hr className="m-2"/>
 
              
             <div id="comment" className="p-2 row">
             <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.textInput}></input>
-            <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={handleComment}>Comment</button>
+            <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={() => handleComment()}>Comment</button>
             </div>
             {comments && comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
                 <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>

@@ -46,17 +46,6 @@ const Timeline = () => {
    const { status: userStatus, data : user, error: userError} = useQuery(['user', userId], () => getUser(userId))
    console.log(user)
    // const userProfile = user?.profileImg
-
-    /**const getUser = () => {
-        http.get(`${config.apiEndpoint}/auth/${JSON.parse(localStorage.getItem('userData')).userId}`)
-        .then(response => response.data)
-        .then(user => setUserProfile(user.profileImg))
-        .catch(err => console.log(err)) 
-    }
-
-    useEffect(() => {
-        getUser()
-    }, [])*/
     
     const handleChange = (event) => {
         setText(event.target.value);
@@ -207,7 +196,7 @@ const Timeline = () => {
         ))}
        </InfiniteScroll> */}
 
-       {/**{posts && posts.map((post) => (
+       {posts && posts.map((post) => (
             <Post 
             changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
                 setModalOpen(true)
@@ -227,10 +216,9 @@ const Timeline = () => {
             postId={post.id} 
             userId={post.UserId}
             date={post.createdAt}
-            allComments = {comments}
             userLoggedIn = {userlogged} 
             comments = {comments}/>
-        ))} */}
+        ))} 
         {/**</CommentContext.Provider> */}
 
         {modalOpen && <Modal 
