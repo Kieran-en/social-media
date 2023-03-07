@@ -15,7 +15,7 @@ import {useNavigate, useParams } from "react-router-dom";
 import { useEffect, useCallback } from "react";
 import { CommentContext } from "../Context/CommentContext";
 import config from '../config.json'
-import { useQuery, useMutation, QueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getPosts, createPost, modifyPost, deletePost } from "../Services/postService";
 import { getComments, createComment, modifyComment, deleteComment } from "../Services/commentService";
 import { getUser, signup, modifyUser, login } from "../Services/userService";
@@ -24,7 +24,6 @@ const Timeline = () => {
     const navigate = useNavigate();
     const [text, setText] = useState('');
     const [file, setFile] = useState();
-    //const [posts, setPosts] = useState([]);
    // const [comments, setComments] = useState([]);
     const postsRef = useRef([])
     const {userlogged} = useParams();
@@ -32,20 +31,19 @@ const Timeline = () => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [page , setPage] = useState(2);
     const [hasMore, setHasMore] = useState(true);
+    const queryClient = useQueryClient()
     /** 
     Intermediate varile to store the postId send from post inorder to transfer it as a prop to Modal Component
     This will enable the modal to send to the server the modification of a specific post 
     */
    const [postToModify, setPostToModify] = useState();
    const [postToDelete, setPostToDelete] = useState();
-   //const [userProfile, setUserProfile] = useState();
    const userId = JSON.parse(localStorage.getItem('userData')).userId
 
    const { status, data : posts, error } = useQuery('posts', getPosts)
    const { status: commentStatus, data : comments, error: commentError } = useQuery('comments', getComments)
    const { status: userStatus, data : user, error: userError} = useQuery(['user', userId], () => getUser(userId))
-   console.log(user)
-   // const userProfile = user?.profileImg
+
     
     const handleChange = (event) => {
         setText(event.target.value);
@@ -62,7 +60,7 @@ const Timeline = () => {
 
     const mutation = useMutation(createPost, {
       onSuccess: () => {
-        QueryClient.invalidateQueries('posts')
+        queryClient.invalidateQueries("posts")
       }
     })
 
@@ -140,10 +138,10 @@ const Timeline = () => {
         style={{display: 'flex',
         flexDirection: 'column',
        }}>
-              <Row className="mb-1 d-flex align-items-center">
+              <Row className="mb-1 d-flex flex-column align-items-start">
               <Col lg={1} className=''><img src={user && user.profileImg} alt='Profile Image' style={{width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer'}}/></Col>
                 <Col lg={9} className=''><textarea type='text' name="text" value={text} onChange={handleChange} className={style.textarea} placeholder="What's New!"></textarea></Col>
-                <Col lg={2} className='d-flex justify-content-center'>
+                <Col lg={2} className='d-flex justify-content-start'>
                  {file &&<img alt='preview-img' src={URL.createObjectURL(file)} style={{width: '100px', height: '100px', objectFit: 'cover'}}/>}
                 </Col>
               </Row>
@@ -171,29 +169,6 @@ const Timeline = () => {
                      </p>
                    }
         >
-        {postss.map((post) => (
-            <Post 
-            changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
-                setModalOpen(true)
-                setPostToModify(specificPost)
-            }}
-            changeDeleteModalState={(specificPost) => {
-                deleteModalOpen ? setDeleteModalOpen(false) : setDeleteModalOpen(true)
-                setPostToDelete(specificPost)
-            }}
-            profileImg={post.User && post.User.profileImg}
-            picture={post.imageUrl} 
-            content={post.text} 
-            likes={post.likes} 
-            dislikes={post.dislikes} 
-            username={post.User.name}
-            key={post.id}
-            postId={post.id} 
-            userId={post.UserId}
-            date={post.createdAt}
-            allComments = {getComments}
-            userLoggedIn = {userlogged} />
-        ))}
        </InfiniteScroll> */}
 
        {posts && posts.map((post) => (

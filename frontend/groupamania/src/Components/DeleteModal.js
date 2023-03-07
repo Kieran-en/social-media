@@ -3,9 +3,12 @@ import Backdrop from './Backdrop';
 import { IoCloseCircleOutline } from "react-icons/io5";
 import style from '../Styles/deletemodal.module.css';
 import { deletePost } from '../Services/postService';
-import { useMutation, QueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 export default function DeleteModal({closeModal, postToDelete, allPosts}) {
+
+
+  const queryClient = useQueryClient();
 
 
   function handleDelete(event){
@@ -19,7 +22,7 @@ export default function DeleteModal({closeModal, postToDelete, allPosts}) {
 
     const deletePostMutation = useMutation(deletePost, {
       onSuccess: () => {
-        QueryClient.invalidateQueries('posts')
+        queryClient.invalidateQueries('posts')
       }
     })
 

@@ -7,13 +7,14 @@ import style from '../Styles/timeline.module.css';
 import { FaImages } from "react-icons/fa";
 import { useParams } from 'react-router-dom';
 import { modifyPost } from '../Services/postService';
-import { useMutation, QueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 export default function Modal({closeModal, postToModify, allPosts}) {
   const [text, setText] = useState('')
   const [error, setError] = useState('');
   const [selectedFile, setSelectedFile] = useState();
   const {userlogged} = useParams();
+  const queryClient = useQueryClient()
 
   const handleChange = (event) => {
     setText(event.target.value)
@@ -21,7 +22,7 @@ export default function Modal({closeModal, postToModify, allPosts}) {
 
   const updatePostMutation = useMutation(modifyPost,{
     onSuccess: () => {
-      QueryClient.invalidateQueries('posts')
+      queryClient.invalidateQueries('posts')
     }
   })
 

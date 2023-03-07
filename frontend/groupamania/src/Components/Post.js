@@ -13,7 +13,7 @@ import {Tooltip,} from 'react-tippy';
 import dayjs from 'dayjs';
 import { createComment } from "../Services/commentService";
 import { like, getNumLikes, isPostLiked } from "../Services/likeService";
-import { useQuery, useMutation, QueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
@@ -24,6 +24,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
     const [postLiked, setPostLiked] = useState(false);
     //const [numLikes, setNumLikes] = useState();
     const [showComment, setShowComemnt] = useState(false)
+    const queryClient = useQueryClient();
 
     const {error, data : numLikes, status} = useQuery('numLikes', getNumLikes)
 
@@ -38,7 +39,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
 
     const commentMutation = useMutation(createComment, {
       onSuccess: () => {
-        QueryClient.invalidateQueries('comments')
+        queryClient.invalidateQueries('comments')
       }
     })
 
@@ -53,13 +54,13 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
 
     const likeMutation = useMutation(like, {
         onSuccess: () => {
-          QueryClient.invalidateQueries('like')
+            queryClient.invalidateQueries('like')
         }
       })
 
     const isPostLikedMutation = useMutation(isPostLiked, {
         onSuccess: () => {
-            QueryClient.invalidateQueries('like')
+            queryClient.invalidateQueries('like')
           }
     })
 
@@ -140,7 +141,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
              
             <div id="comment" className="p-2 row">
             <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.textInput}></input>
-            <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={() => handleComment()}>Comment</button>
+            <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={handleComment}>Comment</button>
             </div>
             {comments && comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
                 <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
