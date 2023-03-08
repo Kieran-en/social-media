@@ -5,28 +5,23 @@ import style from '../Styles/deletemodal.module.css';
 import { deletePost } from '../Services/postService';
 import { useMutation, useQueryClient } from 'react-query';
 
-export default function DeleteModal({closeModal, postToDelete, allPosts}) {
-
+export default function DeleteModal({closeModal, postToDelete}) {
 
   const queryClient = useQueryClient();
 
+  const deletePostMutation = useMutation(deletePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts')
+    }
+  })
 
   function handleDelete(event){
     event.preventDefault();
 
-    const post = new FormData();
+    /**const post = new FormData();
     post.append('postId', postToDelete);
-    post.append('text', 'YeaHHhhh!')
-
-    console.log(postToDelete)
-
-    const deletePostMutation = useMutation(deletePost, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('posts')
-      }
-    })
-
-   deletePostMutation.mutate(post)
+    console.log(post) */
+   deletePostMutation.mutate(postToDelete)
   }
 
   return (

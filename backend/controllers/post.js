@@ -84,10 +84,11 @@ exports.modifyProfile = (req, res, next) => {
 }
 
 exports.deletePost = (req, res, next) => { 
-  console.log(req.body)
+    console.log(req.params.id)
+  console.log("THIS IS ITTTTTTTTTTT" + req.params.id)
     Post.findOne({
         where: {
-            id: req.body.postId
+            id: req.params.id
         }
     })
     .then(post => {
@@ -99,18 +100,33 @@ exports.deletePost = (req, res, next) => {
             console.log(post.UserId);
             return res.status(401).json({message: 'Unauthorized request!'})
         }
-        filename = post.imageUrl.split('/images/')[1];
-        fs.unlink(`images/${filename}`, () => {
+       else{ 
+
+        if(post.imageUrl){
+            filename = post.imageUrl.split('/images/')[1];
+            fs.unlink(`images/${filename}`, () => {
+                Post.destroy({
+                    where: {
+                        id: req.params.id
+                    }
+                })
+                .then(() => res.status(200).json({message: 'Post deleted!'}))
+                .catch(error => {
+                    res.status(500).json({error})
+                })
+            })
+        } else {
             Post.destroy({
                 where: {
-                    id: req.body.postId
+                    id: req.params.id
                 }
             })
             .then(() => res.status(200).json({message: 'Post deleted!'}))
             .catch(error => {
                 res.status(500).json({error})
             })
-        })
+        }
+       }
     })
     .catch(error => {
         console.log('Are you the error?')

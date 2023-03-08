@@ -32,6 +32,7 @@ export default function Modal({closeModal, postToModify, allPosts}) {
         post.append('text', text)
         post.append('image', selectedFile);
         post.append('postId', postToModify);
+        console.log(post)
 
     if (validate(post)){
       updatePostMutation.mutate(post)

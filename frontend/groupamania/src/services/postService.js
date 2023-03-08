@@ -14,6 +14,7 @@ export async function modifyPost(post){
     return await http.put(`${config.apiEndpoint}/post`, post)
 }
 
-export async function deletePost(post){
-    return await http.delete(`${config.apiEndpoint}/post`, post)
+export async function deletePost(postToDelete){
+    console.log(postToDelete)
+    return await http.delete(`${config.apiEndpoint}/post/${postToDelete}`)
 }
