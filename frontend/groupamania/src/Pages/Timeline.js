@@ -42,7 +42,6 @@ const Timeline = () => {
    const { status, data : posts, error } = useQuery('posts', getPosts)
    const { status: commentStatus, data : comments, error: commentError } = useQuery('comments', getComments)
    const { status: userStatus, data : user, error: userError} = useQuery(['user', userId], () => getUser(userId))
-
     
     const handleChange = (event) => {
         setText(event.target.value);

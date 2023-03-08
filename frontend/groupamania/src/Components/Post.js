@@ -31,8 +31,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
         setShowComemnt(!showComment)
     }
 
-    console.log(comments)
-
+    console.log(comments && comments)
 
     const handleChange = (event) => {
         setComment(event.target.value)
@@ -138,7 +137,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             
                 <div className="d-flex gap-2 p-2 align-items-center gap-1">   
                         <div><FaThumbsUp style={{color : postLiked ? '#BB2D3B' : 'white', cursor : 'pointer'}} onClick={() => handleLike()}/> {numLikes} </div>
-                        <div><MdOutlineComment className="" style={{cursor : 'pointer'}} onClick={() => toggleShowComment()}/> {comments.length} </div>  
+                        <div><MdOutlineComment className="" style={{cursor : 'pointer'}} onClick={() => toggleShowComment()}/> {comments ? comments.length : 0} </div>  
                 </div>
                 <hr className="m-2"/>
 
