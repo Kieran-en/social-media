@@ -12,13 +12,12 @@ import navStyle from '../Styles/navbar.module.css';
 import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
 import { useState, useRef } from "react";
 import {useNavigate, useParams } from "react-router-dom";
-import { useEffect, useCallback } from "react";
 import { CommentContext } from "../Context/CommentContext";
 import config from '../config.json'
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getPosts, createPost, modifyPost, deletePost } from "../Services/postService";
 import { getComments, createComment, modifyComment, deleteComment } from "../Services/commentService";
-import { getUser, signup, modifyUser, login } from "../Services/userService";
+import { getUser } from "../Services/userService";
 
 const Timeline = () => {
     const navigate = useNavigate();

@@ -5,7 +5,7 @@ const User = require('../models/User')
 exports.creatComment = (req, res, next) => {
     //const commentObject = req.body.comment;
     // console.log(commentObject.PostId)
-    console.log('Ohhhh')
+    console.log('YEAHHHHHH' + req.body.text)
     const comment = Comment.build({
         text: req.body.text,
         PostId: req.body.PostId,

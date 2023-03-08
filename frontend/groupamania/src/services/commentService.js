@@ -3,6 +3,7 @@ import config from '../config.json'
 
 export async function getComments(){
     const res = await http.get(`${config.apiEndpoint}/comment`)
+    console.log(res.data)
     return res.data
 } 
 

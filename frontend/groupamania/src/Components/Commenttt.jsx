@@ -7,6 +7,7 @@ export default function Comment({text, username, profileImg, date}) {
       <div>
         <img alt="profileImage" src=""/> 
         <input type="text"></input>
+        <button>Comment</button>
       </div>
       <div className={navStyle.commentSection}> 
         <div >
