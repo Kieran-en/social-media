@@ -146,10 +146,10 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.textInput}></input>
             <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={handleComment}>Comment</button>
             </div>
-            {showComment && <Commenttt></Commenttt>}
-            {comments && comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
+            {showComment && <Commenttt comments={comments} handleChange={handleChange} />}
+            {/** {comments && comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
                 <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
-            ))}
+            ))} */}
       
                 
         </div>

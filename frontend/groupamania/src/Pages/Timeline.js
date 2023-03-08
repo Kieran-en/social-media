@@ -109,7 +109,7 @@ const Timeline = () => {
     }
 
     return ( 
-            <div style={{backgroundColor: '#18191A', height: '100%'}}>
+            <div style={{backgroundColor: '#18191A', height: '100%', flex: '1'}}>
         <Navbar className="justify-content-between" style={{backgroundColor: '#242526', borderRadius: '10px'}}>
                 <NavbarBrand>
                     <img src={navImg2} className={navStyle.img} alt='companyIcon'/>
@@ -120,7 +120,10 @@ const Timeline = () => {
           Account
          </Dropdown.Toggle>
         <Dropdown.Menu >
-            <Dropdown.Item eventKey='logout' onClick={() => navigate("/Login")}>LogOut <FaDoorOpen className="ml-5"/></Dropdown.Item>
+            <Dropdown.Item eventKey='logout' onClick={() => {
+              localStorage.removeItem('token')
+              navigate("/Login")
+              }}>LogOut <FaDoorOpen className="ml-5"/></Dropdown.Item>
             <Dropdown.Item eventKey='profile' onClick={() => navigate(`/profilepage/${userlogged}`)  }>Visit Profile <FaUser className="ml-5" /></Dropdown.Item>
         </Dropdown.Menu>
         </Dropdown>
@@ -154,7 +157,6 @@ const Timeline = () => {
             </form>
 
         </Container>
-        {/**<CommentContext.Provider value={comments}> */}
 
          {/** <InfiniteScroll
         dataLength={2}
@@ -192,7 +194,6 @@ const Timeline = () => {
             userLoggedIn = {userlogged} 
             comments = {comments}/>
         ))} 
-        {/**</CommentContext.Provider> */}
 
         {modalOpen && <Modal 
         closeModal={() => {setModalOpen(false)}}

@@ -6,8 +6,19 @@ import Login from './Pages/Login';
 import Timeline from './Pages/Timeline';
 import ErrorPage from './Pages/ErrorPage'
 import ProfilePage from './Pages/ProfilePage'
+import jwtDecode from 'jwt-decode'
 
 function App() {
+
+
+  try {
+    const jwt = localStorage.getItem('token')
+  const userData = jwtDecode(jwt)
+  console.log(userData)
+
+  } catch (error) {
+    
+  }
 
   return ( 
   <div className='App'>
