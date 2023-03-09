@@ -17,7 +17,7 @@ import config from '../config.json'
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getPosts, createPost, modifyPost, deletePost } from "../Services/postService";
 import { getComments, createComment, modifyComment, deleteComment } from "../Services/commentService";
-import { getUser } from "../Services/userService";
+import { getUser, logout } from "../Services/userService";
 
 const Timeline = () => {
     const navigate = useNavigate();
@@ -81,21 +81,6 @@ const Timeline = () => {
          setPage(prev => prev + 1);
       }*/
 
-   /**  const getComments = useCallback(() => {
-        fetch(`${config.apiEndpoint}/comment`)
-        .then(response =>response.json())
-        .then(data => {
-            setComments([...data])
-        })
-        .catch(err => {
-            console.log(err);
-        });
-      }, [])
-
-    useEffect(() => {
-        getComments();
-      }, [])  */
-
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     }
@@ -121,7 +106,7 @@ const Timeline = () => {
          </Dropdown.Toggle>
         <Dropdown.Menu >
             <Dropdown.Item eventKey='logout' onClick={() => {
-              localStorage.removeItem('token')
+              logout()
               navigate("/Login")
               }}>LogOut <FaDoorOpen className="ml-5"/></Dropdown.Item>
             <Dropdown.Item eventKey='profile' onClick={() => navigate(`/profilepage/${userlogged}`)  }>Visit Profile <FaUser className="ml-5" /></Dropdown.Item>

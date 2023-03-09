@@ -137,7 +137,8 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             
                 <div className="d-flex gap-2 p-2 align-items-center gap-1">   
                         <div><FaThumbsUp style={{color : postLiked ? '#BB2D3B' : 'white', cursor : 'pointer'}} onClick={() => handleLike()}/> {numLikes} </div>
-                        <div><MdOutlineComment className="" style={{cursor : 'pointer'}} onClick={() => toggleShowComment()}/> {comments ? comments.length : 0} </div>  
+                        <div><MdOutlineComment className="" style={{cursor : 'pointer'}} onClick={() => toggleShowComment()}/> {comments ? comments.filter(comment =>
+                            comment.PostId === postId).length : 0} </div>  
                 </div>
                 <hr className="m-2"/>
 

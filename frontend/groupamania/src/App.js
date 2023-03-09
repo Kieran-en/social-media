@@ -6,21 +6,16 @@ import Login from './Pages/Login';
 import Timeline from './Pages/Timeline';
 import ErrorPage from './Pages/ErrorPage'
 import ProfilePage from './Pages/ProfilePage'
-import jwtDecode from 'jwt-decode'
+import { AuthContext } from './Context/AuthContext';
+import { getCurrentUser } from './Services/userService';
 
 function App() {
 
-
-  try {
-    const jwt = localStorage.getItem('token')
-  const userData = jwtDecode(jwt)
-  console.log(userData)
-
-  } catch (error) {
-    
-  }
+  //const userContext = userContext(AuthContext)
+  const userData = getCurrentUser();
 
   return ( 
+    <AuthContext.Provider value={userData}>
   <div className='App'>
     <BrowserRouter>
     <Routes>
@@ -32,7 +27,7 @@ function App() {
     </Routes>
     </BrowserRouter>
   </div>
-  
+  </AuthContext.Provider>
 )}
 
 export default App;
