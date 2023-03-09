@@ -1,6 +1,8 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactDOM from 'react-dom';
+import { AuthContext } from './Context/AuthContext';
+import { getCurrentUser } from './Services/userService';
 import logger from './Services/logService'
 import './index.css';
 import App from './App';
@@ -11,13 +13,15 @@ import {
 } from 'react-query'
 
 logger.init()
-
 const queryClient = new QueryClient()
+const userData = getCurrentUser();
 
 ReactDOM.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+    <AuthContext.Provider value={userData}>
     <App />
+    </AuthContext.Provider>
     </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root')
