@@ -1,17 +1,23 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import navStyle from '../Styles/timeline.module.css';
+import style from '../Styles/comment.module.css';
 import Comment from './Comment';
 import { useMutation, useQueryClient } from "react-query";
+import { AuthContext } from '../Context/AuthContext';
+import { createComment } from '../Services/commentService';
 
-export default function Commenttt({handleChange, postId, comments}) {
+export default function Commenttt({postId, comments}) {
   const [commentText, setComment] = useState('');
   const queryClient = useQueryClient();
+  const userData = useContext(AuthContext)
 
   const commentMutation = useMutation(createComment, {
     onSuccess: () => {
       queryClient.invalidateQueries('comments')
     }
   })
+
+  console.log(comments)
 
   const handleComment = (event) => {
       event.preventDefault();
@@ -25,28 +31,20 @@ export default function Commenttt({handleChange, postId, comments}) {
       })  
   }
 
+  const handleChange = (e) => {
+    setComment(e.target.value)
+  }
+
   return (
-    <div>
-      <div>
-        <img alt="profileImage" src=""/> 
-        <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.textInput}></input>
-            <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={handleComment}>Comment</button>
+    <div style={{padding: '0.5rem 0rem'}}>
+     <div className={style.comment_box}>
+        <div><img alt="profileImage" src={userData.profileImg} className={style.profile_img}/></div> 
+        <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.input}></input>
+            <button type="submit" className="btn btn-danger p-1" onClick={handleComment}>Comment</button>
       </div>
       {comments && comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
                 <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
             ))}
-
-{/** <div className={navStyle.commentSection}> 
-        <div >
-        <img src={profileImg} className={navStyle.profileImg}/>
-    </div>
-    <div className="p-1 d-flex flex-column align-items-start" style={{backgroundColor: '#3A3B3C', borderRadius: '10px', marginLeft: '10px'}}>
-      <p style={{paddingLeft: '10px', fontWeight: 'bold'}}>{username}</p> 
-      <p style={{paddingLeft: '10px'}}>{text}</p>
-      </div>
-    <span style={{fontSize: '10px', marginLeft: '5px', color: '#A8ABAF'}}>{dayjs(date).fromNow()}</span>
-    </div>
-    */}
     </div>
   )
 }

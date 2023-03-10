@@ -12,11 +12,10 @@ import navStyle from '../Styles/navbar.module.css';
 import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
 import { useState, useRef, useContext } from "react";
 import {useNavigate, useParams } from "react-router-dom";
-import { CommentContext } from "../Context/CommentContext";
 import config from '../config.json'
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { getPosts, createPost, modifyPost, deletePost } from "../Services/postService";
-import { getComments, createComment, modifyComment, deleteComment } from "../Services/commentService";
+import { getPosts, createPost } from "../Services/postService";
+import { getComments } from "../Services/commentService";
 import { getUser, logout } from "../Services/userService";
 import { AuthContext } from "../Context/AuthContext";
 
@@ -34,14 +33,13 @@ const Timeline = () => {
     const queryClient = useQueryClient()
 
     const userData = useContext(AuthContext)
-    console.log(userData)
     /** 
     Intermediate varile to store the postId send from post inorder to transfer it as a prop to Modal Component
     This will enable the modal to send to the server the modification of a specific post 
     */
    const [postToModify, setPostToModify] = useState();
    const [postToDelete, setPostToDelete] = useState();
-   const userId = JSON.parse(localStorage.getItem('userData')).userId
+   const {userId} = userData
 
    const { status, data : posts, error } = useQuery('posts', getPosts)
    const { status: commentStatus, data : comments, error: commentError } = useQuery('comments', getComments)

@@ -6,8 +6,7 @@ import {FaThumbsUp} from "react-icons/fa";
 import { MdOutlineComment } from "react-icons/md";
 import style from '../Styles/timeline.module.css';
 import { useState } from "react";
-import Comment from "./Comment";
-import Commenttt from "./Comment";
+import Commenttt from "./Commenttt";
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
 import dayjs from 'dayjs';
@@ -19,7 +18,6 @@ dayjs.extend(relativeTime);
 
 const Post = ({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, comments, changeDeleteModalState, date}) => {
 
-    const [commentText, setComment] = useState('');
     const [postLiked, setPostLiked] = useState(false);
     //const [numLikes, setNumLikes] = useState();
     const [showComment, setShowComemnt] = useState(false)
@@ -29,30 +27,6 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
 
   const toggleShowComment = () => {
         setShowComemnt(!showComment)
-    }
-
-    console.log(comments && comments)
-
-    const handleChange = (event) => {
-        setComment(event.target.value)
-    } 
-
-    const commentMutation = useMutation(createComment, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('comments')
-      }
-    })
-
-    const handleComment = (event) => {
-        event.preventDefault();
-        const comment = new FormData();
-        comment.append('text', commentText);
-        comment.append('PostId', postId);
-
-        commentMutation.mutate({
-            text: commentText,
-            PostId: postId
-        })  
     }
 
     const likeMutation = useMutation(like, {
@@ -134,23 +108,14 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
                 : <img src={picture} className={navStyle.img} alt={content}/>
                 }
             </div>}
-            
                 <div className="d-flex gap-2 p-2 align-items-center gap-1">   
                         <div><FaThumbsUp style={{color : postLiked ? '#BB2D3B' : 'white', cursor : 'pointer'}} onClick={() => handleLike()}/> {numLikes} </div>
                         <div><MdOutlineComment className="" style={{cursor : 'pointer'}} onClick={() => toggleShowComment()}/> {comments ? comments.filter(comment =>
                             comment.PostId === postId).length : 0} </div>  
                 </div>
-                <hr className="m-2"/>
 
-             
-            <div id="comment" className="p-2 row">
-            <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.textInput}></input>
-            <button type="submit" className="btn btn-danger mr-1 mt-2" onClick={handleComment}>Comment</button>
-            </div>
-            {showComment && <Commenttt comments={comments} handleChange={handleChange} />}
-            {/** {comments && comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
-                <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
-            ))} */}
+            {showComment && <Commenttt comments={comments} />}
+            
       
                 
         </div>
