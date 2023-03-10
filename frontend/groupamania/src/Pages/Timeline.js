@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import style from '../Styles/timeline.module.css';
 import navStyle from '../Styles/navbar.module.css';
 import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import {useNavigate, useParams } from "react-router-dom";
 import { CommentContext } from "../Context/CommentContext";
 import config from '../config.json'

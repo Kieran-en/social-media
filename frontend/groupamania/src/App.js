@@ -10,14 +10,17 @@ import ProtectedRoute from './Components/ProtectedRoute';
 
 function App() {
 
-
   return ( 
   <div className='App'>
     <BrowserRouter>
     <Routes>
       <Route path='/' index element={<SignUp />} />
       <Route path='/login' element={<Login />} />
-      <ProtectedRouteRoute path='/timeline/:userlogged' element={<Timeline />} />
+      <Route path='/timeline/:userlogged' element={
+        <ProtectedRoute>
+          <Timeline />
+        </ProtectedRoute>
+      } />
       <Route path='/profilepage/:userlogged' element={<ProfilePage/>} />
       <Route path='*' element={<ErrorPage />} />
     </Routes>
