@@ -21,7 +21,10 @@ function App() {
           <Timeline />
         </ProtectedRoute>
       } />
-      <Route path='/profilepage/:userlogged' element={<ProfilePage/>} />
+      <Route path='/profilepage/:userlogged' element={
+        <ProtectedRoute>
+          <ProfilePage/>
+        </ProtectedRoute>} />
       <Route path='*' element={<ErrorPage />} />
     </Routes>
     </BrowserRouter>
