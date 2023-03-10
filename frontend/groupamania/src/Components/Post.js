@@ -114,7 +114,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
                             comment.PostId === postId).length : 0} </div>  
                 </div>
 
-            {showComment && <Commenttt comments={comments} />}
+            {showComment && <Commenttt comments={comments} postId={postId}/>}
             
       
                 

@@ -17,7 +17,7 @@ export default function Commenttt({postId, comments}) {
     }
   })
 
-  console.log(comments)
+  console.log(postId)
 
   const handleComment = (event) => {
       event.preventDefault();
