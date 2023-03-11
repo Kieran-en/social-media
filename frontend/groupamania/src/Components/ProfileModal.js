@@ -84,10 +84,20 @@ function ProfileModal({closeModal, username, email, profileImg}) {
          </span>
          </div>
          <div style={{display: 'flex', width: '90%', justifyContent: 'flex-start', marginBottom: '10px', alignItems: 'center'}}>
-             <Tooltip trigger="mouseenter" title="Change Profile Image" arrow="true" position="top"><img src={profileImg} alt="profile-image" className={style.profileImg}></img></Tooltip>
-             <div style={{display: 'flex', justifyContent: 'flex-start'}}>
-             <label htmlFor='uplaod-profile' className='uplaod-profileLabel'>Modify profile Image</label>
+
+             <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+            <Tooltip trigger="mouseenter" title="Change Profile Image" arrow="true" position="top"><img src={profileImg} alt="profile-image" className={style.profileImg}></img></Tooltip>
+            <label htmlFor='uplaod-profile' className='uplaod-profileLabel'>Modify profile Image</label>
              <input id='uplaod-profile' name='image' type='file' className='uplaod-profileInput' onChange={handleFileChange}></input>
+            </div>
+             {file && 
+             <img src={URL.createObjectURL(file)} alt="profileImage-preview" 
+             style={{width: '80px', 
+             height: '80px', 
+             objectFit: 'cover', 
+             borderRadius: '50%',
+             alignSelf: 'flex-end'}}/>}
              </div>
              </div>
          <div className='textAreas'>

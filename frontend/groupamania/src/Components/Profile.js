@@ -35,7 +35,11 @@ const Profile = ({email, profileImg, changeModalState, userlogged}) => {
     <ProfileStyle>
         <h1>User Profile</h1>
         <div className={style.imageDiv}>
-        <Tooltip trigger="mouseenter" title="Change Profile Image" arrow="true" position="top"><img src={profileImg} alt="profile-image" className={style.profileImg}></img></Tooltip>
+        <Tooltip trigger="mouseenter" title="Change Profile Image" arrow="true" position="top"><img src={profileImg}
+         alt="profile-image" className={style.profileImg}
+         onClick={changeModalState}>
+        </img>
+        </Tooltip>
         </div>
         <hr className={style.hr}/>
         <div className={style.info}>
