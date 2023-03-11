@@ -3,33 +3,24 @@ import Backdrop from './Backdrop';
 import { IoCloseCircleOutline } from "react-icons/io5";
 import '../Styles/ProfileModal.css';
 import style from '../Styles/profile.module.css';
-import { useState } from 'react';
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useState, useContext } from 'react';
 import {Tooltip,} from 'react-tippy';
-import { useMutation, QueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { modifyUser } from '../Services/userService';
+import { AuthContext } from '../Context/AuthContext';
 
 function ProfileModal({closeModal, username, email, profileImg}) {
+    const queryClient = useQueryClient()
     const [values, setValues] = useState({
         name: username,
         email: email,
     });
     const [file, setFile] = useState();
     const [formErrors, setFormErrors] = useState({});
+    const userData = useContext(AuthContext)
+    const userId = userData.userId
     console.log(file)
 
-    axios.interceptors.request.use(
-        config => {
-            config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
-            return config;
-        },
-        error => {
-            return Promise.reject(error);
-        }
-    );
-
-    const userId = JSON.parse(localStorage.getItem('userData')).userId
 
     const handleChange = (event) => {
         setValues(values => ({
@@ -65,30 +56,21 @@ function ProfileModal({closeModal, username, email, profileImg}) {
 
     const updateUserMutation = useMutation(modifyUser, {
             onSuccess: () => {
-                QueryClient.invalidateQueries(['user', userId])
+                queryClient.invalidateQueries(['user', userId])
               }
     })
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        const userData = new FormData();
-        userData.append('name', values.name);
-        userData.append('email', values.email);
-        userData.append('image', file);
+        const userInfo = new FormData();
+        userInfo.append('name', values.name);
+        userInfo.append('email', values.email);
+        userInfo.append('image', file);
+        userInfo.append('id', userId)
 
         if (validateForm()){
-            updateUserMutation.mutate(userData)
+            updateUserMutation.mutate(userInfo)
             closeModal()
-          
-           /**axios.put(`http://localhost:3000/api/auth/${userId}`, userData)
-
-    .then((response) => {
-        console.log(response)
-        closeModal()
-        updateUser(values)
-        getUserData()
-    })
-    .catch(error => console.log(error))*/
         }
     }
 

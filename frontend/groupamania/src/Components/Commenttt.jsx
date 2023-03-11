@@ -17,8 +17,6 @@ export default function Commenttt({postId, comments}) {
     }
   })
 
-  console.log(postId)
-
   const handleComment = (event) => {
       event.preventDefault();
       const comment = new FormData();

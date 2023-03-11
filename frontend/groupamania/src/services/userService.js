@@ -13,8 +13,8 @@ export function signup(userInfo){
     return http.post(`${config.apiEndpoint}/auth/signup`, userInfo)
 }
 
-export function modifyUser(id, userInfo){
-    return http.put(`${config.apiEndpoint}/auth/${id}`, userInfo)
+export function modifyUser(userInfo){
+    return http.put(`${config.apiEndpoint}/auth/${userInfo.id}`, userInfo)
 }
 
 export function login(userInfo){
@@ -28,6 +28,7 @@ export function logout(){
 export function getCurrentUser(){
     try {
         const jwt = localStorage.getItem(tokenKey)
+        //console.log(jwtDecode(jwt));
         return jwtDecode(jwt)
         } catch (error) {
         return null

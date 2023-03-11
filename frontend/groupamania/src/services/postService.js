@@ -15,6 +15,5 @@ export async function modifyPost(post){
 }
 
 export async function deletePost(postToDelete){
-    console.log(postToDelete)
     return await http.delete(`${config.apiEndpoint}/post/${postToDelete}`)
 }

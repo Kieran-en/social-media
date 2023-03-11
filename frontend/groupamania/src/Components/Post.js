@@ -10,7 +10,6 @@ import Commenttt from "./Commenttt";
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
 import dayjs from 'dayjs';
-import { createComment } from "../Services/commentService";
 import { like, getNumLikes, isPostLiked } from "../Services/likeService";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 var relativeTime = require('dayjs/plugin/relativeTime')
