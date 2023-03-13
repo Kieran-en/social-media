@@ -5,7 +5,7 @@ import '../Styles/ProfileModal.css';
 import style from '../Styles/profile.module.css';
 import { useState, useContext } from 'react';
 import {Tooltip,} from 'react-tippy';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from "react-query";
 import { modifyUser } from '../Services/userService';
 import { AuthContext } from '../Context/AuthContext';
 

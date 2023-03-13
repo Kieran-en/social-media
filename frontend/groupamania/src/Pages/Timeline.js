@@ -1,15 +1,12 @@
 import React from "react";
 import { Container, Row, Col, NavbarBrand } from "react-bootstrap";
-import { Navbar, Dropdown } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
-import navImg2 from '../Images/icon-left-font-monochrome-white.png';
 import Post from "../Components/Post";
 import Modal from "../Components/Modal";
 import DeleteModal from '../Components/DeleteModal';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import style from '../Styles/timeline.module.css';
-import navStyle from '../Styles/navbar.module.css';
-import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
+import {FaImages} from "react-icons/fa";
 import { useState, useRef, useContext } from "react";
 import {useNavigate, useParams } from "react-router-dom";
 import config from '../config.json'
@@ -18,12 +15,12 @@ import { getPosts, createPost } from "../Services/postService";
 import { getComments } from "../Services/commentService";
 import { getUser, logout } from "../Services/userService";
 import { AuthContext } from "../Context/AuthContext";
+import NavBar from "../Components/NavBar";
 
 const Timeline = () => {
     const navigate = useNavigate();
     const [text, setText] = useState('');
     const [file, setFile] = useState();
-   // const [comments, setComments] = useState([]);
     const postsRef = useRef([])
     const {userlogged} = useParams();
     const [modalOpen, setModalOpen] = useState(false);
@@ -97,25 +94,7 @@ const Timeline = () => {
 
     return ( 
             <div style={{backgroundColor: '#18191A', height: '100%', flex: '1'}}>
-        <Navbar className="justify-content-between" style={{backgroundColor: '#242526', borderRadius: '10px'}}>
-                <NavbarBrand>
-                    <img src={navImg2} className={navStyle.img} alt='companyIcon'/>
-                </NavbarBrand>
-                <Col xs={2}>
-        <Dropdown>
-        <Dropdown.Toggle variant="danger" id="dropdown-basic">
-          Account
-         </Dropdown.Toggle>
-        <Dropdown.Menu >
-            <Dropdown.Item eventKey='logout' onClick={() => {
-              logout()
-              navigate("/Login")
-              }}>LogOut <FaDoorOpen className="ml-5"/></Dropdown.Item>
-            <Dropdown.Item eventKey='profile' onClick={() => navigate(`/profilepage/${userlogged}`)  }>Visit Profile <FaUser className="ml-5" /></Dropdown.Item>
-        </Dropdown.Menu>
-        </Dropdown>
-         </Col>
-        </Navbar>
+        <NavBar />
         <Container className='shadow' 
         style={{backgroundColor: '#242526', 
         color: 'white', 
