@@ -4,7 +4,6 @@ import styles from '../Styles/conversation.module.css'
 
 function Conversation() {
     const user = getCurrentUser()
-    console.log(user)
 
   return (
     <div className={styles.conversation}>

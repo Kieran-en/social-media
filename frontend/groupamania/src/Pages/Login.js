@@ -45,7 +45,7 @@ const Login = () => {
     }
 
     return (
-        <div className='login'>
+        <div className='login' style={{color: 'white'}}>
             <Nav/>
             <form className='container' onSubmit={handleSubmit}>
                 <div className='form-group mb-4 d-flex flex-column align-items-start'>
@@ -56,7 +56,7 @@ const Login = () => {
                 <label htmlFor='password' className='form-label'>Password:</label>
                 <input type='password' placeholder='Password' name='password' id='password' value={values.password} onChange={handleChange} className='form-control'></input>
                 </div>
-                <button type='submit' className='btn btn-danger w-100 p-2'>Login</button>
+                <button type='submit' className='btn w-100 p-2' style={{backgroundColor: '#0F6E5A', color: 'white'}}>Login</button>
                 </form>
         </div>
     )

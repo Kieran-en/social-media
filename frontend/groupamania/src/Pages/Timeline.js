@@ -118,7 +118,7 @@ const Timeline = () => {
                   <label htmlFor='file-uplaod' className={style.multimediaLabel}>Media  <FaImages /></label>
                     <input id='file-uplaod' name='image' type='file' className={style.multimediaInput} onChange={handleFileChange}></input>
                 </Col>
-                <Col xs={2} className = 'p-2 d-flex align-items-start'><button type="submit" className="btn btn-danger " onClick={getPosts}>Submit</button></Col>
+                <Col xs={2} className = 'p-2 d-flex align-items-start'><button type="submit" className="btn" style={{backgroundColor: '#0F6E5A', color: 'white'}} onClick={getPosts}>Submit</button></Col>
               </Row>
             </form>
 

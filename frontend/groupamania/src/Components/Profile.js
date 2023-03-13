@@ -1,6 +1,7 @@
 import React from "react";
 import { ProfileStyle, Button } from "./styles/Profile.styled";
 import {MdBorderColor} from "react-icons/md";
+import { FaHome } from "react-icons/fa";
 import style from '../Styles/profile.module.css';
 import { RiPagesLine } from "react-icons/ri";
 import { Navbar, Dropdown } from "react-bootstrap";
@@ -17,19 +18,17 @@ const Profile = ({email, profileImg, changeModalState, userlogged}) => {
   
     return (
     <div style={{backgroundColor: '#18191A'}}>
-    <Navbar className="justify-content-between" style={{backgroundColor: '#242526'}}>
+    <Navbar className="justify-content-between p-3" style={{backgroundColor: '#242526'}}>
                 <NavbarBrand>
                     <img src={navImg2} className={navStyle.img} alt='companyIcon'/>
                 </NavbarBrand>
                 <Col xs={2}>
-        <Dropdown>
-        <Dropdown.Toggle variant="danger" id="dropdown-basic">
-          Account
-         </Dropdown.Toggle>
-        <Dropdown.Menu >
-            <Dropdown.Item eventKey='profile' onClick={() => navigate(`/timeline/${userlogged}`) }>Timeline <RiPagesLine className="ml-5" /></Dropdown.Item>
-        </Dropdown.Menu>
-        </Dropdown>
+                    <div style={{color: 'white', fontSize: '1.2rem', 
+                    cursor: 'pointer', display: 'flex', 
+                    justifyContent: 'flex-end', alignItems: 'center',
+                    gap: '0.3rem'
+                }} 
+                    onClick={() => navigate(`/timeline/${userlogged}`) }>Timeline <FaHome /></div>
          </Col>
         </Navbar>
     <ProfileStyle>

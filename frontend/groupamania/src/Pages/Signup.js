@@ -85,7 +85,7 @@ const SignUp = () => {
 
 
     return (
-        <div className="signup">
+        <div className="signup" style={{color: 'white'}}>
             <Nav />
             <form className='container ' onSubmit={handleSubmit}>
                 <div className='form-group mb-4 d-flex-column justify-content-start'>
@@ -110,7 +110,7 @@ const SignUp = () => {
                 <input type='password' placeholder='Confirm Password' name='confirmedPassword' id='confirmed-pass' className='form-control' value={values.confirmPassword} onChange={handleChange}></input>
                 {formErrors.confirmedPassword && <p className='text-warning'>{formErrors.confirmedPassword}</p>}
                 </div>
-                <button type='submit' className='btn btn-danger w-100 p-2' >Register</button>
+                <button type='submit' className='btn w-100 p-2' style={{backgroundColor: '#0F6E5A', color: 'white'}}>Register</button>
             </form>
         </div>
     )

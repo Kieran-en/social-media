@@ -1,0 +1,30 @@
+.message_box{
+    display: flex;
+    flex-direction: column;
+}
+
+.message{
+    max-width: 25rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.image{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.text{
+    color: white;
+    font-size: 1;
+    background-color: #0F6E5A;
+    border-radius: 0.5rem;
+    padding: 0.2rem;
+}
+
+.time{
+    font-size: 0.9rem;
+    color: gray;
+}
