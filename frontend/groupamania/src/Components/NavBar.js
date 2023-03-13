@@ -24,7 +24,7 @@ export default function NavBar() {
                 <Row>
                 <Col className='d-flex align-items-center gap-3'>
                 {userlogged ? <MdOutlineMessage className={navStyle.icons} onClick={() => navigate('/messages')} />
-                : <FaHome onClick={() => navigate(`/timeline/${userlogged}`)} className={navStyle.icons}/> }
+                : <FaHome onClick={() => navigate(`/timeline/${user.username}`)} className={navStyle.icons}/> }
                 <MdNotifications className={navStyle.icons}/>
         <Dropdown>
         <Dropdown.Toggle variant="dark" id="dropdown-basic">

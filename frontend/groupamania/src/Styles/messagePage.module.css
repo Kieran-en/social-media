@@ -1,0 +1,20 @@
+.grid{
+    display: grid;
+    grid-template-columns: 2fr 3fr 2fr;
+    grid-template-rows: 100vh;
+    height: 100%;
+    padding: 0.5rem;
+}
+
+.friend_section{
+    height: 100%;
+}
+
+.chat_section{
+    height: 100%;
+}
+
+.online_section{
+    height: 100%;
+}
+
