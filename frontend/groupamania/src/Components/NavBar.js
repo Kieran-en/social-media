@@ -7,13 +7,13 @@ import { getCurrentUser, logout } from "../Services/userService";
 import {useNavigate, useParams} from "react-router-dom";
 import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
 import { MdOutlineMessage, MdNotifications } from "react-icons/md";
+import { FaHome } from "react-icons/fa";
 
 export default function NavBar() {
     const navigate = useNavigate();
     const {userlogged} = useParams();
     const user = getCurrentUser();
     const profileImg = user.profileImg
-    console.log(user)
 
   return (
     <div>
@@ -23,7 +23,8 @@ export default function NavBar() {
                 </NavbarBrand>
                 <Row>
                 <Col className='d-flex align-items-center gap-3'>
-                <MdOutlineMessage className={navStyle.icons} />
+                {userlogged ? <MdOutlineMessage className={navStyle.icons} onClick={() => navigate('/messages')} />
+                : <FaHome onClick={() => navigate(`/timeline/${userlogged}`)} className={navStyle.icons}/> }
                 <MdNotifications className={navStyle.icons}/>
         <Dropdown>
         <Dropdown.Toggle variant="dark" id="dropdown-basic">

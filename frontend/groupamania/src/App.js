@@ -7,6 +7,7 @@ import Timeline from './Pages/Timeline';
 import ErrorPage from './Pages/ErrorPage'
 import ProfilePage from './Pages/ProfilePage'
 import ProtectedRoute from './Components/ProtectedRoute';
+import MessagePage from './Pages/MessagePage';
 
 function App() {
 
@@ -24,6 +25,10 @@ function App() {
       <Route path='/profilepage/:userlogged' element={
         <ProtectedRoute>
           <ProfilePage/>
+        </ProtectedRoute>} />
+        <Route path='messages' element={
+          <ProtectedRoute>
+          <MessagePage />
         </ProtectedRoute>} />
       <Route path='*' element={<ErrorPage />} />
     </Routes>
