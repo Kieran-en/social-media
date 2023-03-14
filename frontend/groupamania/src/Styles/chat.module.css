@@ -3,5 +3,8 @@
     border-right: 1px solid gray;
     border-left: 1px solid gray;
     height: 100%;
+}
+
+.chatTop{
     overflow-y: scroll;
 }

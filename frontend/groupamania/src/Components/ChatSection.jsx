@@ -5,10 +5,15 @@ import styles from '../Styles/chat.module.css'
 function ChatSection() {
   return (
     <div className={styles.box}>
+      <div className={styles.chatTop}>
+      <Message own={true}/>
       <Message />
+      <Message own={true}/>
       <Message />
-      <Message />
-      <Message />
+      </div>
+      <div className={styles.chatBottom}>
+        
+      </div>
     </div>
   )
 }

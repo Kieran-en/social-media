@@ -1,14 +1,22 @@
 .message_box{
     display: flex;
     flex-direction: column;
-    max-width: 25rem;
     margin-top: 1rem;
     gap: 0px;
 }
 
+.message_box.own{
+    align-items: flex-end;
+}
+
 .message{
+    max-width: 25rem;
     display: flex;
     gap: 0.5rem;
+}
+
+.message.own {
+    flex-direction: row-reverse;
 }
 
 .image{
@@ -21,15 +29,25 @@
 .text{
     color: white;
     font-size: 1;
-    background-color: #0F6E5A;
+    background-color: #242526;
     border-radius: 0.5rem;
-    padding: 0.2rem;
+    padding: 0.3rem;
+}
+
+.text.own{
+    background-color: #0F6E5A;
 }
 
 .time{
     font-size: 0.9rem;
+    max-width: 25rem;
     color: gray;
     display: flex;
     justify-content: flex-end;
     margin-top: -1rem;
+}
+
+.time.own{
+    justify-content: flex-start;
+    margin-right: 2.375rem;
 }
