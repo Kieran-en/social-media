@@ -1,17 +1,19 @@
 .message_box{
     display: flex;
     flex-direction: column;
+    max-width: 25rem;
+    margin-top: 1rem;
+    gap: 0px;
 }
 
 .message{
-    max-width: 25rem;
     display: flex;
     gap: 0.5rem;
 }
 
 .image{
-    width: 60px;
-    height: 60px;
+    width: 30px;
+    height: 30px;
     object-fit: cover;
     border-radius: 50%;
 }
@@ -27,4 +29,7 @@
 .time{
     font-size: 0.9rem;
     color: gray;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -1rem;
 }
