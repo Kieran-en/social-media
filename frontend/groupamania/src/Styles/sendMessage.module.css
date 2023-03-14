@@ -1,0 +1,15 @@
+.box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: green;
+}
+
+.input{
+    width: 80%;
+    height: 70px;
+}
+
+.icon{
+    color: #0F6E5A;
+}

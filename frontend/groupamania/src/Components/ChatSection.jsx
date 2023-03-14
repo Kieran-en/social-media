@@ -1,6 +1,7 @@
 import React from 'react'
 import Message from './Message'
 import styles from '../Styles/chat.module.css'
+import sendMessage from './sendMessage'
 
 function ChatSection() {
   return (
@@ -12,7 +13,7 @@ function ChatSection() {
       <Message />
       </div>
       <div className={styles.chatBottom}>
-        
+        <sendMessage />
       </div>
     </div>
   )
