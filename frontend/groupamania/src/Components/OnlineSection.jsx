@@ -1,8 +1,13 @@
 import React from 'react'
+import OnlineUser from './OnlineUser'
 
 function OnlineSection() {
   return (
-    <div>onlineSection</div>
+    <div>
+      <OnlineUser />
+      <OnlineUser />
+      <OnlineUser />
+    </div>
   )
 }
 
