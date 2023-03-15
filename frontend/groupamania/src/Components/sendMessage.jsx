@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { IoSendSharp } from "react-icons/io5";
 import styles from '../Styles/sendMessage.module.css'
 
-function sendMessage() {
+function SendMessage() {
     const [message, setMessage] = useState();
 
     const handleChange = (event) => {
@@ -15,10 +15,11 @@ function sendMessage() {
 
   return (
     <div className={styles.box}>
-        <input type="textarea" value={message} onChange={handleChange} className={styles.input}/>
+        <textarea type="text" value={message} onChange={handleChange} className={styles.input} placeholder="Send Message...">
+        </textarea>
         <IoSendSharp className={styles.icon}/>
     </div>
   )
 }
 
-export default sendMessage
+export default SendMessage

@@ -17,7 +17,7 @@ export default function NavBar() {
 
   return (
     <div>
-        <Navbar className="justify-content-between p-3" style={{backgroundColor: '#242526', borderRadius: '10px'}}>
+        <Navbar className="justify-content-between px-3" style={{backgroundColor: '#242526', borderRadius: '10px'}}>
                 <NavbarBrand>
                     <img src={navImg2} className={navStyle.img} alt='companyIcon'/>
                 </NavbarBrand>

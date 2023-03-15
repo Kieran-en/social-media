@@ -2,14 +2,27 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: green;
+    gap: 0.5rem;
 }
 
 .input{
-    width: 80%;
-    height: 70px;
+    width: 90%;
+    height: 100px;
+    outline: none;
+    background-color: #242526;
+    border: none;
+    color: white;
+    padding: 0.5rem;
 }
 
 .icon{
     color: #0F6E5A;
+    font-size: 2rem;
+    cursor: pointer;
+    width: 10%;
+    transition: all 0.5s ease;
+}
+
+.icon:hover{
+    color: #1ABA97;
 }
