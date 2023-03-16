@@ -1,5 +1,6 @@
 const db = require('../config')
 const Sequelize = require('sequelize');
+const Message = require('./Message')
 
 const Conversation = db.define('Conversation', {
     id: {
@@ -8,12 +9,15 @@ const Conversation = db.define('Conversation', {
         autoIncrement: true,
         allowNull: false
     },
-    senderId: {
-        type: Sequelize.DataTypes.INTEGER
-    },
     receiverId: {
         type: Sequelize.DataTypes.INTEGER
     }
 })
+
+Conversation.hasMany(Message, {
+    onDelete: 'CASCADE'
+})
+
+Message.belongsTo(Conversation)
 
 module.exports = Conversation;

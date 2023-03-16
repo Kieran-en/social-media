@@ -2,15 +2,18 @@ const express = require('express');
 const app = express();
 const postRoutes = require('../backend/routes/post');
 const commentRoutes = require('../backend/routes/comment');
+const userRoutes = require('../backend/routes/user');
+const likeRoutes = require('./routes/like')
+const followRoutes = require('./routes/follow')
+const messageRoutes = require('./routes/message')
+const conversationRoutes = require('./routes/conversation')
 const mysql = require('mysql');
 const path = require('path');
 const db = require('./config');
 const cors = require('cors');
-const userRoutes = require('../backend/routes/user');
 const User = require('./models/User');
 const Post = require('./models/Post');
 const sequelize = require('sequelize');
-const likeRoutes = require('./routes/like')
 
 
 app.use((req, res, next) => {
@@ -39,6 +42,9 @@ app.use('/api/auth', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/like', likeRoutes);
+app.use('/api/follow', followRoutes);
+app.use('/api/message', messageRoutes);
+app.use('/api/conversation', conversationRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;

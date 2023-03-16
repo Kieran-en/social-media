@@ -46,15 +46,17 @@ Comment.belongsTo(User);
 
 User.hasMany(Like, { onDelete: 'CASCADE'});
 
-Like.belongsTo(User, { onDelete: 'CASCADE'});
+Like.belongsTo(User);
 
 User.hasMany(Message, {onDelete: 'CASCADE'})
 
-Message.belongsTo(User, { onDelete: 'CASCADE'});
+Message.belongsTo(User);
 
-User.hasMany(Conversation, {onDelete: 'CASCADE'})
+User.hasMany(Conversation, {onDelete: 'CASCADE',
+foreignKey: 'senderId'
+})
 
-Conversation.belongsTo(User, {onDelete: 'CASCADE'})
+Conversation.belongsTo(User)
 
 /**Post.hasMany(Comment, {
     onDelete: 'CASCADE'

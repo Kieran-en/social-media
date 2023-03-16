@@ -29,8 +29,6 @@ Post.hasMany(Like, {
     onDelete: 'CASCADE'
 });
 
-Like.belongsTo(Post, {
-    onDelete: 'CASCADE'
-});
+Like.belongsTo(Post);
 
 module.exports = Post;
