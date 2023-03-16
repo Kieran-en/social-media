@@ -3,6 +3,8 @@ const db = require('../config');
 const Comment = require('./Comment');
 const Post = require('./Post');
 const Like = require('./Like');
+const Message = require('./Message')
+const Conversation = require('./Conversation')
 
 const User = db.define('User', {
     id: {
@@ -45,6 +47,14 @@ Comment.belongsTo(User);
 User.hasMany(Like, { onDelete: 'CASCADE'});
 
 Like.belongsTo(User, { onDelete: 'CASCADE'});
+
+User.hasMany(Message, {onDelete: 'CASCADE'})
+
+Message.belongsTo(User, { onDelete: 'CASCADE'});
+
+User.hasMany(Conversation, {onDelete: 'CASCADE'})
+
+Conversation.belongsTo(User, {onDelete: 'CASCADE'})
 
 /**Post.hasMany(Comment, {
     onDelete: 'CASCADE'
