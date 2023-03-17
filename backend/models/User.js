@@ -56,13 +56,10 @@ User.hasMany(Conversation, {onDelete: 'CASCADE',
 foreignKey: 'senderId'
 })
 
-Conversation.belongsTo(User)
+Conversation.belongsTo(User, {
+    foreignKey : 'senderId',
+})
 
-/**Post.hasMany(Comment, {
-    onDelete: 'CASCADE'
-});
-
-Comment.belongsTo(Post);*/
 
 
 module.exports = User;
