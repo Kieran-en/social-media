@@ -53,12 +53,11 @@ User.hasMany(Message, {onDelete: 'CASCADE'})
 Message.belongsTo(User);
 
 User.hasMany(Conversation, {onDelete: 'CASCADE',
-foreignKey: 'senderId'
+foreignKey: 'senderId',
+as: 'sender'
 })
 
-Conversation.belongsTo(User, {
-    foreignKey : 'senderId',
-})
+Conversation.belongsTo(User)
 
 
 
