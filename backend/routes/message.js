@@ -3,7 +3,7 @@ const router = express.Router();
 const messageCtrl = require('../controllers/message');
 const auth = require('../middlewares/auth')
 
-router.post('/')
-router.get('/:conversationId')
+router.post('/', messageCtrl.createMessage)
+router.get('/:conversationId', messageCtrl.getMessages)
 
 module.exports = router;
