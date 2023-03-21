@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import {MdDelete, MdBorderColor} from "react-icons/md";
 import navStyle from '../Styles/timeline.module.css';
@@ -39,6 +39,15 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             queryClient.invalidateQueries('like')
           }
     })
+
+    useEffect(() => {
+        isPostLikedMutation.mutate({
+            userId: userId,
+            postId, postId
+        })
+    }, [])
+
+   // console.log(postLiked)
 
     
     const handleLike = () => {

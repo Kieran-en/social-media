@@ -2,7 +2,9 @@ import http from './httpService'
 import config from '../config.json'
 
 export async function like(like){
-    return await http.post(`${config.apiEndpoint}/like`, like)
+    const res = await http.post(`${config.apiEndpoint}/like`, like)
+    console.log(res)
+    return res
 }
 
 export async function getNumLikes(id){

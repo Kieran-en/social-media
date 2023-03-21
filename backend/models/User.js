@@ -4,6 +4,7 @@ const Comment = require('./Comment');
 const Post = require('./Post');
 const Like = require('./Like');
 const Message = require('./Message')
+const Follow = require('./Follow')
 const Conversation = require('./Conversation')
 
 const User = db.define('User', {
@@ -28,6 +29,12 @@ const User = db.define('User', {
     },
     password: {
         type: Sequelize.STRING,
+    },
+    followers: {
+        type: Sequelize.INTEGER,
+    },
+    following: {
+        type: Sequelize.INTEGER,
     }
 
 })
@@ -57,7 +64,12 @@ foreignKey: 'senderId',
 as: 'sender'
 })
 
-Conversation.belongsTo(User)
+Conversation.belongsTo(User, {
+    foreignKey: 'senderId'
+})
+
+User.belongsToMany(User, { as: 'following_user_id', through: Follow, foreignKey: 'following_user_id' });
+User.belongsToMany(User, { as: 'followed_user_id', through: Follow, foreignKey: 'followed_user_id' });
 
 
 

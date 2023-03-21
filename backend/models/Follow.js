@@ -3,22 +3,11 @@ const db = require('../config');
 const User = require('./User')
 
 const Follow = db.define('Follow', {
-    following_user_id: {
+    id: {
         type: Sequelize.INTEGER,
-        references: {
-            model: User,
-            key: 'id'
-          }
+        primaryKey: true,
+        autoIncrement: true,
     },
-    followed_user_id: {
-        type: Sequelize.INTEGER,
-        references: {
-            model: User,
-            key: 'id'
-          }
-    }
 })
-
-User.belongsToMany(User, { through: Follow });
 
 module.exports = Follow;

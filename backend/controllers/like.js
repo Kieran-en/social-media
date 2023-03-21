@@ -1,7 +1,7 @@
 const Like = require('../models/Like');
 const User = require('../models/User');
 const Post = require('../models/Post');
-const { Op, json } = require("sequelize");
+const { Op } = require("sequelize");
 
 
 exports.likeOrDislike = (req, res, next) => {
