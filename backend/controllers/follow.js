@@ -5,6 +5,8 @@ const { Op } = require("sequelize");
 exports.followOrUnfollow = (req, res, next) => {
     const {following_user_id, followed_user_id, follow} = req.body;
 
+    console.log("SEE THIS", followed_user_id, following_user_id)
+
     if (follow === 1){
         Follow.create({
             following_user_id: following_user_id,
@@ -12,7 +14,7 @@ exports.followOrUnfollow = (req, res, next) => {
         })
           User.increment({followers: 1}, { where: {id: followed_user_id}})
           User.increment({following: 1}, { where: {id: following_user_id}})
-          .then(() => res.status(200).json({message: 'Post Liked!'}))
+          .then(() => res.status(200).json({message: 'You successfully followed this boy/girl!'}))
           .catch(error => res.status(500).json({error}))
         }
 
@@ -34,9 +36,25 @@ exports.followOrUnfollow = (req, res, next) => {
                         [Op.and]: [{following_user_id : following_user_id}, {followed_user_id : followed_user_id}]
                     }
                 })
+                .then(() => res.status(200).json({message: 'You successfully unfollowed this pikin'}))
+                .catch(error => res.status(500).json({error}))
             }
         })
 
 
     }
+}
+
+exports.isUserFollowed = (req, res, next) => {
+    const {following_user_id, followed_user_id} = req.query;
+    Follow.count({
+        where: {
+            [Op.and] : [{
+                following_user_id : following_user_id,
+                followed_user_id: followed_user_id
+            }]
+        }
+    })
+    .then(count => res.status(200).json(count))
+    .catch(error => res.status(500).json({error}))
 }

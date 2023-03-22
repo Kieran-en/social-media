@@ -79,8 +79,8 @@ exports.likeOrDislike = (req, res, next) => {
 
 //This function checks whether a post is liked. It returns true if the post il liked and false if not.
 exports.postLiked = (req, res, next) => {
-    const {userId, postId} = req.body;
-    Like.findOne({
+    const {userId, postId} = req.query;
+    Like.count({
         where: {
             [Op.and] : [{
                 userId : userId,
@@ -88,14 +88,7 @@ exports.postLiked = (req, res, next) => {
             }]
         }
     })
-    .then(like => {
-        if(!like){
-            return res.status(404).json({message: 'false'})
-        }
-        else {
-            return res.status(200).json({message: 'true'})
-        }
-    })
+    .then(count => res.status(200).json(count))
     .catch(error => res.status(500).json({error}))
 }
 
