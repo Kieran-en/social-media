@@ -9,9 +9,13 @@ export async function like(like){
 
 export async function getNumLikes(id){
     const res = await http.get(`${config.apiEndpoint}/like/${id}`)
+    console.log(res)
     return res.data
 }
 
-export async function isPostLiked(data){
-    return await http.post(`${config.apiEndpoint}/like/postLiked`, data)
+export async function isPostLiked(userId, postId){
+    console.log("POOOOOOOSST",userId, postId)
+    const res = await http.get(`${config.apiEndpoint}/like/postLiked/?userId=${userId}&postId=${postId}`)
+    console.log(res)
+    return res.data
 }

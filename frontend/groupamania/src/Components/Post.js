@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import {MdDelete, MdBorderColor} from "react-icons/md";
 import navStyle from '../Styles/timeline.module.css';
 import {FaThumbsUp} from "react-icons/fa";
 import { MdOutlineComment } from "react-icons/md";
+import { AuthContext } from "../Context/AuthContext";
 import style from '../Styles/timeline.module.css';
 import { useState } from "react";
 import Commenttt from "./Commenttt";
@@ -17,12 +18,14 @@ dayjs.extend(relativeTime);
 
 const Post = ({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, comments, changeDeleteModalState, date}) => {
 
-    const [postLiked, setPostLiked] = useState(false);
+    //const [postLiked, setPostLiked] = useState(false);
     //const [numLikes, setNumLikes] = useState();
     const [showComment, setShowComemnt] = useState(false)
     const queryClient = useQueryClient();
+    const userData = useContext(AuthContext) 
 
-    const {error, data : numLikes, status} = useQuery('numLikes', getNumLikes)
+    const {error, data : numLikes, status} = useQuery('numLikes', () => getNumLikes(postId))
+    const {isLikedError, data : count, isLikedStatus} = useQuery(['isPostLiked', postId], () => isPostLiked(userId, postId))
 
   const toggleShowComment = () => {
         setShowComemnt(!showComment)
@@ -33,37 +36,21 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             queryClient.invalidateQueries('like')
         }
       })
-
-    const isPostLikedMutation = useMutation(isPostLiked, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('like')
-          }
-    })
-
-    useEffect(() => {
-        isPostLikedMutation.mutate({
-            userId: userId,
-            postId, postId
-        })
-    }, [])
-
-   // console.log(postLiked)
-
     
     const handleLike = () => {
-        if (!postLiked){
+        if (!(count > 0)){
 
             likeMutation.mutate({
                 like: 1,
                 postId: postId,
-                userId: JSON.parse(localStorage.getItem('userData')).userId
+                userId: userData.userId
             })
 
         } else {
             likeMutation.mutate({
                 like: 0,
                 postId: postId,
-                userId: JSON.parse(localStorage.getItem('userData')).userId
+                userId: userData.userId
             })
         }
     } 
@@ -117,7 +104,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
                 }
             </div>}
                 <div className="d-flex gap-2 p-2 align-items-center gap-1">   
-                        <div><FaThumbsUp style={{color : postLiked ? '#BB2D3B' : 'white', cursor : 'pointer'}} onClick={() => handleLike()}/> {numLikes} </div>
+                        <div><FaThumbsUp style={{color : count > 0 ? '#0F6E5A' : 'white', cursor : 'pointer'}} onClick={() => handleLike()}/> {numLikes} </div>
                         <div><MdOutlineComment className="" style={{cursor : 'pointer'}} onClick={() => toggleShowComment()}/> {comments ? comments.filter(comment =>
                             comment.PostId === postId).length : 0} </div>  
                 </div>
