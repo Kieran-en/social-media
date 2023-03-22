@@ -31,10 +31,47 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
         setShowComemnt(!showComment)
     }
 
+    console.log("COUNTT", count)
+
     const likeMutation = useMutation(like, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('like')
-        }
+
+        onMutate: async (newLike) => {
+            // Cancel any outgoing refetches
+            // (so they don't overwrite our optimistic update)
+            await queryClient.cancelQueries({ queryKey: ['numLikes'] })
+            await queryClient.cancelQueries({ queryKey: ['isPostLiked', postId] })
+        
+            // Snapshot the previous value
+            const previousNumLikes = queryClient.getQueryData(['numLikes'])
+            const previousPostLiked = queryClient.getQueryData(['isPostLiked', postId])
+        
+            // Optimistically update to the new value
+            queryClient.setQueryData(['numLikes'], (old) => count > 0 ? old - 1 : old + 1)
+            queryClient.setQueryData(['isPostLiked', postId], (old) => count > 0 ? old - 1 : old + 1)
+        
+            // Return a context object with the snapshotted value
+            return { previousNumLikes, previousPostLiked }
+          },
+          // If the mutation fails,
+          // use the context returned from onMutate to roll back
+          onError: (err, newTodo, context) => Promise.all([
+            queryClient.setQueryData(['numLikes'], context.previousNumLikes),
+            queryClient.setQueryData(['isPostLiked', postId], context.previousPostLiked)
+          ]),
+          
+        
+          
+          // Always refetch after error or success:
+          onSettled: () => Promise.all([
+            queryClient.invalidateQueries({ queryKey: ['numLikes'] }),
+            queryClient.invalidateQueries({ queryKey: ['isPostLiked', postId] })
+          ]),
+
+
+        onSuccess: () => Promise.all([
+            queryClient.invalidateQueries('numLikes'),
+            queryClient.invalidateQueries('isPostLiked', postId)
+        ]) 
       })
     
     const handleLike = () => {

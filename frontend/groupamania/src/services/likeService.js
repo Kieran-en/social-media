@@ -14,7 +14,6 @@ export async function getNumLikes(id){
 }
 
 export async function isPostLiked(userId, postId){
-    console.log("POOOOOOOSST",userId, postId)
     const res = await http.get(`${config.apiEndpoint}/like/postLiked/?userId=${userId}&postId=${postId}`)
     console.log(res)
     return res.data
