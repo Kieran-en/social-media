@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ProfileStyle, Button } from "./styles/Profile.styled";
 import {MdBorderColor} from "react-icons/md";
 import { FaHome } from "react-icons/fa";
@@ -7,17 +7,21 @@ import { Navbar, Dropdown } from "react-bootstrap";
 import navStyle from '../Styles/navbar.module.css';
 import { Col, NavbarBrand } from "react-bootstrap";
 import {FaDoorOpen, FaUser} from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import navImg2 from '../Images/icon-left-font-monochrome-white.png';
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
 import { follow, getFollowingCount, logout } from "../Services/userService";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { AuthContext } from "../Context/AuthContext";
 
-const Profile = ({email, profileImg, changeModalState, userlogged, followers, following}) => {
+const Profile = ({email, profileImg, changeModalState, username, followers, following}) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const {data: followCount} = useQuery('followCount', () => getFollowingCount())
+    const {user} = useParams()
+    const userData = useContext(AuthContext)
+    const userProfileName = userData.username
+    //const {data: followCount} = useQuery('followCount', () => getFollowingCount())
 
     const followMutation = useMutation(follow, {
         onSuccess: () => Promise.all([
@@ -26,7 +30,9 @@ const Profile = ({email, profileImg, changeModalState, userlogged, followers, fo
         ]) 
     })
 
-    const handleFollow = () => {
+    console.log(username, userProfileName)
+
+    /** const handleFollow = () => {
         if (!(followCount > 0)){
 
             followMutation.mutate({
@@ -42,7 +48,7 @@ const Profile = ({email, profileImg, changeModalState, userlogged, followers, fo
                 userId: 'serData.userId'
             })
         }
-    } 
+    } */
  
     
     return (
@@ -58,7 +64,7 @@ const Profile = ({email, profileImg, changeModalState, userlogged, followers, fo
                 cursor: 'pointer', display: 'flex', 
                 gap: '0.3rem', alignItems: 'center'
             }} 
-                onClick={() => navigate(`/timeline/${userlogged}`) }>
+                onClick={() =>  navigate(`/timeline/${userProfileName}`) }>
                     Timeline<FaHome />
          </Col>
          <Col> 
@@ -79,11 +85,16 @@ const Profile = ({email, profileImg, changeModalState, userlogged, followers, fo
     <ProfileStyle>
         <h1>User Profile</h1>
         <div className={style.imageDiv}>
+        {username == userProfileName ?
         <Tooltip trigger="mouseenter" title="Change Profile Image" arrow="true" position="top"><img src={profileImg}
          alt="profile-image" className={style.profileImg}
          onClick={changeModalState}>
         </img>
-        </Tooltip>
+        </Tooltip> :
+        <img src={profileImg}
+        alt="profile-image" className={style.profileImg}>
+       </img>
+        }
         </div>
         <hr className={style.hr}/>
         <div className={style.follow_section}>
@@ -99,13 +110,15 @@ const Profile = ({email, profileImg, changeModalState, userlogged, followers, fo
         <button className={`${style.follow_button}`}>Follow</button>
         <div className={style.info}>
             <div>
-                <span style={{fontSize: '18px'}}>Username: {userlogged} </span> 
-                <Tooltip trigger="mouseenter" arrow="true" title="Change Username" position="top">
-                    <MdBorderColor onClick={changeModalState} /></Tooltip></div>
+                <span style={{fontSize: '18px'}}>Username: {username} </span> 
+                {username == userProfileName && <Tooltip trigger="mouseenter" arrow="true" title="Change Username" position="top">
+                    <MdBorderColor onClick={changeModalState} /></Tooltip>}
+                    </div>
             <div>
                 <span style={{fontSize: '18px'}}>Email: {email} </span>
-                <Tooltip trigger="mouseenter" arrow="true" title="Change Email" position="top">
-                    <MdBorderColor onClick={changeModalState}/></Tooltip></div>
+                {username == userProfileName && <Tooltip trigger="mouseenter" arrow="true" title="Change Email" position="top">
+                    <MdBorderColor onClick={changeModalState}/></Tooltip>}
+                    </div>
         </div>
         <div>
         </div>

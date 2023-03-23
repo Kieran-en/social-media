@@ -9,13 +9,12 @@ import { useParams } from "react-router-dom";
 const ProfilePage = () => {
 
     const [modalOpen, setModalOpen] = useState(false);    
-    const {userlogged} = useParams()
-    const {error, data : userData, status} = useQuery(['user'], () => getUser(userlogged))
-    console.log(userData)
+    const {user} = useParams()
+    const {error, data : userData, status} = useQuery(['user'], () => getUser(user))
 
     return (
         <>
-        <Profile  userlogged={userData && userData.name} 
+        <Profile  username={userData && userData.name} 
         email={userData && userData.email} 
         followers = {userData && userData.followers} 
         following = {userData && userData.following}

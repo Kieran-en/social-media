@@ -103,8 +103,9 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
     return (
         <div className='container mt-5 mb-5' style={{backgroundColor: '#242526', color: 'white', borderRadius: '10px', width: 'clamp(50%, 800px, 85%)'}}>
             <div className="row d-flex align-items-center justify-content-between">
-                <div className="col-sm-7 d-flex align-items-center mt-2">
-                <div className="col-sm-4 d-flex align-items-center cursor-pointer" onClick={() => navigate(`/profilepage/${username}`)}>
+                <div className="col-sm-7 d-flex align-items-center mt-2 ">
+                <div className="col-sm-4 d-flex align-items-center " style={{cursor: 'pointer'}}
+                 onClick={() => navigate(`/profilepage/${username}`)}>
                     <img src={profileImg} onClick={() => console.log('This is the PostID' + postId)} className={navStyle.profileImg}/>
                     <div style={{marginLeft: '10px', fontWeight: 'bold', display: 'flex', flexDirection:'column'}} >
                         <span>{username}</span>
