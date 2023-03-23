@@ -11,6 +11,7 @@ const ProfilePage = () => {
     const [modalOpen, setModalOpen] = useState(false);    
     const userId = JSON.parse(localStorage.getItem('userData')).userId
     const {error, data : userData, status} = useQuery(['user', userId], () => getUser(userId))
+    console.log(userData)
 
     return (
         <>

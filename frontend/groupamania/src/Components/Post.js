@@ -31,7 +31,8 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
         setShowComemnt(!showComment)
     }
 
-    console.log("COUNTT", count)
+    //This variable is to clone count since the latter read only
+    const countClone = parseInt(count)
 
     const likeMutation = useMutation(like, {
 
@@ -46,8 +47,8 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             const previousPostLiked = queryClient.getQueryData(['isPostLiked', postId])
         
             // Optimistically update to the new value
-            queryClient.setQueryData(['numLikes'], (old) => count > 0 ? old - 1 : old + 1)
-            queryClient.setQueryData(['isPostLiked', postId], (old) => count > 0 ? old - 1 : old + 1)
+            queryClient.setQueryData(['numLikes'], (old) => count > 0 ? old-- : old++ )
+            queryClient.setQueryData(['isPostLiked', postId], (old) => count > 0 ? old-- : old++)
         
             // Return a context object with the snapshotted value
             return { previousNumLikes, previousPostLiked }
@@ -68,7 +69,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
           ]),
 
 
-        onSuccess: () => Promise.all([
+          onSuccess: () => Promise.all([
             queryClient.invalidateQueries('numLikes'),
             queryClient.invalidateQueries('isPostLiked', postId)
         ]) 

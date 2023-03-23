@@ -26,6 +26,34 @@
     cursor: pointer;
 }
 
+.follow_section{
+    display: flex;
+    gap: 1rem;
+}
+
+.follow_box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.follow_text{
+    font-size: 1rem;
+}
+
+.follow_coount{
+    font-size: 1rem;
+}
+
+.follow_button{
+    border: none;
+    padding: 0.4rem 5rem;
+    background-color: #0F6E5A;
+    color: white;
+    border-radius: 10px;
+}
+
 .info{
     display: flex;
     flex-direction: column;
