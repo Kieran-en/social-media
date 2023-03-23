@@ -110,7 +110,7 @@ function ProfileModal({closeModal, username, email, profileImg}) {
                     <p style={{fontSize: '12px'}} className="text-warning">{formErrors.email}</p>
                   )}
         </div>
-       <button type='submit' style={{border: 'none', width: '90%', padding: '3px', borderRadius: '10px', backgroundColor: '#DC3545', color: 'white'}} onClick={handleSubmit}>Update</button>
+       <button type='submit' style={{border: 'none', width: '90%', padding: '3px', borderRadius: '10px', backgroundColor: '#0F6E5A', color: 'white'}} onClick={handleSubmit}>Update</button>
        </div>
        </Backdrop>
   )
