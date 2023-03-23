@@ -13,16 +13,16 @@ import {Tooltip,} from 'react-tippy';
 import dayjs from 'dayjs';
 import { like, getNumLikes, isPostLiked } from "../Services/likeService";
 import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
 const Post = ({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, comments, changeDeleteModalState, date}) => {
 
-    //const [postLiked, setPostLiked] = useState(false);
-    //const [numLikes, setNumLikes] = useState();
     const [showComment, setShowComemnt] = useState(false)
     const queryClient = useQueryClient();
     const userData = useContext(AuthContext) 
+    const navigate = useNavigate();
 
     const {error, data : numLikes, status} = useQuery('numLikes', () => getNumLikes(postId))
     const {isLikedError, data : count, isLikedStatus} = useQuery(['isPostLiked', postId], () => isPostLiked(userId, postId))
@@ -104,7 +104,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
         <div className='container mt-5 mb-5' style={{backgroundColor: '#242526', color: 'white', borderRadius: '10px', width: 'clamp(50%, 800px, 85%)'}}>
             <div className="row d-flex align-items-center justify-content-between">
                 <div className="col-sm-7 d-flex align-items-center mt-2">
-                <div className="col-sm-4 d-flex align-items-center">
+                <div className="col-sm-4 d-flex align-items-center cursor-pointer" onClick={() => navigate(`/profilepage/${username}`)}>
                     <img src={profileImg} onClick={() => console.log('This is the PostID' + postId)} className={navStyle.profileImg}/>
                     <div style={{marginLeft: '10px', fontWeight: 'bold', display: 'flex', flexDirection:'column'}} >
                         <span>{username}</span>

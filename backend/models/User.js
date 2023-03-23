@@ -32,9 +32,12 @@ const User = db.define('User', {
     },
     followers: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
+
     },
     following: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
     }
 
 })

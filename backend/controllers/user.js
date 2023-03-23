@@ -55,7 +55,7 @@ exports.login = (req, res, next) => {
 
 exports.getUser = (req, res, next) => {
     User.findOne({where : 
-    {id: req.params.userId}
+    {name: req.params.username}
 })
 .then(user => res.status(200).json(user))
 .catch(error => res.status(500).json({error}))

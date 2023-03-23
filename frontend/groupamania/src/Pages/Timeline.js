@@ -36,11 +36,11 @@ const Timeline = () => {
     */
    const [postToModify, setPostToModify] = useState();
    const [postToDelete, setPostToDelete] = useState();
-   const {userId} = userData
+   const {username} = userData
 
    const { status, data : posts, error } = useQuery('posts', getPosts)
    const { status: commentStatus, data : comments, error: commentError } = useQuery('comments', getComments)
-   const { status: userStatus, data : user, error: userError} = useQuery(['user', userId], () => getUser(userId))
+   const { status: userStatus, data : user, error: userError} = useQuery(['user'], () => getUser(username))
     
     const handleChange = (event) => {
         setText(event.target.value);

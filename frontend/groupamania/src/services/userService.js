@@ -4,13 +4,22 @@ import jwtDecode from 'jwt-decode'
 
 const tokenKey = "token"
 
-export async function getUser(id){
-    const res = await http.get(`${config.apiEndpoint}/auth/${id}`)
+export async function getUser(name){
+    const res = await http.get(`${config.apiEndpoint}/auth/${name}`)
     return res.data
 } 
 
 export function signup(userInfo){
     return http.post(`${config.apiEndpoint}/auth/signup`, userInfo)
+}
+
+export function follow(data){
+    return http.post(`${config.apiEndpoint}/follow`, data)
+}
+
+export async function getFollowingCount(followed_user_id, following_user_id){
+    const res = await http.get(`${config.apiEndpoint}/follow?${followed_user_id}&${following_user_id}`)
+    return res.data
 }
 
 export function modifyUser(userInfo){

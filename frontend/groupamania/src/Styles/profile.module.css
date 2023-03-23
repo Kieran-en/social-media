@@ -52,6 +52,16 @@
     background-color: #0F6E5A;
     color: white;
     border-radius: 10px;
+    font-weight: 600;
+}
+
+.following_button{
+    border: none;
+    padding: 0.4rem 5rem;
+    background-color: white;
+    color: #0F6E5A;
+    border-radius: 10px;
+    font-weight: 600;
 }
 
 .info{

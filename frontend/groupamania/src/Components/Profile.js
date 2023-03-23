@@ -11,14 +11,40 @@ import { useNavigate } from "react-router-dom";
 import navImg2 from '../Images/icon-left-font-monochrome-white.png';
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
-import { getCurrentUser, logout } from "../Services/userService";
+import { follow, getFollowingCount, logout } from "../Services/userService";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
-const Profile = ({email, profileImg, changeModalState, userlogged}) => {
+const Profile = ({email, profileImg, changeModalState, userlogged, followers, following}) => {
     const navigate = useNavigate();
-    const user = getCurrentUser()
+    const queryClient = useQueryClient();
+    const {data: followCount} = useQuery('followCount', () => getFollowingCount())
 
-    console.log(user)
-  
+    const followMutation = useMutation(follow, {
+        onSuccess: () => Promise.all([
+            queryClient.invalidateQueries('followCount'),
+            queryClient.invalidateQueries('isPostLiked')
+        ]) 
+    })
+
+    const handleFollow = () => {
+        if (!(followCount > 0)){
+
+            followMutation.mutate({
+                follow: 1,
+                following_user_id: 'postId',
+                followed_user_id: 'userData.userId'
+            })
+
+        } else {
+            followMutation.mutate({
+                follow: 0,
+                postId: 'postId',
+                userId: 'serData.userId'
+            })
+        }
+    } 
+ 
+    
     return (
     <div style={{backgroundColor: '#18191A'}}>
     <Navbar className="justify-content-between p-3" style={{backgroundColor: '#242526'}}>
@@ -63,11 +89,11 @@ const Profile = ({email, profileImg, changeModalState, userlogged}) => {
         <div className={style.follow_section}>
             <div className={style.follow_box}>
                 <span className={style.follow_text}>Followers</span>
-                <span className={style.follow_count}>100</span>
+                <span className={style.follow_count}>{followers}</span>
             </div>
             <div className={style.follow_box}>
             <span className={style.follow_text}>Following</span>
-            <span className={style.follow_count}>1</span>
+            <span className={style.follow_count}>{following}</span>
             </div>
         </div>
         <button className={`${style.follow_button}`}>Follow</button>
