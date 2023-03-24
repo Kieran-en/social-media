@@ -109,10 +109,12 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
             </div>
         </div>
 
-        { followCount > 0 ? 
-        <button className={`${style.following_button}`}>Following</button> :
-        <button className={`${style.follow_button}`}>Follow</button> 
+        {following_user_id !== followed_user_id && 
+            (followCount > 0 ? 
+            <button className={`${style.following_button}`}>Following</button> :
+            <button className={`${style.follow_button}`}>Follow</button>)   
         }
+
 
         <div className={style.info}>
             <div>
