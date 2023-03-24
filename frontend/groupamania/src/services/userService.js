@@ -18,7 +18,8 @@ export function follow(data){
 }
 
 export async function getFollowingCount(followed_user_id, following_user_id){
-    const res = await http.get(`${config.apiEndpoint}/follow?${followed_user_id}&${following_user_id}`)
+    const res = await http.get(`${config.apiEndpoint}/follow?followed_user_id=${followed_user_id}&following_user_id=${following_user_id}`)
+    console.log(res.data)
     return res.data
 }
 

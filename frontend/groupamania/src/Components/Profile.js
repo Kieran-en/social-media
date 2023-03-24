@@ -15,13 +15,16 @@ import { follow, getFollowingCount, logout } from "../Services/userService";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { AuthContext } from "../Context/AuthContext";
 
-const Profile = ({email, profileImg, changeModalState, username, followers, following}) => {
+const Profile = ({email, profileImg, changeModalState, username, followers, following, followed_user_id}) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const {user} = useParams()
     const userData = useContext(AuthContext)
+    const following_user_id = userData.userId
     const userProfileName = userData.username
-    //const {data: followCount} = useQuery('followCount', () => getFollowingCount())
+    const {data: followCount} = useQuery('followCount', () => getFollowingCount(followed_user_id, following_user_id))
+
+    console.log(followed_user_id, following_user_id);
 
     const followMutation = useMutation(follow, {
         onSuccess: () => Promise.all([
@@ -30,25 +33,23 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
         ]) 
     })
 
-    console.log(username, userProfileName)
-
-    /** const handleFollow = () => {
+     const handleFollow = () => {
         if (!(followCount > 0)){
 
             followMutation.mutate({
                 follow: 1,
-                following_user_id: 'postId',
-                followed_user_id: 'userData.userId'
+                following_user_id: following_user_id,
+                followed_user_id: followed_user_id
             })
 
         } else {
             followMutation.mutate({
                 follow: 0,
-                postId: 'postId',
-                userId: 'serData.userId'
+                following_user_id: following_user_id,
+                followed_user_id: followed_user_id
             })
         }
-    } */
+    } 
  
     
     return (
@@ -107,7 +108,12 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
             <span className={style.follow_count}>{following}</span>
             </div>
         </div>
-        <button className={`${style.follow_button}`}>Follow</button>
+
+        { followCount > 0 ? 
+        <button className={`${style.following_button}`}>Following</button> :
+        <button className={`${style.follow_button}`}>Follow</button> 
+        }
+
         <div className={style.info}>
             <div>
                 <span style={{fontSize: '18px'}}>Username: {username} </span> 

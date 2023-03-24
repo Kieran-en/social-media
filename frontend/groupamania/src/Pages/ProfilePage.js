@@ -10,19 +10,20 @@ const ProfilePage = () => {
 
     const [modalOpen, setModalOpen] = useState(false);    
     const {user} = useParams()
-    const {error, data : userData, status} = useQuery(['user'], () => getUser(user))
+    const {error, data : userPageData, status} = useQuery(['user'], () => getUser(user)) 
 
     return (
         <>
-        <Profile  username={userData && userData.name} 
-        email={userData && userData.email} 
-        followers = {userData && userData.followers} 
-        following = {userData && userData.following}
-        profileImg={userData && userData.profileImg} 
+        <Profile  username={userPageData && userPageData.name} 
+        email={userPageData && userPageData.email} 
+        followed_user_id = {userPageData && userPageData.id}
+        followers = {userPageData && userPageData.followers} 
+        following = {userPageData && userPageData.following}
+        profileImg={userPageData && userPageData.profileImg} 
         changeModalState={() => modalOpen ? setModalOpen(false) : setModalOpen(true)}/>
         {modalOpen && <ProfileModal closeModal={() => setModalOpen(false)} 
-        username={userData && userData.name} email={ userData && userData.email}
-         profileImg={ userData && userData.profileImg}
+        username={userPageData && userPageData.name} email={ userPageData && userPageData.email}
+         profileImg={ userPageData && userPageData.profileImg}
          />}
         </>
     )

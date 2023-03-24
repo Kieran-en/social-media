@@ -47,6 +47,7 @@ exports.followOrUnfollow = (req, res, next) => {
 
 exports.isUserFollowed = (req, res, next) => {
     const {following_user_id, followed_user_id} = req.query;
+    console.log("FOLLLOWING", following_user_id, followed_user_id)
     Follow.count({
         where: {
             [Op.and] : [{
