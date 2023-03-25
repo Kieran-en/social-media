@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import { getCurrentUser } from '../Services/userService'
 import styles from '../Styles/friend.module.css'
 import Conversation from './Conversation'
 
 function FriendSection() {
     const [search, setSearch] = useState()
+    const userData = getCurrentUser();
 
     const onChange = (event) => {
         setSearch(event.target.value)

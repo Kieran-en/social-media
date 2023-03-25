@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import { like, getNumLikes, isPostLiked } from "../Services/likeService";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { getCurrentUser } from "../Services/userService";
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
@@ -21,7 +22,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
 
     const [showComment, setShowComemnt] = useState(false)
     const queryClient = useQueryClient();
-    const userData = useContext(AuthContext) 
+    const userData = getCurrentUser() 
     const navigate = useNavigate();
 
     const {error, data : numLikes, status} = useQuery('numLikes', () => getNumLikes(postId))

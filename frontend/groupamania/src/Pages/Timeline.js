@@ -13,7 +13,7 @@ import config from '../config.json'
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getPosts, createPost } from "../Services/postService";
 import { getComments } from "../Services/commentService";
-import { getUser, logout } from "../Services/userService";
+import { getCurrentUser, getUser, logout } from "../Services/userService";
 import { AuthContext } from "../Context/AuthContext";
 import NavBar from "../Components/NavBar";
 
@@ -29,7 +29,7 @@ const Timeline = () => {
     const [hasMore, setHasMore] = useState(true);
     const queryClient = useQueryClient()
 
-    const userData = useContext(AuthContext)
+    const userData = getCurrentUser()
     /** 
     Intermediate varile to store the postId send from post inorder to transfer it as a prop to Modal Component
     This will enable the modal to send to the server the modification of a specific post 

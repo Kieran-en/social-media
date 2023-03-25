@@ -5,5 +5,6 @@ const auth = require('../middlewares/auth')
 
 router.post('/', followCtrl.followOrUnfollow)
 router.get('/', followCtrl.isUserFollowed)
+router.get('/:userId', followCtrl.getFriends)
 
 module.exports = router;

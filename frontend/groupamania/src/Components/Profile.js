@@ -24,9 +24,9 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
     const userProfileName = userData.username
     const {data: followCount} = useQuery('followCount', () => getFollowingCount(followed_user_id, following_user_id))
 
-    console.log("followed: "+followed_user_id, "following: "+following_user_id);
+    //console.log("followed: "+followed_user_id, "following: "+following_user_id);
 
-    console.log(userData)
+    //console.log(userData)
 
     const followMutation = useMutation(follow, {
         onSuccess: () => Promise.all([

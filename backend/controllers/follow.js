@@ -61,5 +61,12 @@ exports.isUserFollowed = (req, res, next) => {
 }
 
 exports.getFriends = (req, res, next) => {
-    
+    const {userId} = req.params;
+    Follow.findAll({
+        where: {
+            following_user_id: userId
+        }
+    })
+    .then(friends => res.status(200).json(friends))
+    .catch(error => res.status(500).json({error}))
 }
