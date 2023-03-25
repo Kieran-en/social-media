@@ -59,3 +59,7 @@ exports.isUserFollowed = (req, res, next) => {
     .then(count => res.status(200).json(count))
     .catch(error => res.status(500).json({error}))
 }
+
+exports.getFriends = (req, res, next) => {
+    
+}

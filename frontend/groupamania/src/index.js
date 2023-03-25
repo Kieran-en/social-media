@@ -11,6 +11,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from 'react-query'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 logger.init()
 const queryClient = new QueryClient()
@@ -23,6 +25,17 @@ ReactDOM.render(
     <App />
     </AuthContext.Provider>
     </QueryClientProvider>
+    <ToastContainer 
+    position="top-right"
+    autoClose={5000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="dark" />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -10,7 +10,7 @@ const ProfilePage = () => {
 
     const [modalOpen, setModalOpen] = useState(false);    
     const {user} = useParams()
-    const {error, data : userPageData, status} = useQuery(['user'], () => getUser(user)) 
+    const {error, data : userPageData, status} = useQuery('user', () => getUser(user)) 
 
     return (
         <>

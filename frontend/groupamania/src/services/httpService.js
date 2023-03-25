@@ -1,7 +1,7 @@
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const token = localStorage.getItem('token')
-console.log(token)
 
 axios.interceptors.response.use(null, error => {
     const expectedError = 
@@ -10,8 +10,17 @@ axios.interceptors.response.use(null, error => {
     error.response < 500;
 
     if(!expectedError){
-        console.log('Logging the error', error);
-        //alert("An unexpected error occured")
+        //console.log('Logging the error', error);
+        toast.error("An unexpected error occured!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            })
     }
 
     return Promise.reject(error)

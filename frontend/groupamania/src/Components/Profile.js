@@ -31,7 +31,7 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
     const followMutation = useMutation(follow, {
         onSuccess: () => Promise.all([
             queryClient.invalidateQueries('followCount'),
-            queryClient.invalidateQueries('isPostLiked')
+            queryClient.invalidateQueries('user')
         ]) 
     })
 

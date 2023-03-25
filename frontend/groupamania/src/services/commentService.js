@@ -7,7 +7,7 @@ export async function getComments(){
 } 
 
 export async function createComment(comment){
-    return await http.post(`${config.apiEndpoint}/comment`, comment)
+    return await http.post(`${config.apiEndpoint}/comments`, comment)
 }
 
 export async function modifyComment(comment){
