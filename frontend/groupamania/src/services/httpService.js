@@ -1,5 +1,8 @@
 import axios from "axios";
 
+const token = localStorage.getItem('token')
+console.log(token)
+
 axios.interceptors.response.use(null, error => {
     const expectedError = 
     error.response &&
@@ -14,9 +17,10 @@ axios.interceptors.response.use(null, error => {
     return Promise.reject(error)
 })
 
+
 axios.interceptors.request.use(
     config => {
-        config.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('userData')).token}`;
+        config.headers.authorization = `Bearer ${token}`;
         return config;
     },
     error => {

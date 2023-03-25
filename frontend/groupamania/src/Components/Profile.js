@@ -11,7 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import navImg2 from '../Images/icon-left-font-monochrome-white.png';
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
-import { follow, getFollowingCount, logout } from "../Services/userService";
+import { follow, getCurrentUser, getFollowingCount, logout } from "../Services/userService";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { AuthContext } from "../Context/AuthContext";
 
@@ -19,12 +19,14 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const {user} = useParams()
-    const userData = useContext(AuthContext)
+    const userData = getCurrentUser()
     const following_user_id = userData.userId
     const userProfileName = userData.username
     const {data: followCount} = useQuery('followCount', () => getFollowingCount(followed_user_id, following_user_id))
 
-    console.log(followed_user_id, following_user_id);
+    console.log("followed: "+followed_user_id, "following: "+following_user_id);
+
+    console.log(userData)
 
     const followMutation = useMutation(follow, {
         onSuccess: () => Promise.all([
@@ -50,6 +52,11 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
             })
         }
     } 
+
+    const handleLogOut = () => {
+        logout();
+        navigate("/Login");
+    }
  
     
     return (
@@ -74,10 +81,7 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
           <img src={profileImg} alt="profile-image" className={navStyle.profileImg}/>
          </Dropdown.Toggle>
         <Dropdown.Menu >
-            <Dropdown.Item eventKey='logout' onClick={() => {
-              logout()
-              navigate("/Login")
-              }}>LogOut <FaDoorOpen className="ml-5"/></Dropdown.Item>
+            <Dropdown.Item eventKey='logout' onClick={handleLogOut}>LogOut <FaDoorOpen className="ml-5"/></Dropdown.Item>
         </Dropdown.Menu>
         </Dropdown>
          </Col>
@@ -111,8 +115,8 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
 
         {following_user_id !== followed_user_id && 
             (followCount > 0 ? 
-            <button className={`${style.following_button}`}>Following</button> :
-            <button className={`${style.follow_button}`}>Follow</button>)   
+            <button className={`${style.following_button}`} onClick={handleFollow}>Following</button> :
+            <button className={`${style.follow_button}`} onClick={handleFollow}>Follow</button>)   
         }
 
 

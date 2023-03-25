@@ -35,8 +35,8 @@ const Login = () => {
             .then(response => response.json())
             .then(data => {
                 let { token } = data
-                setAccessToken(data.token);
-                localStorage.setItem("userData", JSON.stringify(data))
+                //setAccessToken(data.token);
+                //localStorage.setItem("userData", JSON.stringify(data))
                 localStorage.setItem('token', token)
                 if (data.hasOwnProperty('token')){
                  navigate(`/timeline/${data.username}`);
