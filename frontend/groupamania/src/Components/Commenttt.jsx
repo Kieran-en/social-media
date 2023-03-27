@@ -5,11 +5,13 @@ import Comment from './Comment';
 import { useMutation, useQueryClient } from "react-query";
 import { AuthContext } from '../Context/AuthContext';
 import { createComment } from '../Services/commentService';
+import { getCurrentUser } from '../Services/userService';
 
 export default function Commenttt({postId, comments}) {
   const [commentText, setComment] = useState('');
   const queryClient = useQueryClient();
-  const userData = useContext(AuthContext)
+  const userData = getCurrentUser();
+  const {userId} = userData
 
   const commentMutation = useMutation(createComment, {
     onSuccess: () => {
@@ -25,7 +27,8 @@ export default function Commenttt({postId, comments}) {
 
       commentMutation.mutate({
           text: commentText,
-          PostId: postId
+          PostId: postId,
+          userId: userId
       })  
   }
 

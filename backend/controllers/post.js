@@ -32,12 +32,12 @@ exports.createPost = (req, res, next) => {
     likes: 0,
     dislikes: 0,
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-    UserId: req.auth.userId
+    UserId: req.body.userId
    } : {
     text: req.body.text,
     likes: 0,
     dislikes: 0,
-    UserId: req.auth.userId
+    UserId: req.body.userId
    }
 
     const post = Post.build({

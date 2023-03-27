@@ -37,6 +37,7 @@ const Timeline = () => {
    const [postToModify, setPostToModify] = useState();
    const [postToDelete, setPostToDelete] = useState();
    const {username} = userData
+   const {userId} = userData
 
    const { status, data : posts, error } = useQuery('posts', getPosts)
    const { status: commentStatus, data : comments, error: commentError } = useQuery('comments', getComments)
@@ -51,6 +52,7 @@ const Timeline = () => {
         const post = new FormData();
         post.append('text', text)
         post.append('image', file);
+        post.append('userId', userId);
 
         mutation.mutate(post)
     }

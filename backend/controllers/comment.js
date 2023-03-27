@@ -9,7 +9,7 @@ exports.creatComment = (req, res, next) => {
     const comment = Comment.build({
         text: req.body.text,
         PostId: req.body.PostId,
-        UserId: req.auth.userId
+        UserId: req.body.userId
     },
     {
         include: [Post, User]

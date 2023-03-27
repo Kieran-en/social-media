@@ -1,10 +1,9 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import {MdDelete, MdBorderColor} from "react-icons/md";
 import navStyle from '../Styles/timeline.module.css';
 import {FaThumbsUp} from "react-icons/fa";
 import { MdOutlineComment } from "react-icons/md";
-import { AuthContext } from "../Context/AuthContext";
 import style from '../Styles/timeline.module.css';
 import { useState } from "react";
 import Commenttt from "./Commenttt";
@@ -23,6 +22,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
     const [showComment, setShowComemnt] = useState(false)
     const queryClient = useQueryClient();
     const userData = getCurrentUser() 
+    console.log(userData.username)
     const navigate = useNavigate();
 
     const {error, data : numLikes, status} = useQuery('numLikes', () => getNumLikes(postId))
@@ -31,9 +31,6 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
   const toggleShowComment = () => {
         setShowComemnt(!showComment)
     }
-
-    //This variable is to clone count since the latter read only
-    const countClone = parseInt(count)
 
     const likeMutation = useMutation(like, {
 
@@ -69,11 +66,11 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
             queryClient.invalidateQueries({ queryKey: ['isPostLiked', postId] })
           ]),
 
-
-          onSuccess: () => Promise.all([
+/**  onSuccess: () => Promise.all([
             queryClient.invalidateQueries('numLikes'),
             queryClient.invalidateQueries('isPostLiked', postId)
-        ]) 
+        ]) */
+         
       })
     
     const handleLike = () => {

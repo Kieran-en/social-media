@@ -62,11 +62,17 @@ exports.isUserFollowed = (req, res, next) => {
 
 exports.getFriends = (req, res, next) => {
     const {userId} = req.params;
+    console.log("USSEERRID: ", userId)
     Follow.findAll({
         where: {
             following_user_id: userId
-        }
-    })
+        },
+        include: [ 
+          {model: User, as: 'followed_user_id', foreignKey: 'followed_user_id' },      
+          // or just use this to include everything:
+          // include: [{all:true}]
+        ]
+      })
     .then(friends => res.status(200).json(friends))
     .catch(error => res.status(500).json({error}))
 }
