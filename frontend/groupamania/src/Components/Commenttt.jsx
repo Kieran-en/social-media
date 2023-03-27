@@ -43,8 +43,11 @@ export default function Commenttt({postId, comments}) {
         <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.input}></input>
             <button type="submit" className="btn p-1" style={{backgroundColor: '#0F6E5A', color: 'white'}} onClick={handleComment}>Comment</button>
       </div>
-      {comments && comments.filter(comment => comment.PostId === postId).map(filteredComment => ( 
-                <Comment text={filteredComment.text} date={filteredComment.createdAt} profileImg={filteredComment.User.profileImg} username={filteredComment.User.name} key={filteredComment.id}/>
+      {comments && (comments.filter(comment => comment.PostId === postId) && comments.filter(comment => comment.PostId === postId)).map(filteredComment => ( 
+                <Comment text={filteredComment && filteredComment.text} 
+                date={filteredComment && filteredComment.createdAt}
+                 profileImg={filteredComment.User && filteredComment.User.profileImg} 
+                 username={filteredComment.User && filteredComment.User.name} key={filteredComment && filteredComment.id}/>
             ))}
     </div>
   )
