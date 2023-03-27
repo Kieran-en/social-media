@@ -17,7 +17,7 @@ import { getCurrentUser } from "../Services/userService";
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
-const Post = ({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, comments, changeDeleteModalState, date}) => {
+const Post = ({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, comments, likes, changeDeleteModalState, date}) => {
 
     const [showComment, setShowComemnt] = useState(false)
     const queryClient = useQueryClient();
@@ -34,27 +34,27 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
 
     const likeMutation = useMutation(like, {
 
-        onMutate: async (newLike) => {
+        /**  onMutate: async (newLike) => {
             // Cancel any outgoing refetches
             // (so they don't overwrite our optimistic update)
-            await queryClient.cancelQueries({ queryKey: ['numLikes'] })
+            ///await queryClient.cancelQueries({ queryKey: ['numLikes'] })
             await queryClient.cancelQueries({ queryKey: ['isPostLiked', postId] })
         
             // Snapshot the previous value
-            const previousNumLikes = queryClient.getQueryData(['numLikes'])
+           // const previousNumLikes = queryClient.getQueryData(['numLikes'])
             const previousPostLiked = queryClient.getQueryData(['isPostLiked', postId])
         
             // Optimistically update to the new value
-            queryClient.setQueryData(['numLikes'], (old) => count > 0 ? old-- : old++ )
+            //queryClient.setQueryData(['numLikes'], (old) => count > 0 ? old-- : old++ )
             queryClient.setQueryData(['isPostLiked', postId], (old) => count > 0 ? old-- : old++)
         
             // Return a context object with the snapshotted value
-            return { previousNumLikes, previousPostLiked }
+            return {  previousPostLiked }
           },
           // If the mutation fails,
           // use the context returned from onMutate to roll back
           onError: (err, newTodo, context) => Promise.all([
-            queryClient.setQueryData(['numLikes'], context.previousNumLikes),
+            //queryClient.setQueryData(['numLikes'], context.previousNumLikes),
             queryClient.setQueryData(['isPostLiked', postId], context.previousPostLiked)
           ]),
           
@@ -62,14 +62,16 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
           
           // Always refetch after error or success:
           onSettled: () => Promise.all([
-            queryClient.invalidateQueries({ queryKey: ['numLikes'] }),
+            queryClient.invalidateQueries({ queryKey: ['posts'] }),
             queryClient.invalidateQueries({ queryKey: ['isPostLiked', postId] })
           ]),
+*/
 
-/**  onSuccess: () => Promise.all([
-            queryClient.invalidateQueries('numLikes'),
-            queryClient.invalidateQueries('isPostLiked', postId)
-        ]) */
+       
+ onSuccess: () => Promise.all([
+            queryClient.invalidateQueries(['isPostLiked', postId]),
+            queryClient.invalidateQueries('posts')
+        ]) 
          
       })
     
@@ -141,7 +143,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
                 }
             </div>}
                 <div className="d-flex gap-2 p-2 align-items-center gap-1">   
-                        <div><FaThumbsUp style={{color : count > 0 ? '#0F6E5A' : 'white', cursor : 'pointer'}} onClick={() => handleLike()}/> {numLikes} </div>
+                        <div><FaThumbsUp style={{color : count > 0 ? '#0F6E5A' : 'white', cursor : 'pointer'}} onClick={() => handleLike()}/> {likes} </div>
                         <div><MdOutlineComment className="" style={{cursor : 'pointer'}} onClick={() => toggleShowComment()}/> {comments ? comments.filter(comment =>
                             comment.PostId === postId).length : 0} </div>  
                 </div>

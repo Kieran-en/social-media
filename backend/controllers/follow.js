@@ -67,8 +67,10 @@ exports.getFriends = (req, res, next) => {
         where: {
             following_user_id: userId
         },
-        include: [ 
-          {model: User, as: 'followed_user_id', foreignKey: 'followed_user_id' },      
+        include: [{
+            model: User, //model name which you want to include
+            as: 'followed_user_id', // you have to pass alias as you used while defining
+        }     
           // or just use this to include everything:
           // include: [{all:true}]
         ]
