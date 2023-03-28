@@ -22,7 +22,6 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
     const [showComment, setShowComemnt] = useState(false)
     const queryClient = useQueryClient();
     const userData = getCurrentUser() 
-    console.log(userData.username)
     const navigate = useNavigate();
 
     const {error, data : numLikes, status} = useQuery('numLikes', () => getNumLikes(postId))

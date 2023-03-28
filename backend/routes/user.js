@@ -7,6 +7,7 @@ const multer = require('../middlewares/multer-config');
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
 router.get('/:username', userCtrl.getUser);
+router.get('/friends/:username', userCtrl.getFriends); 
 router.delete('/:username', auth, userCtrl.deleteUser);
 router.put('/:userId', auth, multer, userCtrl.modifyUserData);
 //router.put('/:username', auth, userCtrl.modifyEmail);

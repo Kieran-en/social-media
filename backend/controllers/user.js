@@ -54,9 +54,21 @@ exports.login = (req, res, next) => {
 }
 
 exports.getUser = (req, res, next) => {
-    User.findOne({where : 
-    {name: req.params.username}
-})
+    User.findOne({where : {
+        name: req.params.username
+    }
+},
+)
+.then(user => res.status(200).json(user))
+.catch(error => res.status(500).json({error}))
+}
+
+exports.getFriends = (req, res, next) => {
+    User.findOne({where : {
+        name: req.params.user
+    }, include: 'following_user_id'
+},
+)
 .then(user => res.status(200).json(user))
 .catch(error => res.status(500).json({error}))
 }
