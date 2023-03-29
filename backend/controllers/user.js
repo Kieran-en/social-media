@@ -64,8 +64,9 @@ exports.getUser = (req, res, next) => {
 }
 
 exports.getFriends = (req, res, next) => {
+    console.log("ASDAUJDHuaoWE")
     User.findOne({where : {
-        name: req.params.user
+        name: req.params.username
     }, include: 'following_user_id'
 },
 )

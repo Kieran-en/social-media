@@ -43,6 +43,11 @@ export function getCurrentUser(){
         }
 }
 
+export async function getFriends(userToGetFriends){
+    const res = await await http.get(`${config.apiEndpoint}/auth/friends/${userToGetFriends}`)
+    return res.data.following_user_id;
+}
+
 export function getJwt(){
     return localStorage.getItem(tokenKey)
 }

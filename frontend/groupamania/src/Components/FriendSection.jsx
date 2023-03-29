@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import { getCurrentUser } from '../Services/userService'
 import styles from '../Styles/friend.module.css'
 import Conversation from './Conversation'
 
-function FriendSection() {
+function FriendSection({friends}) {
     const [search, setSearch] = useState()
-    const userData = getCurrentUser();
 
     const onChange = (event) => {
         setSearch(event.target.value)
@@ -15,8 +13,12 @@ function FriendSection() {
     <div>
         <input value={search} onChange={onChange} className={styles.input} placeholder="Search  for friends..."/>
         <div className={styles.conversation_part}>
-        <Conversation />
-        <Conversation />
+          {friends && friends.length > 0 ? 
+          friends.map(friend => <Conversation key={friend && friend.id}
+             id={ friend && friend.id} name={ friend && friend.name} 
+             profileImg={friend && friend.profileImg}/>) :
+          <p className={styles.paragraph}>You have no friends, add some friends so you can chat!</p>
+        }
         </div>
     </div>
   )

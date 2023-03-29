@@ -21,3 +21,9 @@
 .conversation_part{
     margin-top: 1rem;
 }
+
+.paragraph{
+    font-size: 1.5rem;
+    margin: 0.5rem;
+    color: gray;
+}
