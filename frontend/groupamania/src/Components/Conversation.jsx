@@ -1,14 +1,31 @@
 import React from 'react'
+import { useMutation, useQueryClient } from 'react-query'
+import { createConversation } from '../Services/conversationService'
 import { getCurrentUser } from '../Services/userService'
 import styles from '../Styles/conversation.module.css'
 
-function Conversation() {
-    const user = getCurrentUser()
+function Conversation({receiverId, name, profileImg}) {
+    const currentUser = getCurrentUser()
+    const queryClient = useQueryClient()
+    const {userId: senderId} = currentUser;
+
+    const conversationMutation = useMutation(createConversation, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('conversations')
+      }
+    })
+
+    const addConversation = () => {
+      conversationMutation.mutate({
+        receiverId: receiverId,
+        senderId: senderId
+      })
+    }
 
   return (
-    <div className={styles.conversation}>
-        <img src={user.profileImg} alt="conversation-image" className={styles.image}></img>
-        <span className={styles.name}>{user.username}</span>
+    <div className={styles.conversation} onClick={addConversation}>
+        <img src={profileImg} alt="conversation-image" className={styles.image}></img>
+        <span className={styles.name}>{name}</span>
     </div>
   )
 }

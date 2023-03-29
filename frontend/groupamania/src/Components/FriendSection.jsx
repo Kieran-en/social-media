@@ -15,7 +15,7 @@ function FriendSection({friends}) {
         <div className={styles.conversation_part}>
           {friends && friends.length > 0 ? 
           friends.map(friend => <Conversation key={friend && friend.id}
-             id={ friend && friend.id} name={ friend && friend.name} 
+             receiverId={ friend && friend.id} name={ friend && friend.name} 
              profileImg={friend && friend.profileImg}/>) :
           <p className={styles.paragraph}>You have no friends, add some friends so you can chat!</p>
         }
