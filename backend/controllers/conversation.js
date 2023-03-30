@@ -63,3 +63,19 @@ exports.getConversations = (req, res, next) => {
     .then(conversations => res.status(200).json(conversations))
     .catch(error  => res.status(500).json({error}));
 }
+
+exports.getSpecificConversation = (req, res, next) => {
+
+    const {receiverId, senderId} = req.params
+
+    Conversation.findOne({
+        where: {
+            [Op.and]: [{
+                 receiverId: receiverId ,
+                 senderId: senderId 
+              }]
+        }
+    })
+    .then((conversation) => res.status(200).json(conversation))
+    .catch((error) => res.status(500).json({error}))
+}
