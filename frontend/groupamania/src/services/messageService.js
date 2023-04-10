@@ -2,7 +2,7 @@ import http from './httpService'
 import config from '../config.json'
 
 export async function getMessages(conversationId){
-    res = await http.get(`${config.apiEndpoint}/message/${conversationId}`)
+    let res = await http.get(`${config.apiEndpoint}/message/${conversationId}`)
     return res.data;
 }
 

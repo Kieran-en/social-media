@@ -13,6 +13,6 @@ export async function getSpecificConversation(senderId, receiverId){
 
 
 export async function createConversation(conversation){
-    const res =  http.post(`${config.apiEndpoint}/conversation/`, conversation)
+    const res =  http.post(`${config.apiEndpoint}/conversation`, conversation)
     return res.data
 }

@@ -21,7 +21,7 @@ function App() {
         <ProtectedRoute>
           <Timeline />
         </ProtectedRoute>
-      } />
+      } /> 
       <Route path='/profilepage/:user' element={
         <ProtectedRoute>
           <ProfilePage/>

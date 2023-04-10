@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from '../Styles/friend.module.css'
 import Conversation from './Conversation'
 
-function FriendSection({friends}) {
+function FriendSection({friends, updateCurrentChat}) {
     const [search, setSearch] = useState()
 
     const onChange = (event) => {
@@ -15,6 +15,7 @@ function FriendSection({friends}) {
         <div className={styles.conversation_part}>
           {friends && friends.length > 0 ? 
           friends.map(friend => <Conversation key={friend && friend.id}
+            updateCurrentChat
              receiverId={friend && friend.id} name={friend && friend.name} 
              profileImg={friend && friend.profileImg}/>) :
           <p className={styles.paragraph}>You have no friends, add some friends so you can chat!</p>

@@ -10,8 +10,10 @@ function Conversation({receiverId, name, profileImg}) {
     const {userId: senderId} = currentUser;
 
     const conversationMutation = useMutation(createConversation, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('conversation')
+      onSuccess: (data) => {
+        //queryClient.invalidateQueries('conversation')
+        setCurrentChat(data)
+        queryClient.setQueryData('conversation', data)
       }
     })
 

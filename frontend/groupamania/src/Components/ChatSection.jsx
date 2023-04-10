@@ -4,10 +4,14 @@ import Message from './Message'
 import styles from '../Styles/chat.module.css'
 import SendMessage from './SendMessage'
 import { getSpecificConversation } from '../Services/conversationService'
+import { getMessages } from '../Services/messageService'
 
-function ChatSection() {
+function ChatSection({senderData}) {
+  const {senderId} = senderData
   const [currentConversation, setCurrentConversation] = useState()
+  const {data : messages} = useQueryClient('message', () => getMessages())
   const {data : conversation} = useQueryClient('conversation', () => getSpecificConversation())
+  console.log(conversation)
 
   return (
     <div className={styles.box}>
