@@ -12,7 +12,7 @@ function Conversation({receiverId, name, profileImg}) {
     const conversationMutation = useMutation(createConversation, {
       onSuccess: (data) => {
         //queryClient.invalidateQueries('conversation')
-        setCurrentChat(data)
+        //setCurrentChat(data)
         queryClient.setQueryData('conversation', data)
       }
     })
