@@ -17,4 +17,4 @@ const Comment = ({text, username, profileImg, date}) => {
     )
 }
 
-export default (Comment);
+export default Comment;

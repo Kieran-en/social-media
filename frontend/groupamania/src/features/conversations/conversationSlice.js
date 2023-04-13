@@ -6,9 +6,10 @@ export const conversationSlice = createSlice({
     name: 'conversations',
     initialState,
     reducers: {
-        setConversation: (state) => {
-            state = {...state}
-        }
+        //setConversation here is an action name
+        setConversation: (state, action) => {
+            state = {...action.payload}
+        },
     }
 })
 
