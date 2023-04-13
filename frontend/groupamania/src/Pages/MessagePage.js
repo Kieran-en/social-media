@@ -10,7 +10,6 @@ import { getCurrentUser, getFriends } from '../Services/userService'
 
 function MessagePage() {
 
-
   const [currentChat, setCurrentChat] = useState();
   const userData = getCurrentUser()
   const { username } = userData;

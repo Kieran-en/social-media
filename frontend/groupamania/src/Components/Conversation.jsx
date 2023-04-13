@@ -1,13 +1,16 @@
 import React from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import { useSelector, useDispatch } from 'react-redux'
 import { createConversation } from '../Services/conversationService'
 import { getCurrentUser } from '../Services/userService'
+import { setConversation } from '../features/conversations/conversationSlice'
 import styles from '../Styles/conversation.module.css'
 
 function Conversation({receiverId, name, profileImg}) {
     const currentUser = getCurrentUser()
     const queryClient = useQueryClient()
     const {userId: senderId} = currentUser;
+    const dispatch = useDispatch()
 
     const conversationMutation = useMutation(createConversation, {
       onSuccess: (data) => {

@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import { AuthContext } from './Context/AuthContext';
 import { getCurrentUser } from './Services/userService';
 import logger from './Services/logService'
+import { store } from './app/store';
+import { Provider } from 'react-redux';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -20,6 +22,7 @@ const userData = getCurrentUser();
 
 ReactDOM.render(
   <React.StrictMode>
+    <Provider store={store}>
     <QueryClientProvider client={queryClient}>
     <AuthContext.Provider value={userData}>
     <App />
@@ -36,6 +39,7 @@ ReactDOM.render(
     draggable
     pauseOnHover
     theme="dark" />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
