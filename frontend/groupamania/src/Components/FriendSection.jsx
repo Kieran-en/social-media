@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from '../Styles/friend.module.css'
 import Conversation from './Conversation'
 
-function FriendSection({friends, updateCurrentChat}) {
+function FriendSection({friends}) {
     const [search, setSearch] = useState()
 
     const onChange = (event) => {

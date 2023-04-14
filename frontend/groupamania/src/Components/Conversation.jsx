@@ -11,16 +11,18 @@ function Conversation({receiverId, name, profileImg}) {
     const queryClient = useQueryClient()
     const {userId: senderId} = currentUser;
     const dispatch = useDispatch()
+    const conversation = useSelector((state) => state.conversation)
 
     const conversationMutation = useMutation(createConversation, {
-      onSuccess: (data, variables, context) => {
-        console.log(data)
+      onSuccess: (data) => {
         dispatch(setConversation(data))
         //queryClient.invalidateQueries('conversation')
         //setCurrentChat(data)
         queryClient.setQueryData('conversation', data)
       }
     })
+
+   console.log(conversation)
 
     const addConversation = () => {
       conversationMutation.mutate({

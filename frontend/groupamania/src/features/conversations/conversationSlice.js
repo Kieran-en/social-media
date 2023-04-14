@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {}
+let initialState = {};
 
 export const conversationSlice = createSlice({
     name: 'conversations',
@@ -8,7 +8,8 @@ export const conversationSlice = createSlice({
     reducers: {
         //setConversation here is an action name
         setConversation: (state, action) => {
-            state = {...action.payload}
+            state =  {...state, senderId: action.payload.senderId, receiverId: action.payload.receiverId} 
+            return state
         },
     }
 })
