@@ -16,7 +16,6 @@ exports.createConversation = (req, res, next) => {
     })
     .then(conversation => {
         if(!conversation){
-            console.log("CREAAAATED!")
             Promise.all([
                 Conversation.create({
                 receiverId: receiverId,

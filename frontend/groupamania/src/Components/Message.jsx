@@ -1,8 +1,11 @@
 import React from 'react'
 import { getCurrentUser } from '../Services/userService'
 import styles from '../Styles/message.module.css'
+import dayjs from 'dayjs';
+var relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime);
 
-export default function Message({ own }) {
+export default function Message({ own, text, timeSent }) {
     const user = getCurrentUser()
     const ownStyleAllocation = own ? styles.own : ''
 
@@ -10,12 +13,9 @@ export default function Message({ own }) {
     <div className={`${styles.message_box} ${ownStyleAllocation}`}>
         <div className={`${styles.message} ${ownStyleAllocation}`}>
             <img src={user.profileImg} className={styles.image} alt="message-sender-profile" />
-            <p className={`${styles.text} ${ownStyleAllocation}`}>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                Incidunt quam adipisci asperiores corrupti expedita. Non autem tempore natus ut,
-                id deserunt consequuntur necessitatibus,
-                voluptatibus cumque consectetur praesentium eligendi repellendus atque.</p>
+            <p className={`${styles.text} ${ownStyleAllocation}`}>{text}</p>
         </div>
-        <span className={`${styles.time} ${ownStyleAllocation}`}>1 hour ago</span>
+        <span className={`${styles.time} ${ownStyleAllocation}`}>{dayjs(timeSent).fromNow()}</span>
     </div>
   )
 }

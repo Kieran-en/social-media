@@ -8,7 +8,9 @@ export const conversationSlice = createSlice({
     reducers: {
         //setConversation here is an action name
         setConversation: (state, action) => {
-            state =  {...state, senderId: action.payload.senderId, receiverId: action.payload.receiverId} 
+            state =  {...state, senderId: action.payload.senderId, 
+                receiverId: action.payload.receiverId,
+                id: action.payload.id} 
             return state
         },
     }

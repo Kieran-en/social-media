@@ -2,12 +2,12 @@ const Message = require('../models/Message')
 
 exports.createMessage = (req, res, next) => {
 
-    const {text, conversationId, userId} = req.body
+    const {text, conversationId, senderId} = req.body
 
     const newMessage = Message.create({
         text: text,
         ConversationId: conversationId,
-        UserId: userId
+        UserId: senderId
     })
     .then(() => res.status(201).json({message: 'Message created!'}))
     .catch(error => res.status(400).json({error}));
