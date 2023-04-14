@@ -55,6 +55,7 @@ const Timeline = () => {
         post.append('userId', userId);
 
         mutation.mutate(post)
+        setText('')
     }
 
     const mutation = useMutation(createPost, {

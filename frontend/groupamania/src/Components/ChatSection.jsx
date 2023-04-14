@@ -33,7 +33,7 @@ function ChatSection({loggedinUserData}) {
          }
       </div>
       <div className={styles.chatBottom}>
-        <SendMessage conversationId={conversationId} sender={loggedinUserId}/>
+        <SendMessage conversationId={conversationId} senderId={loggedinUserId}/>
       </div>
     </div>
   )
