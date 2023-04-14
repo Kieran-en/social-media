@@ -24,7 +24,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 0.5rem;
 }
 
 .image{
@@ -47,7 +46,7 @@
 }
 
 .time{
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: gray;
     display: flex;
     margin-top: -1rem;
