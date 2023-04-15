@@ -18,7 +18,7 @@ function Conversation({receiverId, name, profileImg}) {
         dispatch(setConversation(data))
         //queryClient.invalidateQueries('conversation')
         //setCurrentChat(data)
-        queryClient.setQueryData('conversation', data)
+        //queryClient.setQueryData('conversation', data)
       }
     })
 

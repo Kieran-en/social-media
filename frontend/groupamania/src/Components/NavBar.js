@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Row, Col, NavbarBrand } from "react-bootstrap";
 import { Navbar, Dropdown } from "react-bootstrap";
 import navImg2 from '../Images/icon-left-font-monochrome-white.png';
@@ -8,13 +8,16 @@ import {useNavigate, useParams} from "react-router-dom";
 import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
 import { MdOutlineMessage, MdNotifications } from "react-icons/md";
 import { FaHome } from "react-icons/fa";
+import { AuthContext } from '../Context/AuthContext';
 
 export default function NavBar() {
     const navigate = useNavigate();
     const {userlogged} = useParams();
     const user = getCurrentUser();
+    const userData = useContext(AuthContext)
+    console.log("Context", userData)
     const profileImg = user.profileImg
-
+    
   return (
     <div>
         <Navbar className="justify-content-between px-3" style={{backgroundColor: '#242526', borderRadius: '10px'}}>

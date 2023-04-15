@@ -20,13 +20,13 @@ function SendMessage({conversationId, senderId}) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        
+
         createMessageMutation.mutate({
           text: text,
           conversationId: conversationId,
           senderId: senderId
         })
-        setText('')
+        setText("")
     }
 
   return (

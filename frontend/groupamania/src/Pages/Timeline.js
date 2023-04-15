@@ -19,6 +19,7 @@ import NavBar from "../Components/NavBar";
 
 const Timeline = () => {
     const navigate = useNavigate();
+    const userData = useContext(AuthContext) 
     const [text, setText] = useState('');
     const [file, setFile] = useState();
     const postsRef = useRef([])
@@ -29,15 +30,15 @@ const Timeline = () => {
     const [hasMore, setHasMore] = useState(true);
     const queryClient = useQueryClient()
 
-    const userData = getCurrentUser()
+    //const userData = getCurrentUser()
     /** 
     Intermediate varile to store the postId send from post inorder to transfer it as a prop to Modal Component
     This will enable the modal to send to the server the modification of a specific post 
     */
    const [postToModify, setPostToModify] = useState();
    const [postToDelete, setPostToDelete] = useState();
-   const {username} = userData
-   const {userId} = userData
+   const {username} = userData &&  userData
+   const {userId} = userData && userData
 
    const { status, data : posts, error } = useQuery('posts', getPosts)
    const { status: commentStatus, data : comments, error: commentError } = useQuery('comments', getComments)
@@ -109,7 +110,7 @@ const Timeline = () => {
         flexDirection: 'column',
        }}>
               <Row className="mb-1 d-flex flex-column align-items-start">
-              <Col lg={1} className=''><img src={user && user.profileImg} alt='Profile Image' style={{width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer'}}/></Col>
+              <Col lg={1} className=''><img src={userData && userData.profileImg} alt='Profile Image' style={{width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer'}}/></Col>
                 <Col lg={9} className=''><textarea type='text' name="text" value={text} onChange={handleChange} className={style.textarea} placeholder="What's New!"></textarea></Col>
                 <Col lg={2} className='d-flex justify-content-start'>
                  {file &&<img alt='preview-img' src={URL.createObjectURL(file)} style={{width: '100px', height: '100px', objectFit: 'cover'}}/>}

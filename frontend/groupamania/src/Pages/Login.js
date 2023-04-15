@@ -3,11 +3,26 @@ import Nav from './Nav';
 import { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setAccessToken } from '../accessToken';
+import { login } from '../Services/userService';
 import config from '../config.json'
+import { useMutation, useQueryClient } from 'react-query';
 
 const Login = () => {
 
     const  navigate = useNavigate();
+    const queryClient = useQueryClient();
+
+    const loginMutation = useMutation(login, {
+        onSuccess: (data) => {
+            console.log("data", data)
+        let { token } = data
+          localStorage.setItem('token', token)
+          console.log(data.hasOwnProperty('token'))
+                if (data.hasOwnProperty('token')){
+                 navigate(`/timeline/${data.username}`);
+                }
+        }
+      })
 
     const [values, setValues] = useState({
         email: '',
@@ -15,7 +30,6 @@ const Login = () => {
     })
 
     const handleChange = (event) => {
-        console.log(event.target.name + ":" + event.target.value)
 
         setValues(values => ({
             ...values, 
@@ -25,7 +39,10 @@ const Login = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        fetch(`${config.apiEndpoint}/auth/login`, {
+
+        console.log("values", values)
+        loginMutation.mutate(values)
+        /**fetch(`${config.apiEndpoint}/auth/login`, {
                 method: 'POST',
                 headers: {
                  'Content-Type': 'application/json',
@@ -41,7 +58,7 @@ const Login = () => {
                 if (data.hasOwnProperty('token')){
                  navigate(`/timeline/${data.username}`);
                 }
-            })
+            }) */
     }
 
     return (

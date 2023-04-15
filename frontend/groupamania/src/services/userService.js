@@ -26,8 +26,9 @@ export function modifyUser(userInfo){
     return http.put(`${config.apiEndpoint}/auth/${userInfo.id}`, userInfo)
 }
 
-export function login(userInfo){
-    return http.post(`${config.apiEndpoint}/auth/login`, userInfo)
+export async function login(userInfo){
+    const res = await http.post(`${config.apiEndpoint}/auth/login`, userInfo)
+    return res.data
 }
 
 export function logout(){
