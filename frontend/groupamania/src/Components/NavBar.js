@@ -4,20 +4,19 @@ import { Navbar, Dropdown } from "react-bootstrap";
 import navImg2 from '../Images/icon-left-font-monochrome-white.png';
 import navStyle from '../Styles/navbar.module.css';
 import { getCurrentUser, logout } from "../Services/userService";
+import { deleteToken } from '../features/tokens/tokenSlice';
 import {useNavigate, useParams} from "react-router-dom";
 import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
 import { MdOutlineMessage, MdNotifications } from "react-icons/md";
 import { FaHome } from "react-icons/fa";
-import { AuthContext } from '../Context/AuthContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function NavBar() {
     const navigate = useNavigate();
+    const dispatch = useDispatch()
     const {userlogged} = useParams();
-    //const user = getCurrentUser();
     const token = useSelector(state => state.token)
     const userData = getCurrentUser(token)
-    console.log("Context", userData)
     const profileImg = userData.profileImg
     
   return (
@@ -38,6 +37,7 @@ export default function NavBar() {
         <Dropdown.Menu >
             <Dropdown.Item eventKey='logout' onClick={() => {
               logout()
+              dispatch(deleteToken)
               navigate("/Login")
               }}>LogOut <FaDoorOpen className="ml-5"/></Dropdown.Item>
             <Dropdown.Item eventKey='profile' onClick={() => navigate(`/profilepage/${userlogged}`)  }>Visit Profile <FaUser className="ml-5" /></Dropdown.Item>

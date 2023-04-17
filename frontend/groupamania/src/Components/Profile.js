@@ -14,11 +14,13 @@ import {Tooltip,} from 'react-tippy';
 import { follow, getCurrentUser, getFollowingCount, logout } from "../Services/userService";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { AuthContext } from "../Context/AuthContext";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteToken } from "../features/tokens/tokenSlice";
 
 const Profile = ({email, profileImg, changeModalState, username, followers, following, followed_user_id}) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const dispatch = useDispatch()
     const {user} = useParams()
     const token = useSelector(state => state.token)
     const userData = getCurrentUser(token)
@@ -57,6 +59,7 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
 
     const handleLogOut = () => {
         logout();
+        dispatch(deleteToken()) 
         navigate("/Login");
     }
  
