@@ -17,7 +17,6 @@ const Login = () => {
             console.log("data", data)
         let { token } = data
           localStorage.setItem('token', token)
-          console.log(data.hasOwnProperty('token'))
                 if (data.hasOwnProperty('token')){
                  navigate(`/timeline/${data.username}`);
                 }
@@ -40,7 +39,6 @@ const Login = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        console.log("values", values)
         loginMutation.mutate(values)
         /**fetch(`${config.apiEndpoint}/auth/login`, {
                 method: 'POST',
