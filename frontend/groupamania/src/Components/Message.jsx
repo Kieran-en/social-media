@@ -2,11 +2,13 @@ import React from 'react'
 import { getCurrentUser } from '../Services/userService'
 import styles from '../Styles/message.module.css'
 import dayjs from 'dayjs';
+import { useSelector } from 'react-redux';
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
 export default function Message({ own, text, timeSent }) {
-    const user = getCurrentUser()
+    const token = useSelector(state => state.token)
+    const user = getCurrentUser(token)
     const ownStyleAllocation = own ? styles.own : ''
 
   return (

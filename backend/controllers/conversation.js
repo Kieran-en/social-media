@@ -9,8 +9,12 @@ exports.createConversation = (req, res, next) => {
     Conversation.findOne({
         where: {
             [Op.and]: [{
-                 receiverId: receiverId ,
-                 senderId: senderId 
+                 receiverId: {
+                    [Op.or] : [receiverId, senderId]
+                    },
+                 senderId: {
+                    [Op.or] : [receiverId, senderId]
+                    }
               }]
         }
     })

@@ -2,9 +2,7 @@ import React from 'react';
 import Nav from './Nav';
 import { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { setAccessToken } from '../accessToken';
 import { login } from '../Services/userService';
-import config from '../config.json'
 import { useMutation, useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { setToken } from '../features/tokens/tokenSlice';
@@ -20,7 +18,6 @@ const Login = () => {
         onSuccess: (data) => {
         let { token } = data
         dispatch(setToken(token))
-        console.log("redux", tokenn)
           localStorage.setItem('token', token)
                 if (data.hasOwnProperty('token')){
                  navigate(`/timeline/${data.username}`);

@@ -23,7 +23,6 @@ const Timeline = () => {
     const token = useSelector(state => state.token)
    // const userData = useContext(AuthContext) 
    const userData = getCurrentUser(token)
-   console.log('timeline', userData)
     const [text, setText] = useState('');
     const [file, setFile] = useState();
     const postsRef = useRef([])

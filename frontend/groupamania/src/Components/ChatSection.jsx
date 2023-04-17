@@ -25,7 +25,7 @@ function ChatSection({loggedinUserData}) {
       <div className={styles.chatTop}>
         { Object.keys(conversation).length === 0 ? 
         <p className={styles.paragraph}>No opened conversation, open a chat!</p> : 
-        messages.map(message => (
+        messages && messages.map(message => (
           <Message key={message && message.id} own={message && message.UserId == loggedinUserId ? true : false}
            text={message && message.text} 
            timeSent={message && message.createdAt} />
