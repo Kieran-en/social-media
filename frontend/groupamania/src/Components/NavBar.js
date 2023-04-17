@@ -9,14 +9,16 @@ import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
 import { MdOutlineMessage, MdNotifications } from "react-icons/md";
 import { FaHome } from "react-icons/fa";
 import { AuthContext } from '../Context/AuthContext';
+import { useSelector } from 'react-redux';
 
 export default function NavBar() {
     const navigate = useNavigate();
     const {userlogged} = useParams();
-    const user = getCurrentUser();
-    const userData = useContext(AuthContext)
+    //const user = getCurrentUser();
+    const token = useSelector(state => state.token)
+    const userData = getCurrentUser(token)
     console.log("Context", userData)
-    const profileImg = user.profileImg
+    const profileImg = userData.profileImg
     
   return (
     <div>
@@ -27,7 +29,7 @@ export default function NavBar() {
                 <Row>
                 <Col className='d-flex align-items-center gap-3'>
                 {userlogged ? <MdOutlineMessage className={navStyle.icons} onClick={() => navigate('/messages')} />
-                : <FaHome onClick={() => navigate(`/timeline/${user.username}`)} className={navStyle.icons}/> }
+                : <FaHome onClick={() => navigate(`/timeline/${userData.username}`)} className={navStyle.icons}/> }
                 <MdNotifications className={navStyle.icons}/>
         <Dropdown>
         <Dropdown.Toggle variant="dark" id="dropdown-basic">

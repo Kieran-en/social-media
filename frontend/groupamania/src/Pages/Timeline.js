@@ -16,10 +16,14 @@ import { getComments } from "../Services/commentService";
 import { getCurrentUser, getUser, logout } from "../Services/userService";
 import { AuthContext } from "../Context/AuthContext";
 import NavBar from "../Components/NavBar";
+import { useSelector } from "react-redux";
 
 const Timeline = () => {
     const navigate = useNavigate();
-    const userData = useContext(AuthContext) 
+    const token = useSelector(state => state.token)
+   // const userData = useContext(AuthContext) 
+   const userData = getCurrentUser(token)
+   console.log('timeline', userData)
     const [text, setText] = useState('');
     const [file, setFile] = useState();
     const postsRef = useRef([])
@@ -30,9 +34,8 @@ const Timeline = () => {
     const [hasMore, setHasMore] = useState(true);
     const queryClient = useQueryClient()
 
-    //const userData = getCurrentUser()
     /** 
-    Intermediate varile to store the postId send from post inorder to transfer it as a prop to Modal Component
+    Intermediate variable to store the postId send from post inorder to transfer it as a prop to Modal Component
     This will enable the modal to send to the server the modification of a specific post 
     */
    const [postToModify, setPostToModify] = useState();

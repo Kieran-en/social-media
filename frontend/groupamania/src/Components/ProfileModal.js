@@ -6,8 +6,9 @@ import style from '../Styles/profile.module.css';
 import { useState, useContext } from 'react';
 import {Tooltip,} from 'react-tippy';
 import { useMutation, useQueryClient } from "react-query";
-import { modifyUser } from '../Services/userService';
+import { getCurrentUser, modifyUser } from '../Services/userService';
 import { AuthContext } from '../Context/AuthContext';
+import { useSelector } from 'react-redux';
 
 function ProfileModal({closeModal, username, email, profileImg}) {
     const queryClient = useQueryClient()
@@ -17,9 +18,9 @@ function ProfileModal({closeModal, username, email, profileImg}) {
     });
     const [file, setFile] = useState();
     const [formErrors, setFormErrors] = useState({});
-    const userData = useContext(AuthContext)
+    const token = useSelector(state => state.token)
+    const userData = getCurrentUser(token)
     const userId = userData.userId
-    console.log(file)
 
 
     const handleChange = (event) => {

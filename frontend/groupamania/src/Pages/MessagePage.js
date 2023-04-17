@@ -6,10 +6,12 @@ import ChatSection from '../Components/ChatSection'
 import OnlineSection from '../Components/OnlineSection'
 import { useQuery } from 'react-query'
 import { getCurrentUser, getFriends } from '../Services/userService'
+import { useSelector } from 'react-redux'
 
 function MessagePage() {
 
-  const userData = getCurrentUser()
+  const token = useSelector(state => state.token)
+  const userData = getCurrentUser(token)
   const { username } = userData;
   const {error, status, data: friends} = useQuery('friends', () => getFriends(username))
 

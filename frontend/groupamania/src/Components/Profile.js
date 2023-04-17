@@ -14,12 +14,14 @@ import {Tooltip,} from 'react-tippy';
 import { follow, getCurrentUser, getFollowingCount, logout } from "../Services/userService";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { AuthContext } from "../Context/AuthContext";
+import { useSelector } from "react-redux";
 
 const Profile = ({email, profileImg, changeModalState, username, followers, following, followed_user_id}) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const {user} = useParams()
-    const userData = getCurrentUser()
+    const token = useSelector(state => state.token)
+    const userData = getCurrentUser(token)
     const following_user_id = userData.userId
     const userProfileName = userData.username
     const {data: followCount} = useQuery('followCount', () => getFollowingCount(followed_user_id, following_user_id))

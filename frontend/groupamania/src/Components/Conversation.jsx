@@ -7,7 +7,8 @@ import { setConversation } from '../features/conversations/conversationSlice'
 import styles from '../Styles/conversation.module.css'
 
 function Conversation({receiverId, name, profileImg}) {
-    const currentUser = getCurrentUser()
+    const token = useSelector(state => state.token)
+    const currentUser = getCurrentUser(token)
     const queryClient = useQueryClient()
     const {userId: senderId} = currentUser;
     const dispatch = useDispatch()

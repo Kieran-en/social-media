@@ -6,16 +6,21 @@ import { setAccessToken } from '../accessToken';
 import { login } from '../Services/userService';
 import config from '../config.json'
 import { useMutation, useQueryClient } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import { setToken } from '../features/tokens/tokenSlice';
 
 const Login = () => {
 
     const  navigate = useNavigate();
     const queryClient = useQueryClient();
+    const tokenn = useSelector((state) => state.token)
+    const dispatch = useDispatch()
 
     const loginMutation = useMutation(login, {
         onSuccess: (data) => {
-            console.log("data", data)
         let { token } = data
+        dispatch(setToken(token))
+        console.log("redux", tokenn)
           localStorage.setItem('token', token)
                 if (data.hasOwnProperty('token')){
                  navigate(`/timeline/${data.username}`);
