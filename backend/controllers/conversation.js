@@ -19,6 +19,7 @@ exports.createConversation = (req, res, next) => {
         }
     })
     .then(conversation => {
+        console.log('ASKDBasd', conversation)
         if(!conversation){
             Promise.all([
                 Conversation.create({
@@ -44,9 +45,13 @@ exports.createConversation = (req, res, next) => {
             Conversation.findOne({
                 where: {
                     [Op.and]: [{
-                         receiverId: receiverId ,
-                         senderId: senderId 
-                      }]
+                        receiverId: {
+                           [Op.or] : [receiverId, senderId]
+                           },
+                        senderId: {
+                           [Op.or] : [receiverId, senderId]
+                           }
+                     }]
                 }
             })
             .then((conversation) => res.status(200).json(conversation))

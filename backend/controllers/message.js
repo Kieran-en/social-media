@@ -4,10 +4,13 @@ exports.createMessage = (req, res, next) => {
 
     const {text, conversationId, senderId} = req.body
 
+    console.log(req.body)
+
     const newMessage = Message.create({
         text: text,
         ConversationId: conversationId,
-        UserId: senderId
+       // UserId: senderId,
+        senderId: senderId
     })
     .then(() => res.status(201).json({message: 'Message created!'}))
     .catch(error => res.status(400).json({error}));

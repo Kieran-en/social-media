@@ -14,7 +14,7 @@ function ChatSection({loggedinUserData}) {
 
   useEffect(() => {
     getMessages(conversationId)
-  }, [messages && messages.length])
+  }, [messages && messages.length, conversation.id])
   
 
   console.log(conversation)
@@ -26,7 +26,7 @@ function ChatSection({loggedinUserData}) {
         { Object.keys(conversation).length === 0 ? 
         <p className={styles.paragraph}>No opened conversation, open a chat!</p> : 
         messages && messages.map(message => (
-          <Message key={message && message.id} own={message && message.UserId == loggedinUserId ? true : false}
+          <Message key={message && message.id} own={message && message.senderId == loggedinUserId ? true : false}
            text={message && message.text} 
            timeSent={message && message.createdAt} />
         ))

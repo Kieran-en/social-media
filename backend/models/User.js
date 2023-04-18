@@ -60,7 +60,7 @@ Like.belongsTo(User);
 
 User.hasMany(Message, {foreignKey: 'senderId', onDelete: 'CASCADE'})
 
-Message.belongsTo(User);
+Message.belongsTo(User, {foreignKey: 'senderId'});
 
 User.hasMany(Conversation, {onDelete: 'CASCADE',
 foreignKey: 'senderId',

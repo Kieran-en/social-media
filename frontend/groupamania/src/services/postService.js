@@ -7,7 +7,7 @@ export async function getPosts(){
 } 
 
 export async function createPost(post){
-    return await http.post(`${config.apiEndpoint}/postt`, post)
+    return await http.post(`${config.apiEndpoint}/post`, post)
 }
 
 export async function modifyPost(post){

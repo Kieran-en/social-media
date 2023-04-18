@@ -13,8 +13,10 @@ exports.followOrUnfollow = (req, res, next) => {
             followed_user_id: followed_user_id
         }, 
         )
-          User.increment({followers: 1}, { where: {id: followed_user_id}})
-          User.increment({following: 1}, { where: {id: following_user_id}})
+        Promise.all([
+            User.increment({followers: 1}, { where: {id: followed_user_id}}),
+            User.increment({following: 1}, { where: {id: following_user_id}})
+        ])
           .then(() => res.status(200).json({message: 'You successfully followed this boy/girl!'}))
           .catch(error => res.status(500).json({error}))
         }
