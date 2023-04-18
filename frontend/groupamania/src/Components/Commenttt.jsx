@@ -6,11 +6,13 @@ import { useMutation, useQueryClient } from "react-query";
 import { AuthContext } from '../Context/AuthContext';
 import { createComment } from '../Services/commentService';
 import { getCurrentUser } from '../Services/userService';
+import { useSelector } from 'react-redux';
 
 export default function Commenttt({postId, comments}) {
   const [commentText, setComment] = useState('');
   const queryClient = useQueryClient();
-  const userData = getCurrentUser();
+  const token = useSelector(state => state.token)
+  const userData = getCurrentUser(token);
   const {userId} = userData
 
   const commentMutation = useMutation(createComment, {
