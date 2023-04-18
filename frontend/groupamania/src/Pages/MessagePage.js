@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import NavBar from '../Components/NavBar'
 import styles from '../Styles/messagePage.module.css'
 import FriendSection from '../Components/FriendSection'
@@ -12,14 +12,22 @@ import { io } from 'socket.io-client'
 function MessagePage() {
 
   const token = useSelector(state => state.token)
-  const [socket, setSocket] = useState()
+  const socket = useRef(io('http://localhost:5500'))
   const userData = getCurrentUser(token)
-  const { username } = userData;
+  const { username, userId } = userData;
   const {error, status, data: friends} = useQuery('friends', () => getFriends(username))
 
   useEffect(() => {
-    setSocket(io('http://localhost:5500'))
-  }, [])
+    socket.current.emit('addUser', userId)
+
+    socket.current.on('getUsers', users => {
+      console.log(users)
+    })
+    
+  }, [token]) //called anytime a new user is loggedIn
+
+
+  console.log(socket)
 
   return (
     <div>
