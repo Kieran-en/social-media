@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import { useQueryClient, useQuery } from 'react-query'
 import { useSelector, useDispatch } from 'react-redux'
 import { getMessages } from '../Services/messageService'
@@ -11,11 +11,15 @@ function ChatSection({loggedinUserData}) {
   const { id: conversationId } = conversation
   const {userId: loggedinUserId} = loggedinUserData
   const {data : messages} = useQuery('messages', () => getMessages(conversationId))
+  const scrollRef = useRef()
 
   useEffect(() => {
     getMessages(conversationId)
-  }, [messages && messages.length, conversation.id])
+  }, [conversation.id])
   
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({behavior : 'smooth'})
+  }, [messages])
 
   console.log(conversation)
   console.log(messages)
@@ -25,12 +29,14 @@ function ChatSection({loggedinUserData}) {
       <div className={styles.chatTop}>
         { Object.keys(conversation).length === 0 ? 
         <p className={styles.paragraph}>No opened conversation, open a chat!</p> : 
-        messages && messages.map(message => (
-          <Message key={message && message.id} own={message && message.senderId == loggedinUserId ? true : false}
-           text={message && message.text} 
-           timeSent={message && message.createdAt} />
-        ))
-         }
+        messages && messages.map(message => ( 
+          <div ref={scrollRef}>
+            <Message key={message && message.id} own={message && message.senderId == loggedinUserId ? true : false}
+          text={message && message.text} 
+          timeSent={message && message.createdAt} />
+          </div>
+        )
+         )}
       </div>
       <div className={styles.chatBottom}>
         <SendMessage conversationId={conversationId} senderId={loggedinUserId}/>
