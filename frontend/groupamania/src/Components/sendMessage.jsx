@@ -4,7 +4,7 @@ import { IoSendSharp } from "react-icons/io5";
 import { createMessage } from '../Services/messageService';
 import styles from '../Styles/sendMessage.module.css'
 
-function SendMessage({conversationId, senderId}) {
+function SendMessage({conversationId, senderId, receiverId, socket}) {
     const [text, setText] = useState();
     const queryClient = useQueryClient()
 
@@ -26,6 +26,13 @@ function SendMessage({conversationId, senderId}) {
           conversationId: conversationId,
           senderId: senderId
         })
+
+        socket.current && socket.current.emit('sendMessage', {
+          senderId,
+          text,
+          receiverId
+        }) 
+
         setText("")
     }
 

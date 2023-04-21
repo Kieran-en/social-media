@@ -16,7 +16,6 @@ function Conversation({receiverId, name, profileImg}) {
 
     const conversationMutation = useMutation(createConversation, {
       onSuccess: (data) => {
-        console.log(data)
         dispatch(setConversation(data))
         //queryClient.invalidateQueries('conversation')
         //setCurrentChat(data)
@@ -24,7 +23,7 @@ function Conversation({receiverId, name, profileImg}) {
       }
     })
 
-   console.log(conversation)
+   //console.log(conversation)
 
     const addConversation = () => {
       conversationMutation.mutate({
