@@ -12,6 +12,7 @@ function ChatSection({loggedinUserData, socket}) {
   const { id: conversationId, receiverId, senderId } = conversation
   const {userId: loggedinUserId} = loggedinUserData
   const {data : messages} = useQuery('messages', () => getMessages(conversationId))
+  const [message, setMessage] = useState(messages)
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const scrollRef = useRef()
 
@@ -22,13 +23,20 @@ function ChatSection({loggedinUserData, socket}) {
  
   useEffect(() => {
     socket.current && socket.current.on('getMessage', ({senderId, text}) => {
+      console.log({senderId, text})
       setArrivalMessage({
         senderId,
         text,
         createdAt: Date.now()
       })
     })
-  })
+
+  }, [])
+
+
+  useEffect(() => {
+    arrivalMessage && setMessage((prev) => [...prev, arrivalMessage])
+  }, [arrivalMessage])
 
   useEffect(() => {
     //arrivalMessage && conversation?.senderId === arrivalMessage.senderId && messages.push(arrivalMessage)
@@ -43,7 +51,7 @@ function ChatSection({loggedinUserData, socket}) {
       <div className={styles.chatTop}>
         { Object.keys(conversation).length === 0 ? 
         <p className={styles.paragraph}>No opened conversation, open a chat!</p> : 
-        messages && messages.map(message => ( 
+        message && message.map(message => ( 
           <div ref={scrollRef} key={message && message.id}>
             <Message key={message && message.id} own={message && message.senderId == loggedinUserId ? true : false}
           text={message && message.text} 

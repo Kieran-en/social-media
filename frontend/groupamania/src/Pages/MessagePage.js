@@ -41,7 +41,7 @@ function MessagePage() {
     <div>
         <NavBar />
         <div className={styles.grid}>
-            <div className={styles.friend_section}><FriendSection friends={friends} /></div>
+            <div className={styles.friend_section}><FriendSection friends={friends} socket={socket}/></div>
             <div className={styles.chat_section}><ChatSection loggedinUserData={userData} socket={socket}/></div>
             <div className={styles.online_section}><OnlineSection /></div>
         </div>

@@ -15,6 +15,8 @@ function SendMessage({conversationId, senderId, receiverId, socket}) {
     })
 
     const handleChange = (event) => {
+      socket.current && socket.current.emit('typing', senderId)
+
         setText(event.target.value)
     }
 
@@ -30,7 +32,8 @@ function SendMessage({conversationId, senderId, receiverId, socket}) {
         socket.current && socket.current.emit('sendMessage', {
           senderId,
           text,
-          receiverId
+          receiverId,
+          room: conversationId
         }) 
 
         setText("")

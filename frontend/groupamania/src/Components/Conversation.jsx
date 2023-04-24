@@ -6,7 +6,7 @@ import { getCurrentUser } from '../Services/userService'
 import { setConversation } from '../features/conversations/conversationSlice'
 import styles from '../Styles/conversation.module.css'
 
-function Conversation({receiverId, name, profileImg}) {
+function Conversation({receiverId, name, profileImg, socket}) {
     const token = useSelector(state => state.token)
     const currentUser = getCurrentUser(token)
     const queryClient = useQueryClient()
@@ -17,6 +17,10 @@ function Conversation({receiverId, name, profileImg}) {
     const conversationMutation = useMutation(createConversation, {
       onSuccess: (data) => {
         dispatch(setConversation(data))
+        socket.current.emit('join_room', {
+          room: data.id,
+          senderId
+        })
         //queryClient.invalidateQueries('conversation')
         //setCurrentChat(data)
         //queryClient.setQueryData('conversation', data)
