@@ -27,8 +27,6 @@ function MessagePage() {
   useEffect(() => {
     socket.current.emit('addUser', userId)
 
-    console.log('exec')
-
     socket.current.on('getUsers', users => {
       console.log(users)
     })

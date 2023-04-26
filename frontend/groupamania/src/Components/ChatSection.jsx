@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
-import { useQueryClient, useQuery } from 'react-query'
-import { useSelector, useDispatch } from 'react-redux'
+import { useQuery } from 'react-query'
+import { useSelector } from 'react-redux'
 import { getMessages } from '../Services/messageService'
 import Message from './Message'
 import styles from '../Styles/chat.module.css'
@@ -10,15 +10,21 @@ function ChatSection({loggedinUserData, socket}) {
 
   const conversation = useSelector((state) => state.conversation)
   const { id: conversationId, receiverId, senderId } = conversation
-  const {userId: loggedinUserId} = loggedinUserData
+  const {userId: loggedinUserId, username: loggedinName} = loggedinUserData
   const {data : messages} = useQuery('messages', () => getMessages(conversationId))
-  const [message, setMessage] = useState(messages)
+  const [message, setMessage] = useState(messages && [...messages])
   const [arrivalMessage, setArrivalMessage] = useState(null)
+  const [userTyping, setUserTyping] = useState(null)
   const scrollRef = useRef()
+
+  console.log(message)
 
   useEffect(() => {
     getMessages(conversationId)
   }, [conversation.id])
+
+  console.log(message)
+  console.log(arrivalMessage)
 
  
   useEffect(() => {
@@ -34,13 +40,16 @@ function ChatSection({loggedinUserData, socket}) {
   }, [])
 
 
+
+
+  console.log(userTyping.userTyping + "is typing...")
+
+
+
   useEffect(() => {
     arrivalMessage && setMessage((prev) => [...prev, arrivalMessage])
   }, [arrivalMessage])
 
-  useEffect(() => {
-    //arrivalMessage && conversation?.senderId === arrivalMessage.senderId && messages.push(arrivalMessage)
-  }, [])
   
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior : 'smooth'})
@@ -61,7 +70,7 @@ function ChatSection({loggedinUserData, socket}) {
          )}
       </div>
       <div className={styles.chatBottom}>
-        <SendMessage conversationId={conversationId} senderId={loggedinUserId} receiverId={receiverId} socket={socket}/>
+        <SendMessage conversationId={conversationId} senderId={loggedinUserId} senderName={loggedinName} receiverId={receiverId} socket={socket}/>
       </div>
     </div>
   )
