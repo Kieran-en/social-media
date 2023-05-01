@@ -11,17 +11,17 @@ function ChatSection({loggedinUserData, socket}) {
   const conversation = useSelector((state) => state.conversation)
   const { id: conversationId, receiverId, senderId } = conversation
   const {userId: loggedinUserId, username: loggedinName} = loggedinUserData
-  const [message, setMessage] = useState()
-  const {data : messages} = useQuery(['messages', conversationId], () => getMessages(conversationId),{
-    onSuccess: (messages) => {
-      setMessage(messages)
+  const [messages, setMessages] = useState()
+  const {data : databaseMessages} = useQuery(['messages', conversationId], () => getMessages(conversationId),{
+    onSuccess: (databaseMessages) => {
+      setMessages(databaseMessages)
     }
     })
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const [userTyping, setUserTyping] = useState(null)
   const scrollRef = useRef()
 
-  console.log(message)
+  console.log(messages)
 
   useEffect(() => {
     getMessages(conversationId)
@@ -34,7 +34,7 @@ function ChatSection({loggedinUserData, socket}) {
     socket.current && socket.current.on('getMessage', ({senderId, text}) => {
       //console.log({senderId, text})
       setArrivalMessage({
-        id: message.length + 1, 
+        id: messages.length + 1, 
         senderId,
         text,
         createdAt: Date.now()
@@ -51,14 +51,14 @@ function ChatSection({loggedinUserData, socket}) {
   console.log(userTyping && userTyping + " is typing...")
 
   useEffect(() => {
-    arrivalMessage && setMessage((prev) => [...prev, arrivalMessage])
-    console.log("after", message)
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage])
+    console.log("after", messages)
   }, [arrivalMessage])
 
   
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior : 'smooth'})
-  }, [message])
+  }, [messages])
 
 
   return (
