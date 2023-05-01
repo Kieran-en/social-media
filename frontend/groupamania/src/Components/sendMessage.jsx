@@ -3,8 +3,10 @@ import { useQueryClient, useMutation } from 'react-query';
 import { IoSendSharp } from "react-icons/io5";
 import { createMessage } from '../Services/messageService';
 import styles from '../Styles/sendMessage.module.css'
+import { useSelector } from 'react-redux';
 
 function SendMessage({conversationId, senderId, receiverId, senderName, socket}) {
+    const conversation = useSelector(state => state.conversation)
     const [text, setText] = useState();
     const queryClient = useQueryClient()
 
@@ -15,7 +17,7 @@ function SendMessage({conversationId, senderId, receiverId, senderName, socket})
     })
 
     const handleChange = (event) => {
-      socket.current && socket.current.emit('typing', {senderName})
+      socket.current && socket.current.emit('typing', {senderName, room: conversation.id})
 
         setText(event.target.value)
     }

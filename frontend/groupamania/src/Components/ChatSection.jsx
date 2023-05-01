@@ -11,12 +11,12 @@ function ChatSection({loggedinUserData, socket}) {
   const conversation = useSelector((state) => state.conversation)
   const { id: conversationId, receiverId, senderId } = conversation
   const {userId: loggedinUserId, username: loggedinName} = loggedinUserData
-  const {data : messages} = useQuery('messages', () => getMessages(conversationId),{
-  onSuccess: () => {
-    setMessage(messages)
-  }
-  })
   const [message, setMessage] = useState()
+  const {data : messages} = useQuery(['messages', conversationId], () => getMessages(conversationId),{
+    onSuccess: (messages) => {
+      setMessage(messages)
+    }
+    })
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const [userTyping, setUserTyping] = useState(null)
   const scrollRef = useRef()
@@ -32,23 +32,28 @@ function ChatSection({loggedinUserData, socket}) {
  
   useEffect(() => {
     socket.current && socket.current.on('getMessage', ({senderId, text}) => {
-      console.log({senderId, text})
+      //console.log({senderId, text})
       setArrivalMessage({
+        id: message.length + 1, 
         senderId,
         text,
         createdAt: Date.now()
       })
     })
-    console.log("This you?", arrivalMessage)
+
+    socket.current && socket.current.on('userTyping', ({userTyping}) => {
+      console.log(userTyping)
+      setUserTyping(userTyping)
+    })
 
   }, [])
 
-  //console.log(userTyping && userTyping.userTyping + "is typing...")
+  console.log(userTyping && userTyping + " is typing...")
 
   useEffect(() => {
     arrivalMessage && setMessage((prev) => [...prev, arrivalMessage])
     console.log("after", message)
-  }, [arrivalMessage, message])
+  }, [arrivalMessage])
 
   
   useEffect(() => {

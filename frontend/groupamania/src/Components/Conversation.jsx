@@ -21,7 +21,7 @@ function Conversation({receiverId, name, profileImg, socket}) {
           room: data.id,
           senderId
         })
-        //queryClient.invalidateQueries('conversation')
+        queryClient.invalidateQueries(['messages', conversation.id])
         //setCurrentChat(data)
         //queryClient.setQueryData('conversation', data)
       }
