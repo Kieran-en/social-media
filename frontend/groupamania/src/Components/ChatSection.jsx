@@ -11,8 +11,12 @@ function ChatSection({loggedinUserData, socket}) {
   const conversation = useSelector((state) => state.conversation)
   const { id: conversationId, receiverId, senderId } = conversation
   const {userId: loggedinUserId, username: loggedinName} = loggedinUserData
-  const {data : messages} = useQuery('messages', () => getMessages(conversationId))
-  const [message, setMessage] = useState(messages && [...messages])
+  const {data : messages} = useQuery('messages', () => getMessages(conversationId),{
+  onSuccess: () => {
+    setMessage(messages)
+  }
+  })
+  const [message, setMessage] = useState()
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const [userTyping, setUserTyping] = useState(null)
   const scrollRef = useRef()
@@ -23,8 +27,7 @@ function ChatSection({loggedinUserData, socket}) {
     getMessages(conversationId)
   }, [conversation.id])
 
-  console.log(message)
-  console.log(arrivalMessage)
+ // console.log(arrivalMessage)
 
  
   useEffect(() => {
@@ -36,24 +39,22 @@ function ChatSection({loggedinUserData, socket}) {
         createdAt: Date.now()
       })
     })
+    console.log("This you?", arrivalMessage)
 
   }, [])
 
-
-
-
-  console.log(userTyping.userTyping + "is typing...")
-
-
+  //console.log(userTyping && userTyping.userTyping + "is typing...")
 
   useEffect(() => {
     arrivalMessage && setMessage((prev) => [...prev, arrivalMessage])
-  }, [arrivalMessage])
+    console.log("after", message)
+  }, [arrivalMessage, message])
 
   
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior : 'smooth'})
-  }, [messages])
+  }, [message])
+
 
   return (
     <div className={styles.box}>
