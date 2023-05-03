@@ -62,7 +62,7 @@ function ChatSection({loggedinUserData, socket}) {
       setUserTyping(userTyping)
     })
 
-  })
+  }, [messages])
 
   //console.log(userTyping && userTyping + " is typing...")
 
