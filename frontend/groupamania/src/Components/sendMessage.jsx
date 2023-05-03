@@ -12,7 +12,7 @@ function SendMessage({conversationId, senderId, receiverId, senderName, socket})
 
     const createMessageMutation = useMutation(createMessage, {
       onSuccess: () => {
-        queryClient.invalidateQueries('messages')
+       // queryClient.invalidateQueries(['messages', conversation.id])
       }
     })
 

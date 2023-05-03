@@ -22,7 +22,6 @@ function MessagePage() {
     socket.current = (io('http://localhost:5500'))
   }, [])
 
-  console.log(socket)
 
   useEffect(() => {
     socket.current.emit('addUser', userId)

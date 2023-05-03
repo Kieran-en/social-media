@@ -17,6 +17,7 @@ const Login = () => {
     const loginMutation = useMutation(login, {
         onSuccess: (data) => {
         let { token } = data
+        console.log(token)
         dispatch(setToken(token))
           localStorage.setItem('token', token)
                 if (data.hasOwnProperty('token')){
