@@ -1,12 +1,12 @@
 import React from 'react'
 import OnlineUser from './OnlineUser'
-
-function OnlineSection() {
+import styles from '../Styles/online.module.css'
+function OnlineSection({onlineUsers}) {
   return (
     <div>
-      <OnlineUser />
-      <OnlineUser />
-      <OnlineUser />
+      {onlineUsers.length > 0 ? 
+      onlineUsers.map(user => <OnlineUser key={user.userId} OnlineUser username={user.username} profileImg={user.profileImg} />) : 
+      <p className={styles.paragraph}>None of your friends is currently online</p>}
     </div>
   )
 }

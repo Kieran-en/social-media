@@ -8,14 +8,18 @@ import { useQuery } from 'react-query'
 import { getCurrentUser, getFriends } from '../Services/userService'
 import { useSelector } from 'react-redux'
 import { io } from 'socket.io-client'
+import { useState } from 'react'
 
 function MessagePage() {
 
   const token = useSelector(state => state.token)
   const socket = useRef()
   const userData = getCurrentUser(token)
-  const { username, userId } = userData;
+  const { username, userId, profileImg } = userData;
+  const [onlineUsers, setOnlineUsers] = useState([])
   const {error, status, data: friends} = useQuery('friends', () => getFriends(username))
+
+  console.log(onlineUsers)
 
 //To avoid a connection from happening everytime the page re-renders
   useEffect(() => {
@@ -24,10 +28,12 @@ function MessagePage() {
 
 
   useEffect(() => {
-    socket.current.emit('addUser', userId)
+    socket.current.emit('addUser', {userId, username, profileImg})
 
     socket.current.on('getUsers', users => {
-      console.log(users)
+      let usersWithoutCurrent = users.filter(user => user.userId !== userId)
+      setOnlineUsers(usersWithoutCurrent)
+      //console.log(users)
     })
 
   }, [token]) //called anytime a new user is loggedIn
@@ -40,7 +46,7 @@ function MessagePage() {
         <div className={styles.grid}>
             <div className={styles.friend_section}><FriendSection friends={friends} socket={socket}/></div>
             <div className={styles.chat_section}><ChatSection loggedinUserData={userData} socket={socket}/></div>
-            <div className={styles.online_section}><OnlineSection /></div>
+            <div className={styles.online_section}><OnlineSection onlineUsers={onlineUsers}/></div>
         </div>
     </div>
   )

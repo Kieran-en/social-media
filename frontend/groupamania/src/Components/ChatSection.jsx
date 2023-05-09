@@ -32,37 +32,50 @@ function ChatSection({loggedinUserData, socket}) {
     },
   };
 
-  console.log(messages)
-
-  useEffect(() => {
+/** 
+ * useEffect(() => {
     getMessages(conversationId)
   }, [conversation.id])
+*/
+
+console.log('outside', messages)
 
  
   useEffect(() => {
-    socket.current && socket.current.on('getMessage', ({senderId, text}) => {
-      console.log('received')
-      /**  setArrivalMessage({
-        id: messages.length + 2, 
-        senderId,
-        text,
-        createdAt: Date.now()
-      }) */
 
-      setMessages([...messages, {
-        id: messages.length + 2, 
-        senderId,
-        text,
-        createdAt: Date.now()
-      }])
+    let isMounted = true;
 
-    })
 
-    socket.current && socket.current.on('userTyping', ({userTyping}) => {
-      setUserTyping(userTyping)
-    })
+    if(isMounted){
+      socket.current && socket.current.on('getMessage', ({senderId, text, room}) => {
+        console.log('received')
 
-  }, [messages])
+    setMessages([...messages, {
+          id: messages.length + 2, 
+          senderId,
+          text,
+          ConversationId: room,
+          createdAt: Date.now()
+        }])
+
+        console.log('inside', messages)
+  
+      })
+
+      /** 
+       *socket.current && socket.current.on('userTyping', ({userTyping}) => {
+        setUserTyping(userTyping)
+      })
+      */
+  
+    }
+
+    return () => {
+      isMounted = false;
+  }
+     
+
+  })
 
   //console.log(userTyping && userTyping + " is typing...")
 
@@ -88,7 +101,7 @@ function ChatSection({loggedinUserData, socket}) {
         <p className={styles.paragraph}>No opened conversation, open a chat!</p> : 
         messages && messages.map(message => ( 
           <div ref={scrollRef} key={message && message.id}>
-            <Message key={message && message.id} own={message && message.senderId == loggedinUserId ? true : false}
+            <Message own={message && message.senderId == loggedinUserId ? true : false}
           text={message && message.text} 
           timeSent={message && message.createdAt} />
           </div>
