@@ -45,7 +45,7 @@ export function getCurrentUser(jwt){
 }
 
 export async function getFriends(userToGetFriends){
-    const res = await await http.get(`${config.apiEndpoint}/auth/friends/${userToGetFriends}`)
+    const res = await http.get(`${config.apiEndpoint}/auth/friends/${userToGetFriends}`)
     return res.data.following_user_id;
 }
 

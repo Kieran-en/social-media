@@ -43,22 +43,19 @@ console.log('outside', messages)
  
   useEffect(() => {
 
-    let isMounted = true;
+    //let isMounted = true;
 
-
-    if(isMounted){
+   // if(isMounted){
       socket.current && socket.current.on('getMessage', ({senderId, text, room}) => {
-        console.log('received')
+        console.log('received', {senderId, text, room})
 
-    setMessages([...messages, {
+      setMessages([...messages, {
           id: messages.length + 2, 
           senderId,
           text,
           ConversationId: room,
           createdAt: Date.now()
-        }])
-
-        console.log('inside', messages)
+        }]) 
   
       })
 
@@ -68,11 +65,11 @@ console.log('outside', messages)
       })
       */
   
-    }
+  //  }
 
-    return () => {
+  /**return () => {
       isMounted = false;
-  }
+  } */
      
 
   })
@@ -101,7 +98,7 @@ console.log('outside', messages)
         <p className={styles.paragraph}>No opened conversation, open a chat!</p> : 
         messages && messages.map(message => ( 
           <div ref={scrollRef} key={message && message.id}>
-            <Message own={message && message.senderId == loggedinUserId ? true : false}
+          <Message own={message && message.senderId == loggedinUserId ? true : false}
           text={message && message.text} 
           timeSent={message && message.createdAt} />
           </div>
@@ -117,7 +114,11 @@ console.log('outside', messages)
        }
       </div>
       <div className={styles.chatBottom}>
-        <SendMessage conversationId={conversationId} senderId={loggedinUserId} senderName={loggedinName} receiverId={receiverId} socket={socket}/>
+        <SendMessage conversationId={conversationId} 
+        senderId={loggedinUserId} 
+        senderName={loggedinName} 
+        receiverId={receiverId} 
+        socket={socket}/>
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors')
 const http = require('http');
 const server = http.createServer(app);
 //const { Server } = require("socket.io");
@@ -7,12 +8,12 @@ const server = http.createServer(app);
 
 let users = [];
 
-const addUser = (userId, socketId) => {
+const addUser = (userId, socketId, profileImg, username) => {
     let index = users.findIndex(user => user.userId === userId)
 
     //if the userId in parameters is not inside the users array yet, add it
     if (index === -1){
-        users.push({userId, socketId})
+        users.push({userId, socketId, username, profileImg})
     }
     
 }
@@ -34,13 +35,15 @@ const io = require("socket.io")(5500, {
     },
 })
 
+app.use(cors())
+
 io.on('connection', (socket) => {
     //when connected
   console.log('a user connected!')
 
   //Receive userId and socketId from user
-  socket.on("addUser", (userId) => {
-    addUser(userId, socket.id) //We add both userId and socketId to have a unique pair because at each session, the socketId changes
+  socket.on("addUser", ({userId, username, profileImg}) => {
+    addUser(userId, socket.id, profileImg, username) //We add both userId and socketId to have a unique pair because at each session, the socketId changes
     io.emit("getUsers", users) //for client to receive new user array after user is added
   })
 
@@ -52,18 +55,21 @@ io.on('connection', (socket) => {
 
   //Send and get message
   socket.on('sendMessage', ({senderId, receiverId, text, room}) => {
-    console.log(receiverId)
+    console.log(receiverId, text)
     //const user = getUser(receiverId);
+    //if(senderId) return
+
     io.to(room).emit('getMessage', {
         senderId,
-        text
+        text,
+        room
     })
   })
 
   socket.on('typing', ({senderName, room}) => {
-    console.log(senderName + " is typing...")
+    console.log(senderName + " is typing... in room " + room)
 
-    io.to(room).emit('userTyping', {
+    io.emit('userTyping', {
         userTyping: senderName
     })
   })

@@ -16,10 +16,11 @@ function MessagePage() {
   const socket = useRef()
   const userData = getCurrentUser(token)
   const { username, userId, profileImg } = userData;
-  const [onlineUsers, setOnlineUsers] = useState([])
+  const [onlineUsersIds, setOnlineUsersIds] = useState([])
+  const [onlineFriends, setOnlineFriends] = useState([])
   const {error, status, data: friends} = useQuery('friends', () => getFriends(username))
 
-  console.log(onlineUsers)
+
 
 //To avoid a connection from happening everytime the page re-renders
   useEffect(() => {
@@ -31,8 +32,10 @@ function MessagePage() {
     socket.current.emit('addUser', {userId, username, profileImg})
 
     socket.current.on('getUsers', users => {
-      let usersWithoutCurrent = users.filter(user => user.userId !== userId)
-      setOnlineUsers(usersWithoutCurrent)
+      setOnlineUsersIds(users.map(user => user.userId)) //Mapping online users Ids
+      let userFriendsOnline = friends && friends.filter(friend => onlineUsersIds.includes(friend.userId))
+
+      setOnlineFriends(userFriendsOnline)
       //console.log(users)
     })
 
@@ -46,7 +49,7 @@ function MessagePage() {
         <div className={styles.grid}>
             <div className={styles.friend_section}><FriendSection friends={friends} socket={socket}/></div>
             <div className={styles.chat_section}><ChatSection loggedinUserData={userData} socket={socket}/></div>
-            <div className={styles.online_section}><OnlineSection onlineUsers={onlineUsers}/></div>
+            <div className={styles.online_section}><OnlineSection onlineUsers={onlineFriends}/></div>
         </div>
     </div>
   )
