@@ -1,10 +1,14 @@
 import http from './httpService'
 import config from '../config.json'
 
-export async function getPosts(){
-    const res = await http.get(`${config.apiEndpoint}/post?page=1`)
+export async function getPosts({pageParam = 1}){
+    const res = await http.get(`${config.apiEndpoint}/post?page=${pageParam}`)
     return res.data;
-} 
+}
+
+export async function getData(){
+
+}
 
 export async function createPost(post){
     return await http.post(`${config.apiEndpoint}/post`, post)

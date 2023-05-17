@@ -20,8 +20,6 @@ function MessagePage() {
   const [onlineFriends, setOnlineFriends] = useState([])
   const {error, status, data: friends} = useQuery('friends', () => getFriends(username))
 
-
-
 //To avoid a connection from happening everytime the page re-renders
   useEffect(() => {
     socket.current = (io('http://localhost:5500'))
@@ -33,15 +31,18 @@ function MessagePage() {
 
     socket.current.on('getUsers', users => {
       setOnlineUsersIds(users.map(user => user.userId)) //Mapping online users Ids
-      let userFriendsOnline = friends && friends.filter(friend => onlineUsersIds.includes(friend.userId))
-
-      setOnlineFriends(userFriendsOnline)
+      //let userFriendsOnline = friends && friends.filter(friend => onlineUsersIds.includes(friend.userId))
       //console.log(users)
     })
 
   }, [token]) //called anytime a new user is loggedIn
 
+  useEffect(() => {
+    setOnlineFriends(friends && friends.filter(friend => onlineUsersIds.includes(friend.id)))
+  }, [onlineUsersIds])
 
+  console.log(friends)
+  console.log(onlineFriends)
 
   return (
     <div>

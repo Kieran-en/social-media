@@ -17,7 +17,7 @@ import { getCurrentUser } from "../Services/userService";
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
-const Post = ({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, comments, likes, changeDeleteModalState, date}) => {
+const Post = React.forwardRef(({picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, comments, likes, changeDeleteModalState, date}, ref) => {
 
     const [showComment, setShowComemnt] = useState(false)
     const queryClient = useQueryClient();
@@ -32,40 +32,6 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
     }
 
     const likeMutation = useMutation(like, {
-
-        /**  onMutate: async (newLike) => {
-            // Cancel any outgoing refetches
-            // (so they don't overwrite our optimistic update)
-            ///await queryClient.cancelQueries({ queryKey: ['numLikes'] })
-            await queryClient.cancelQueries({ queryKey: ['isPostLiked', postId] })
-        
-            // Snapshot the previous value
-           // const previousNumLikes = queryClient.getQueryData(['numLikes'])
-            const previousPostLiked = queryClient.getQueryData(['isPostLiked', postId])
-        
-            // Optimistically update to the new value
-            //queryClient.setQueryData(['numLikes'], (old) => count > 0 ? old-- : old++ )
-            queryClient.setQueryData(['isPostLiked', postId], (old) => count > 0 ? old-- : old++)
-        
-            // Return a context object with the snapshotted value
-            return {  previousPostLiked }
-          },
-          // If the mutation fails,
-          // use the context returned from onMutate to roll back
-          onError: (err, newTodo, context) => Promise.all([
-            //queryClient.setQueryData(['numLikes'], context.previousNumLikes),
-            queryClient.setQueryData(['isPostLiked', postId], context.previousPostLiked)
-          ]),
-          
-        
-          
-          // Always refetch after error or success:
-          onSettled: () => Promise.all([
-            queryClient.invalidateQueries({ queryKey: ['posts'] }),
-            queryClient.invalidateQueries({ queryKey: ['isPostLiked', postId] })
-          ]),
-*/
-
        
  onSuccess: () => Promise.all([
             queryClient.invalidateQueries(['isPostLiked', postId]),
@@ -100,7 +66,7 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
     }
 
     return (
-        <div className='container mt-5 mb-5' style={{backgroundColor: '#242526', color: 'white', borderRadius: '10px', width: 'clamp(50%, 800px, 85%)'}}>
+        <div  className='container mt-5 mb-5' style={{backgroundColor: '#242526', color: 'white', borderRadius: '10px', width: 'clamp(50%, 800px, 85%)'}}>
             <div className="row d-flex align-items-center justify-content-between">
                 <div className="col-sm-7 d-flex align-items-center mt-2 ">
                 <div className="col-sm-4 d-flex align-items-center " style={{cursor: 'pointer'}}
@@ -153,6 +119,6 @@ const Post = ({picture, profileImg, content, username, userLoggedIn, postId, use
                 
         </div>
     )
-}
+})
 
 export default Post;

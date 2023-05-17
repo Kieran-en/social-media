@@ -6,6 +6,8 @@ const server = http.createServer(app);
 //const { Server } = require("socket.io");
 //const io = new Server(server);
 
+app.use(cors())
+
 let users = [];
 
 const addUser = (userId, socketId, profileImg, username) => {
@@ -57,7 +59,6 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', ({senderId, receiverId, text, room}) => {
     console.log(receiverId, text)
     //const user = getUser(receiverId);
-    //if(senderId) return
 
     io.to(room).emit('getMessage', {
         senderId,

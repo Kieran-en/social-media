@@ -10,7 +10,8 @@ import {FaImages} from "react-icons/fa";
 import { useState, useRef, useContext } from "react";
 import {useNavigate, useParams } from "react-router-dom";
 import config from '../config.json'
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "react-query";
+import { useInView } from "react-intersection-observer";
 import { getPosts, createPost } from "../Services/postService";
 import { getComments } from "../Services/commentService";
 import { getCurrentUser, getUser, logout } from "../Services/userService";
@@ -26,6 +27,7 @@ const Timeline = () => {
     const [text, setText] = useState('');
     const [file, setFile] = useState();
     const postsRef = useRef([])
+    const {ref, inView} = useInView();
     const {userlogged} = useParams();
     const [modalOpen, setModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -42,7 +44,23 @@ const Timeline = () => {
    const {username} = userData &&  userData
    const {userId} = userData && userData
 
-   const { status, data : posts, error } = useQuery('posts', getPosts)
+   //const { status, data : posts, error } = useQuery('posts', () => getPosts(page))
+   const {
+    status,
+    data : posts,
+    error,
+    isFetching,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: 'posts',
+    queryFn: getPosts,
+    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+  })
+
+  console.log(posts)
+
    const { status: commentStatus, data : comments, error: commentError } = useQuery('comments', getComments)
    const { status: userStatus, data : user, error: userError} = useQuery(['user'], () => getUser(username))
     
@@ -53,7 +71,7 @@ const Timeline = () => {
     const handlePost = (event) => {
         event.preventDefault();
         const post = new FormData();
-        post.append('text', text)
+        post.append('text', text);
         post.append('image', file);
         post.append('userId', userId);
 
@@ -143,29 +161,33 @@ const Timeline = () => {
         >
        </InfiniteScroll> */}
 
-       {posts && posts.map((post) => (
-            <Post 
-            changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
-                setModalOpen(true)
-                setPostToModify(specificPost)
-            }}
-            changeDeleteModalState={(specificPost) => {
-                deleteModalOpen ? setDeleteModalOpen(false) : setDeleteModalOpen(true)
-                setPostToDelete(specificPost)
-            }}
-            profileImg={post.User && post.User.profileImg}
-            picture={post.imageUrl} 
-            content={post.text} 
-            likes={post.likes} 
-            dislikes={post.dislikes} 
-            username={post.User.name}
-            key={post.id}
-            postId={post.id} 
-            userId={post.UserId}
-            date={post.createdAt}
-            userLoggedIn = {userlogged} 
-            comments = {comments}/>
-        ))} 
+       {posts && posts.pages.map((page, key) => (
+        <React.Fragment key={key}>
+        {page.map((post) => (
+          <Post 
+          changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
+              setModalOpen(true)
+              setPostToModify(specificPost)
+          }}
+          changeDeleteModalState={(specificPost) => {
+              deleteModalOpen ? setDeleteModalOpen(false) : setDeleteModalOpen(true)
+              setPostToDelete(specificPost)
+          }}
+          profileImg={post.User && post.User.profileImg}
+          picture={post.imageUrl} 
+          content={post.text} 
+          likes={post.likes} 
+          dislikes={post.dislikes} 
+          username={post.User.name}
+          key={post.id}
+          postId={post.id} 
+          userId={post.UserId}
+          date={post.createdAt}
+          userLoggedIn = {userlogged} 
+          comments = {comments}/>
+        ))}
+      </React.Fragment>
+       ))}
 
         {modalOpen && <Modal 
         closeModal={() => {setModalOpen(false)}}
