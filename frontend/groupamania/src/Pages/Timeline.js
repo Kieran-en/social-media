@@ -44,7 +44,6 @@ const Timeline = () => {
    const {username} = userData &&  userData
    const {userId} = userData && userData
 
-   //const { status, data : posts, error } = useQuery('posts', () => getPosts(page))
    const {
     status,
     data : posts,
@@ -213,7 +212,8 @@ const Timeline = () => {
         </Container>
 
        {content}
-
+       {isFetchingNextPage && <h3>Loading...</h3>}
+       
         {modalOpen && <Modal 
         closeModal={() => {setModalOpen(false)}}
         postToModify={postToModify}

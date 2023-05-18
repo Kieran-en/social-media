@@ -64,9 +64,6 @@ const Post = React.forwardRef(({picture, profileImg, content, username, userLogg
         return fileArray[fileArray.length - 1] === 'mp4';
     }
 
-    console.log(postId, ref ? 'true' : 'false')
-
-
     return (
         <React.Fragment>
             {ref ? (
