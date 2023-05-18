@@ -7,7 +7,7 @@ import DeleteModal from '../Components/DeleteModal';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import style from '../Styles/timeline.module.css';
 import {FaImages} from "react-icons/fa";
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import {useNavigate, useParams } from "react-router-dom";
 import config from '../config.json'
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "react-query";
@@ -56,7 +56,10 @@ const Timeline = () => {
   } = useInfiniteQuery({
     queryKey: 'posts',
     queryFn: getPosts,
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    getNextPageParam: (lastPage, allPages) => {
+      let nextPage = lastPage.length === 2 ? allPages.length + 1 : undefined;
+      return nextPage;
+    }
   })
 
   console.log(posts)
@@ -108,6 +111,12 @@ const Timeline = () => {
         setFile(event.target.files[0]);
     }
 
+    useEffect(() => {
+      if (inView && hasNextPage) {
+        fetchNextPage();
+      }
+    }, [inView, fetchNextPage, hasNextPage]);
+
     if (status === 'loading') {
       return <span>Loading...</span>
     }
@@ -115,6 +124,61 @@ const Timeline = () => {
     if (status === 'error') {
       return <span>Error: {error.message}</span>
     }
+
+
+    const content =
+    status === "success" &&
+    posts.pages.map((page) =>
+      page.map((post, i) => {
+        if (page.length === i + 1) {
+          return <Post 
+          ref={ref}
+          changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
+              setModalOpen(true)
+              setPostToModify(specificPost)
+          }}
+          changeDeleteModalState={(specificPost) => {
+              deleteModalOpen ? setDeleteModalOpen(false) : setDeleteModalOpen(true)
+              setPostToDelete(specificPost)
+          }}
+          profileImg={post.User && post.User.profileImg}
+          picture={post.imageUrl} 
+          content={post.text} 
+          likes={post.likes} 
+          dislikes={post.dislikes} 
+          username={post.User.name}
+          key={post.id}
+          postId={post.id} 
+          userId={post.UserId}
+          date={post.createdAt}
+          userLoggedIn = {userlogged} 
+          comments = {comments}/>
+        } else {
+          return <Post 
+        changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
+            setModalOpen(true)
+            setPostToModify(specificPost)
+        }}
+        changeDeleteModalState={(specificPost) => {
+            deleteModalOpen ? setDeleteModalOpen(false) : setDeleteModalOpen(true)
+            setPostToDelete(specificPost)
+        }}
+        profileImg={post.User && post.User.profileImg}
+        picture={post.imageUrl} 
+        content={post.text} 
+        likes={post.likes} 
+        dislikes={post.dislikes} 
+        username={post.User.name}
+        key={post.id}
+        postId={post.id} 
+        userId={post.UserId}
+        date={post.createdAt}
+        userLoggedIn = {userlogged} 
+        comments = {comments}/>
+        }
+      })
+    );
+
 
     return ( 
             <div style={{backgroundColor: '#18191A', height: '100%', flex: '1'}}>
@@ -148,46 +212,7 @@ const Timeline = () => {
 
         </Container>
 
-         {/** <InfiniteScroll
-        dataLength={2}
-        next={fetchData}
-        hasMore={hasMore}
-        loader={<h4 style={{color: 'white', textAlign: 'center'}}>Loading...</h4>}
-        endMessage={
-                     <p style={{ textAlign: 'center', color: 'white', fontSize: '16px'}}>
-                      <b>Yay! You have seen it all</b>
-                     </p>
-                   }
-        >
-       </InfiniteScroll> */}
-
-       {posts && posts.pages.map((page, key) => (
-        <React.Fragment key={key}>
-        {page.map((post) => (
-          <Post 
-          changeModalState={(specificPost) => {modalOpen ? setModalOpen(false)  :  
-              setModalOpen(true)
-              setPostToModify(specificPost)
-          }}
-          changeDeleteModalState={(specificPost) => {
-              deleteModalOpen ? setDeleteModalOpen(false) : setDeleteModalOpen(true)
-              setPostToDelete(specificPost)
-          }}
-          profileImg={post.User && post.User.profileImg}
-          picture={post.imageUrl} 
-          content={post.text} 
-          likes={post.likes} 
-          dislikes={post.dislikes} 
-          username={post.User.name}
-          key={post.id}
-          postId={post.id} 
-          userId={post.UserId}
-          date={post.createdAt}
-          userLoggedIn = {userlogged} 
-          comments = {comments}/>
-        ))}
-      </React.Fragment>
-       ))}
+       {content}
 
         {modalOpen && <Modal 
         closeModal={() => {setModalOpen(false)}}
