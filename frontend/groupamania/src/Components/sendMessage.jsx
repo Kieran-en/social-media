@@ -5,7 +5,7 @@ import { createMessage } from '../Services/messageService';
 import styles from '../Styles/sendMessage.module.css'
 import { useSelector } from 'react-redux';
 
-function SendMessage({conversationId, senderId, receiverId, senderName, socket}) {
+function SendMessage({conversationId, senderId, receiverId, senderName, socket, typing, setTyping}) {
     const conversation = useSelector(state => state.conversation)
     const [text, setText] = useState();
     const queryClient = useQueryClient()
@@ -14,14 +14,36 @@ function SendMessage({conversationId, senderId, receiverId, senderName, socket})
       
     })
 
+    console.log(typing)
+
     const handleChange = (event) => {
-      socket.current && socket.current.emit('typing', {senderName, room: conversation.id})
+      socket.current && socket.current.emit('typing', {senderName, room: conversationId})
+
+      if(!typing){
+        console.log('asd')
+        setTyping(true)
+        socket.current && socket.current.emit('typing', ({senderName, room: conversationId}))
+      }
+      let lastTypingTime = new Date().getTime();
+      let timerLength = 3000;
+      setTimeout(() => {
+        let timeNow = new Date().getTime();
+        let timeDiff = timeNow - lastTypingTime;
+
+        if(timeDiff >= timerLength && typing){
+          socket.current && socket.current.emit('stop typing', ({senderName, room: conversationId}))
+          setTyping(false)
+        }
+      }, timerLength)
+
 
         setText(event.target.value)
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        socket.current && socket.current.emit('stop typing', ({senderName, room: conversationId}))
 
         createMessageMutation.mutate({
           text: text,

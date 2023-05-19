@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
     console.log(receiverId, text)
     //const user = getUser(receiverId);
 
-    io.to(room).emit('getMessage', {
+    io.in(room).emit('getMessage', {
         senderId,
         text,
         room
@@ -70,9 +70,13 @@ io.on('connection', (socket) => {
   socket.on('typing', ({senderName, room}) => {
     console.log(senderName + " is typing... in room " + room)
 
-    io.emit('userTyping', {
+    io.in(room).emit('typing', {
         userTyping: senderName
     })
+  })
+
+  socket.on('stop typing', ({senderName, room}) => {
+    io.in(room).emit('stop typing')
   })
 
 //when disconnected

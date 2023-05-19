@@ -21,7 +21,13 @@ function ChatSection({loggedinUserData, socket}) {
     })
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const [userTyping, setUserTyping] = useState(null)
+  const [typing, setTyping] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef()
+
+  console.log('is typing', isTyping)
+
+
 
   const defaultOptions = {
     loop: true,
@@ -76,12 +82,25 @@ console.log('outside', messages)
 
   //console.log(userTyping && userTyping + " is typing...")
 
-  /** 
-   *  useEffect(() => {
-    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage])
-    console.log("after", messages)
-  }, [arrivalMessage])
-  */
+  useEffect(() => {
+    socket.current && socket.current.on('typing', ({userTyping}) => {
+      setUserTyping(userTyping)
+    })
+  })
+
+  useEffect(() => {
+    socket.current && socket.current.on('typing', () => {
+      console.log('typing oh')
+       setIsTyping(true)
+      })
+    socket.current && socket.current.on('stop typing', () => {
+      console.log('stop typing oh')
+      setIsTyping(false)
+    })
+  }, [])
+
+  console.log(userTyping + "typing...")
+
 
 
   
@@ -104,13 +123,7 @@ console.log('outside', messages)
           </div>
         )
          )}
-         {userTyping && 
-         <Lottie
-         options={defaultOptions}
-         // height={50}
-         width={80}
-         style={{ marginBottom: 15, marginLeft: 0, backgroundColor: 'white' }}
-       />
+         {isTyping && <span style={{color: 'white'}}>Typing</span>
        }
       </div>
       <div className={styles.chatBottom}>
@@ -118,7 +131,9 @@ console.log('outside', messages)
         senderId={loggedinUserId} 
         senderName={loggedinName} 
         receiverId={receiverId} 
-        socket={socket}/>
+        socket={socket}
+        typing={typing}
+        setTyping={setTyping}/>
       </div>
     </div>
   )
