@@ -64,12 +64,6 @@ console.log('outside', messages)
         }]) 
   
       })
-
-      /** 
-       *socket.current && socket.current.on('userTyping', ({userTyping}) => {
-        setUserTyping(userTyping)
-      })
-      */
   
   //  }
 
@@ -84,25 +78,23 @@ console.log('outside', messages)
 
   useEffect(() => {
     socket.current && socket.current.on('typing', ({userTyping}) => {
+      console.log("Last ime that I checced")
       setUserTyping(userTyping)
     })
   })
 
   useEffect(() => {
     socket.current && socket.current.on('typing', () => {
-      console.log('typing oh')
+      //console.log('typing oh')
        setIsTyping(true)
       })
     socket.current && socket.current.on('stop typing', () => {
       console.log('stop typing oh')
       setIsTyping(false)
     })
-  }, [])
+  })
 
   console.log(userTyping + "typing...")
-
-
-
   
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior : 'smooth'})
