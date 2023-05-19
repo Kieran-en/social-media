@@ -6,7 +6,7 @@ import { getMessages } from '../Services/messageService'
 import Message from './Message'
 import styles from '../Styles/chat.module.css'
 import SendMessage from './SendMessage'
-import animationData from '../animations/typing.json'
+import typingAnimation from '../animations/typing.json'
 
 function ChatSection({loggedinUserData, socket}) {
 
@@ -26,17 +26,6 @@ function ChatSection({loggedinUserData, socket}) {
   const scrollRef = useRef()
 
   console.log('is typing', isTyping)
-
-
-
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
 
 /** 
  * useEffect(() => {
@@ -78,14 +67,13 @@ console.log('outside', messages)
 
   useEffect(() => {
     socket.current && socket.current.on('typing', ({userTyping}) => {
-      console.log("Last ime that I checced")
       setUserTyping(userTyping)
     })
   })
 
   useEffect(() => {
     socket.current && socket.current.on('typing', () => {
-      //console.log('typing oh')
+      console.log('typing oh')
        setIsTyping(true)
       })
     socket.current && socket.current.on('stop typing', () => {
@@ -94,13 +82,12 @@ console.log('outside', messages)
     })
   })
 
-  console.log(userTyping + "typing...")
+  //console.log(userTyping + "typing...")
   
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior : 'smooth'})
   }, [messages])
   
-  //console.log(userTyping)
 
   return (
     <div className={styles.box}>
@@ -115,7 +102,10 @@ console.log('outside', messages)
           </div>
         )
          )}
-         {isTyping && <span style={{color: 'white'}}>Typing</span>
+         {isTyping && <Lottie animationData={typingAnimation}
+          height={20}
+         width={20}
+         style={{ marginBottom: 15, marginLeft: 0 }}/>
        }
       </div>
       <div className={styles.chatBottom}>

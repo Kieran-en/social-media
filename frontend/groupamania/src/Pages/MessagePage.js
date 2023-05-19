@@ -41,8 +41,6 @@ function MessagePage() {
     setOnlineFriends(friends && friends.filter(friend => onlineUsersIds.includes(friend.id)))
   }, [onlineUsersIds])
 
-  console.log(friends)
-  console.log(onlineFriends)
 
   return (
     <div>
