@@ -30,16 +30,13 @@ function ChatSection({loggedinUserData, socket}) {
     width: 200,
   }
 
-
-  console.log('is typing', isTyping)
-
 /** 
  * useEffect(() => {
     getMessages(conversationId)
   }, [conversation.id])
 */
 
-console.log('outside', messages)
+//console.log('outside', messages)
 
  
   useEffect(() => {
@@ -79,11 +76,11 @@ console.log('outside', messages)
 
   useEffect(() => {
     socket.current && socket.current.on('typing', () => {
-      console.log('typing oh')
+      //console.log('typing oh')
        setIsTyping(true)
       })
     socket.current && socket.current.on('stop typing', () => {
-      console.log('stop typing oh')
+     // console.log('stop typing oh')
       setIsTyping(false)
     })
   })

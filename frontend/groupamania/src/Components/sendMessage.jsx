@@ -14,13 +14,11 @@ function SendMessage({conversationId, senderId, receiverId, senderName, socket, 
       
     })
 
-    console.log(typing)
 
     const handleChange = (event) => {
       socket.current && socket.current.emit('typing', {senderName, room: conversationId})
 
       if(!typing){
-        console.log('asd')
         setTyping(true)
         socket.current && socket.current.emit('typing', ({senderName, room: conversationId}))
       }
