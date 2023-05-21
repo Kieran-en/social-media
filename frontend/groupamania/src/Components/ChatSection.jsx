@@ -87,7 +87,7 @@ function ChatSection({loggedinUserData, socket}) {
   
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior : 'smooth'})
-  }, [messages])
+  }, [messages, isTyping])
   
 
   return (
