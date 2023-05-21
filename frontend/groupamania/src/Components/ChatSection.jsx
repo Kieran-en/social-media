@@ -24,6 +24,12 @@ function ChatSection({loggedinUserData, socket}) {
   const [typing, setTyping] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef()
+  //Styling lottie
+  const style = {
+    height: 200,
+    width: 200,
+  }
+
 
   console.log('is typing', isTyping)
 
@@ -81,8 +87,6 @@ console.log('outside', messages)
       setIsTyping(false)
     })
   })
-
-  //console.log(userTyping + "typing...")
   
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior : 'smooth'})
@@ -102,10 +106,11 @@ console.log('outside', messages)
           </div>
         )
          )}
-         {isTyping && <Lottie animationData={typingAnimation}
-          height={20}
-         width={20}
-         style={{ marginBottom: 15, marginLeft: 0 }}/>
+         {isTyping && 
+         (<div ref={scrollRef}>
+          <Lottie animationData={typingAnimation} 
+         style={{height: '4.2rem', width: '4.2rem', marginTop: '0.1rem', marginLeft: 0}}/>
+         </div>)
        }
       </div>
       <div className={styles.chatBottom}>
