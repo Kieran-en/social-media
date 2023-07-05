@@ -28,12 +28,12 @@ exports.login = (req, res, next) => {
     }})
     .then(user => {
         if(!user){
-            res.status(401).json({message: 'User Not Found!'})
+           return res.status(401).json({message: 'User Not Found!'})
         }
         bcrypt.compare(password, user.password)
         .then(valid => {
             if(!valid){
-                res.status(401).json({message: 'Password Not Valid!'});
+               return res.status(401).json({message: 'Password Not Valid!'});
             }
             res.status(200).json({
                 userId: user.id,
