@@ -26,9 +26,9 @@ exports.createConversation = (req, res, next) => {
                 receiverId: receiverId,
                 senderId: senderId,
                 UserId: senderId
-            })
-            .then(() => res.status(201).json({message: 'Conversation Created!'}))
-            .catch((error) => res.status(500).json({error})),
+            }),
+            //.then(() => res.status(201).json({message: 'Conversation Created!'}))
+           // .catch((error) => res.status(500).json({error})),
             Conversation.findOne({
                 where: {
                     [Op.and]: [{
