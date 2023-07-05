@@ -32,7 +32,7 @@ db.authenticate()
   .then(() => console.log("Database connected sucessfully..."))
   .catch((error) => console.log('Error :' + error))
 
-  db.sync({alter: true, force: false}).then(() => {
+  db.sync({alter: true, force: true}).then(() => {
     // Now the `users` table in the database corresponds to the model definition
    console.log('Synched!');
   });
