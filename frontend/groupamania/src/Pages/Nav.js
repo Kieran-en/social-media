@@ -7,7 +7,7 @@ const Nav = () => {
     return (
         <nav className={navStyle.nav}>
             <div className="col-3 p-3">
-            <img src={navImg} className={navStyle.img} alt='logo'/>
+                 {/** <img src={navImg} className={navStyle.img} alt='companyIcon'/>*/}
             </div>
             <ul className={navStyle.list}>
                 <li><Link style={{color: 'white', textDecoration: 'none', marginRight: '20px'}} to='/'>SignUp</Link></li>

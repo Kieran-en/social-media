@@ -3,8 +3,12 @@ const app = express();
 const cors = require('cors')
 const http = require('http');
 const server = http.createServer(app);
-//const { Server } = require("socket.io");
-//const io = new Server(server);
+const { Server } = require("socket.io");
+const io = new Server(5500, {
+  cors: {
+    origin: ["http://localhost:4000"],
+},
+});
 
 app.use(cors())
 
@@ -31,11 +35,14 @@ const getUser = (userId) => {
     return users.find(user => user.userId === userId)
 }
 
-const io = require("socket.io")(5500, {
+/**
+ * const io = require("socket.io")(5500, {
     cors: {
         origin: ["http://localhost:4000"],
     },
 })
+ */
+
 
 app.use(cors())
 
@@ -70,13 +77,14 @@ io.on('connection', (socket) => {
   socket.on('typing', ({senderName, room}) => {
     console.log(senderName + " is typing... in room " + room)
 
-    io.in(room).emit('typing', {
+    socket.to(room).emit('typing', {
         userTyping: senderName
     })
   })
 
   socket.on('stop typing', ({senderName, room}) => {
-    io.in(room).emit('stop typing')
+
+    socket.to(room).emit('stop typing')
   })
 
 //when disconnected

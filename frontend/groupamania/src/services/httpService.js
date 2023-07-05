@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 
 const token = localStorage.getItem('token')
 
+console.log(token)
+
 axios.interceptors.response.use(null, error => {
     const expectedError = 
     error.response &&

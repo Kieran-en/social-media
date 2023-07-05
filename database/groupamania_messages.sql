@@ -1,0 +1,99 @@
+-- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
+--
+-- Host: localhost    Database: groupamania
+-- ------------------------------------------------------
+-- Server version	8.0.28
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `messages`
+--
+
+DROP TABLE IF EXISTS `messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `messages` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `text` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  `ConversationId` int DEFAULT NULL,
+  `senderId` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ConversationId` (`ConversationId`),
+  KEY `senderId` (`senderId`),
+  CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_10` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_11` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_12` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_13` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_14` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_15` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_16` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_17` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_18` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_19` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_20` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_21` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_22` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_23` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_24` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_25` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_26` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_27` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_28` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_29` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_3` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_30` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_31` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_32` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_33` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_34` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_35` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_36` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_37` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_38` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_39` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_4` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_40` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_41` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_42` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_5` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_6` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_7` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_8` FOREIGN KEY (`senderId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `messages_ibfk_9` FOREIGN KEY (`ConversationId`) REFERENCES `conversations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=238 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `messages`
+--
+
+LOCK TABLES `messages` WRITE;
+/*!40000 ALTER TABLE `messages` DISABLE KEYS */;
+INSERT INTO `messages` VALUES (202,'Hayah\n','2023-05-19 05:50:55','2023-05-19 05:50:55',1,1),(203,'Hun?','2023-05-19 05:51:49','2023-05-19 05:51:49',1,2),(204,'I no gabdu','2023-05-19 05:55:24','2023-05-19 05:55:24',1,1),(205,'For real','2023-05-19 05:56:35','2023-05-19 05:56:35',1,2),(206,'Mood swings','2023-05-19 05:57:06','2023-05-19 05:57:06',1,1),(207,'I don\'t kiss and tell','2023-05-19 05:58:01','2023-05-19 05:58:01',1,2),(208,'Wandafut','2023-05-19 05:58:36','2023-05-19 05:58:36',1,2),(209,'I will never leave your side','2023-05-19 06:02:01','2023-05-19 06:02:01',1,1),(210,'J\'aime','2023-05-19 06:16:58','2023-05-19 06:16:58',1,2),(211,'Ein','2023-05-19 06:17:45','2023-05-19 06:17:45',1,1),(212,'Belaire','2023-05-19 06:21:47','2023-05-19 06:21:47',1,1),(213,'Humility','2023-05-19 06:42:10','2023-05-19 06:42:10',1,2),(214,'Ghetto','2023-05-19 06:45:21','2023-05-19 06:45:21',1,1),(215,'','2023-05-19 06:45:21','2023-05-19 06:45:21',1,1),(216,'Tata','2023-05-19 06:54:05','2023-05-19 06:54:05',1,2),(217,'Je ne comprends plus','2023-05-19 06:54:20','2023-05-19 06:54:20',1,1),(218,'Yo','2023-05-19 06:59:18','2023-05-19 06:59:18',1,2),(219,'Organize','2023-05-19 07:05:17','2023-05-19 07:05:17',1,1),(220,'Hun','2023-05-21 09:29:54','2023-05-21 09:29:54',1,2),(221,'','2023-05-21 09:29:54','2023-05-21 09:29:54',1,2),(222,'last time that I checc\'d','2023-05-21 11:59:38','2023-05-21 11:59:38',1,2),(223,'Message','2023-05-23 14:57:47','2023-05-23 14:57:47',1,2),(224,'Yo','2023-06-02 19:09:18','2023-06-02 19:09:18',1,2),(225,'Hey','2023-06-15 08:11:22','2023-06-15 08:11:22',1,2),(226,'Hi','2023-06-15 08:14:02','2023-06-15 08:14:02',1,1),(227,'Hey','2023-06-15 08:16:37','2023-06-15 08:16:37',1,2),(228,'How?','2023-06-15 08:18:08','2023-06-15 08:18:08',1,1),(229,'Hey bro?','2023-06-27 09:34:28','2023-06-27 09:34:28',1,2),(230,'Yup','2023-06-27 09:37:35','2023-06-27 09:37:35',1,1),(231,'How are you?','2023-06-27 09:41:05','2023-06-27 09:41:05',1,2),(232,'Fine and you','2023-06-27 12:35:13','2023-06-27 12:35:13',NULL,2),(233,'Fine and you?','2023-06-27 12:35:59','2023-06-27 12:35:59',NULL,2),(234,'My brother','2023-06-27 12:36:58','2023-06-27 12:36:58',1,1),(235,'Are you good?','2023-06-27 12:38:05','2023-06-27 12:38:05',1,2),(236,'Hi bro \nHow are you doing?','2023-06-27 16:48:48','2023-06-27 16:48:48',NULL,2),(237,'Hi bro\nHow are you doing?','2023-06-27 16:52:02','2023-06-27 16:52:02',1,1);
+/*!40000 ALTER TABLE `messages` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-07-05 10:01:15

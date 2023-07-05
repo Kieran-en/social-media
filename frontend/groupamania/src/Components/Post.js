@@ -14,6 +14,7 @@ import { like, getNumLikes, isPostLiked } from "../Services/likeService";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../Services/userService";
+import { useSelector } from "react-redux";
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
 
@@ -21,7 +22,8 @@ const Post = React.forwardRef(({picture, profileImg, content, username, userLogg
 
     const [showComment, setShowComemnt] = useState(false)
     const queryClient = useQueryClient();
-    const userData = getCurrentUser() 
+    const token = useSelector(state => state.token)
+    const userData = getCurrentUser(token) 
     const navigate = useNavigate();
 
     const {error, data : numLikes, status} = useQuery('numLikes', () => getNumLikes(postId))
@@ -39,6 +41,8 @@ const Post = React.forwardRef(({picture, profileImg, content, username, userLogg
         ]) 
          
       })
+
+      console.log("PostId: " + postId + ", count: " + count)
     
     const handleLike = () => {
         if (!(count > 0)){

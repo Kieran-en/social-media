@@ -23,7 +23,7 @@ export default function NavBar() {
     <div>
         <Navbar className="justify-content-between px-3" style={{backgroundColor: '#242526', borderRadius: '10px'}}>
                 <NavbarBrand>
-                    <img src={navImg2} className={navStyle.img} alt='companyIcon'/>
+                  {/** <img src={navImg2} className={navStyle.img} alt='companyIcon'/>*/}
                 </NavbarBrand>
                 <Row>
                 <Col className='d-flex align-items-center gap-3'>

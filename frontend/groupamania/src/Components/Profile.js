@@ -68,7 +68,7 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
     <div style={{backgroundColor: '#18191A'}}>
     <Navbar className="justify-content-between p-3" style={{backgroundColor: '#242526'}}>
                 <NavbarBrand>
-                    <img src={navImg2} className={navStyle.img} alt='companyIcon'/>
+                    {/**<img src={navImg2} className={navStyle.img} alt='companyIcon'/> */}
                 </NavbarBrand>
                 <div style={{display: 'flex',justifyContent: 'space-between' , 
                 alignItems: 'center',  gap: '10px'}}>
