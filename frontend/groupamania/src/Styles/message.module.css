@@ -34,15 +34,15 @@
 }
 
 .text{
-    color: white;
+    color: black;
     font-size: 1;
-    background-color: #242526;
+    background-color: white;
     border-radius: 0.5rem;
     padding: 0.3rem;
 }
 
 .text.own{
-    background-color: #0F6E5A;
+    background-color: rgb(128, 235, 172);
 }
 
 .time{

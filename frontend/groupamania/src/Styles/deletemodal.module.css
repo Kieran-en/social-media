@@ -4,7 +4,7 @@
     justify-content: space-between;
     width: clamp(50%, 500px, 90%);
     align-items: center;
-    background-color: #242526;
+    background-color: white;
     border-radius: 15px;
     height: min(50%, 150px);
 }
@@ -20,7 +20,7 @@
     display: grid;
     place-items: center;
     width: 90%;
-    color: white;
+    color: black;
     font-size: 16px;
 }
 
@@ -43,8 +43,8 @@
 
 .cancelButton{
     width: 25%;
-    background-color: white;
-    color: #DC3545;
+    background-color: #0F6E5A;
+    color: white;
     border-radius: 5px;
     border: none;
     padding: 3px;

@@ -85,7 +85,7 @@ const SignUp = () => {
 
 
     return (
-        <div className="signup" style={{color: 'white'}}>
+        <div className="signup" style={{color: 'green', backgroundColor: 'white'}}>
             <Nav />
             <form className='container ' onSubmit={handleSubmit}>
                 <div className='form-group mb-4 d-flex-column justify-content-start'>

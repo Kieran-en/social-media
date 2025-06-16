@@ -1,4 +1,5 @@
 .box{
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,9 +10,9 @@
     padding: 0.3rem 0.5rem;
     outline: none;
     border-radius: 1rem;
-    border: none;
-    background-color: #242526;
-    color: white;
+    border: 1px solid gray;
+    background-color: white;
+    color: black;
 }
 
 .input::placeholder{
@@ -19,6 +20,7 @@
 }
 
 .conversation_part{
+    background-color: #242526;
     margin-top: 1rem;
 }
 

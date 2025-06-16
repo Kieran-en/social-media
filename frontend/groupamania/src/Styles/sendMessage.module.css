@@ -1,19 +1,26 @@
 .box{
+    background-color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
 }
 
-.input{
+.input {
     width: 90%;
-    height: 100px;
-    outline: none;
-    background-color: #242526;
+    min-height: 60px;
+    max-height: 100px;
+    resize: none;
+    overflow-y: auto;
+    background-color: white;
     border: none;
-    color: white;
+    outline: none;
+    color: black;
     padding: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
 }
+
 
 .icon{
     color: #0F6E5A;

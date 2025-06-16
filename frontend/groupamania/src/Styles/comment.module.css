@@ -5,6 +5,15 @@
     width: 100%;
 }
 
+.comment_box input{
+    flex: 1;
+    padding-bottom: 1rem;
+    border-radius: 0.3rem;
+    outline: none;
+    /* border: 1px solid #ccc; */
+
+}
+
 .profile_img{
     width: 35px;
     height: 35px;

@@ -17,7 +17,8 @@ export default function Commenttt({postId, comments}) {
 
   const commentMutation = useMutation(createComment, {
     onSuccess: () => {
-      queryClient.invalidateQueries('comments')
+      queryClient.invalidateQueries('comments');
+      setComment('');
     }
   })
 
@@ -39,9 +40,9 @@ export default function Commenttt({postId, comments}) {
   }
 
   return (
-    <div style={{padding: '0.5rem 0rem'}}>
+    <div>
      <div className={style.comment_box}>
-        <div><img alt="profileImage" src={userData.profileImg} className={style.profile_img}/></div> 
+        {/* <div style={{paddingBottom: '1rem'}}><img alt="profileImage" src={userData.profileImg} className={style.profile_img}/></div>  */}
         <input type='text' name='comment' placeholder="Any comment ?" value={commentText} onChange={handleChange} className={style.input}></input>
             <button type="submit" className="btn p-1" style={{backgroundColor: '#0F6E5A', color: 'white'}} onClick={handleComment}>Comment</button>
       </div>

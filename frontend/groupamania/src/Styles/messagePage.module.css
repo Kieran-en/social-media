@@ -1,9 +1,14 @@
 .grid{
+    padding-top: 70px;
+    background-color: white;
     display: grid;
     grid-template-columns: 2fr 3fr 2fr;
     grid-template-rows: calc(100vh - 150px);
     padding: 0.5rem;
 }
 
-
+.grid > * {
+    padding-top: 6rem;
+    height: 99vh;
+}
 

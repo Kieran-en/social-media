@@ -9,6 +9,7 @@ import { Col, NavbarBrand } from "react-bootstrap";
 import {FaDoorOpen, FaUser} from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import navImg2 from '../Images/icon-left-font-monochrome-white.png';
+import navImg from '../Images/EEC.png';
 import 'react-tippy/dist/tippy.css';
 import {Tooltip,} from 'react-tippy';
 import { follow, getCurrentUser, getFollowingCount, logout } from "../Services/userService";
@@ -65,15 +66,15 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
  
     
     return (
-    <div style={{backgroundColor: '#18191A'}}>
-    <Navbar className="justify-content-between p-3" style={{backgroundColor: '#242526'}}>
-                <NavbarBrand>
-                    {/**<img src={navImg2} className={navStyle.img} alt='companyIcon'/> */}
+    <div style={{backgroundColor: 'rgb(240, 236, 236)', height: '100vh'}}>
+    <Navbar className="justify-content-between p-3" style={{backgroundColor: 'white', borderRadius: '10px'}}>
+                <NavbarBrand className='color-green d-flex align-items-center gap-2' style={{cursor: 'pointer', color: 'green'}} onClick={() => navigate(`/timeline/${userData.username}`)}>
+                    <img src={navImg} className={navStyle.img} alt='companyIcon'/> Melen
                 </NavbarBrand>
                 <div style={{display: 'flex',justifyContent: 'space-between' , 
                 alignItems: 'center',  gap: '10px'}}>
                 <Col
-                style={{color: 'white', fontSize: '1.2rem', 
+                style={{color: 'green', fontSize: '1.2rem', 
                 cursor: 'pointer', display: 'flex', 
                 gap: '0.3rem', alignItems: 'center'
             }} 
@@ -82,7 +83,7 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
          </Col>
          <Col> 
          <Dropdown>
-        <Dropdown.Toggle variant="dark" id="dropdown-basic">
+        <Dropdown.Toggle variant="" id="dropdown-basic">
           <img src={profileImg} alt="profile-image" className={navStyle.profileImg}/>
          </Dropdown.Toggle>
         <Dropdown.Menu >
@@ -92,7 +93,7 @@ const Profile = ({email, profileImg, changeModalState, username, followers, foll
          </Col>
          </div>
         </Navbar>
-    <ProfileStyle>
+    <ProfileStyle style={{backgroundColor: 'white', color: 'black',}}>
         <h1>User Profile</h1>
         <div className={style.imageDiv}>
         {username == userProfileName ?

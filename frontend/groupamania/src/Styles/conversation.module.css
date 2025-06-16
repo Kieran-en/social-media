@@ -1,4 +1,5 @@
 .conversation{
+    background-color: white;
     display: flex;
     align-items: center;
     gap: 1.3rem;
@@ -8,7 +9,7 @@
 }
 
 .conversation:hover{
-    background-color: #242526;
+    background-color: rgb(240, 236, 236);
 }
 
 .image{
@@ -20,6 +21,6 @@
 
 .name{
     font-size: 1rem;
-    color: white;
+    color: black;
     font-weight: 500;
 }

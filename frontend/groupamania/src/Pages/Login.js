@@ -63,7 +63,7 @@ const Login = () => {
     }
 
     return (
-        <div className='login' style={{color: 'white'}}>
+        <div className='login' style={{color: 'green', backgroundColor: 'white', minHeight: '100vh'}}>
             <Nav/>
             <form className='container' onSubmit={handleSubmit}>
                 <div className='form-group mb-4 d-flex flex-column align-items-start'>

@@ -4,7 +4,7 @@ height: min(55%, 550px);
 display: flex;
 flex-direction: column;
 align-items: center;
-background-color: #242526;
+background-color: white;
 padding: 10px;
 border-radius: 10px;
 z-index: 99;
@@ -13,7 +13,7 @@ z-index: 99;
 .topModalll{
     display: flex;
     justify-content: space-between;
-    color: #A8ABAF;
+    color: black;
     width: 90%;
     margin-bottom: 20px;
 }
@@ -23,7 +23,7 @@ z-index: 99;
 }
 
 .uplaod-profileLabel{
-    color: #A8ABAF;
+    color: black;
     font-size: 14px;
     margin-left: 15px;
     text-decoration: underline;

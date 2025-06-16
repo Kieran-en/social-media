@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { getMessages } from '../Services/messageService'
 import Message from './Message'
 import styles from '../Styles/chat.module.css'
-import SendMessage from './SendMessage'
+import SendMessage from './sendMessage'
 import typingAnimation from '../animations/typing.json'
 
 function ChatSection({loggedinUserData, socket}) {
@@ -97,7 +97,7 @@ function ChatSection({loggedinUserData, socket}) {
         <p className={styles.paragraph}>No opened conversation, open a chat!</p> : 
         messages && messages.map(message => ( 
           <div ref={scrollRef} key={message && message.id}>
-          <Message own={message && message.senderId == loggedinUserId ? true : false}
+          <Message own={message && message.senderId === loggedinUserId ? true : false}
           text={message && message.text} 
           timeSent={message && message.createdAt} />
           </div>
