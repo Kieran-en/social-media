@@ -23,7 +23,11 @@ export async function getFollowingCount(followed_user_id, following_user_id){
 }
 
 export function modifyUser(userInfo){
-    return http.put(`${config.apiEndpoint}/auth/${userInfo.id}`, userInfo)
+    return http.put(`${config.apiEndpoint}/auth/${userInfo.get('id')}`, userInfo, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
 }
 
 export async function login(userInfo){

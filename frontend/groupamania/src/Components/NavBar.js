@@ -38,7 +38,7 @@ export default function NavBar() {
         <Dropdown.Menu >
             <Dropdown.Item eventKey='logout' onClick={() => {
               logout()
-              dispatch(deleteToken)
+              dispatch(deleteToken())
               navigate("/Login")
               }}>LogOut <FaDoorOpen className="ml-5"/></Dropdown.Item>
             <Dropdown.Item eventKey='profile' onClick={() => navigate(`/profilepage/${userData.username}`)  }>Visit Profile <FaUser className="ml-5" /></Dropdown.Item>
