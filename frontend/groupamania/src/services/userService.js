@@ -9,6 +9,11 @@ export async function getUser(name){
     return res.data
 } 
 
+export async function getRole(role){
+    const res = await http.get(`${config.apiEndpoint}/auth/${role}`)
+    return res.data
+} 
+
 export function signup(userInfo){
     return http.post(`${config.apiEndpoint}/auth/signup`, userInfo)
 }

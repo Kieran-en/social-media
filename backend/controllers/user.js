@@ -36,17 +36,20 @@ exports.login = (req, res, next) => {
                return res.status(401).json({message: 'Password Not Valid!'});
             }
             res.status(200).json({
-                userId: user.id,
-                username: user.name,
-                token: jwt.sign({
-                    userId: user.id,
-                    username: user.name,
-                    profileImg: user.profileImg
-                },
-                    'RANDOM_SECRET_KEY',
-                    {expiresIn: '24h'}
-                    ) 
-            })
+    userId: user.id,
+    username: user.name,
+    role: user.role,  // 👈 on peut aussi l'envoyer directement si tu veux l'utiliser côté frontend
+    token: jwt.sign({
+        userId: user.id,
+        username: user.name,
+        role: user.role, // 👈 AJOUT ICI
+        profileImg: user.profileImg
+    },
+    'RANDOM_SECRET_KEY',
+    {expiresIn: '24h'}
+    ) 
+})
+
         })
         .catch(error => res.status(500).json({error}))
     })

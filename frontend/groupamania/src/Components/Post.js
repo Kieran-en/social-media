@@ -23,6 +23,7 @@ const Post = React.forwardRef(({ picture, profileImg, content, username, userLog
     const queryClient = useQueryClient();
     const token = useSelector(state => state.token);
     const userData = getCurrentUser(token);
+    const role = useSelector(state => state.role);
     const navigate = useNavigate();
 
     const { data: numLikes } = useQuery('numLikes', () => getNumLikes(postId));
@@ -61,7 +62,7 @@ const Post = React.forwardRef(({ picture, profileImg, content, username, userLog
                     </div>
                 </div>
 
-                {userLoggedIn === username && (
+                {(userLoggedIn === username || userData.role === "admin") && (
                     <div className={style.iconGroup}>
                         <Tooltip title="Modify Post?" arrow trigger="mouseenter" position="top">
                             <MdBorderColor onClick={() => changeModalState(postId)} className={style.icons} />
