@@ -32,10 +32,14 @@ db.authenticate()
   .then(() => console.log("Database connected sucessfully..."))
   .catch((error) => console.log('Error :' + error))
 
-  db.sync({alter: true, force: false}).then(() => {
-    // Now the `users` table in the database corresponds to the model definition
-   console.log('Synched!');
+  db.sync()
+  .then(() => {
+    console.log('Synched!'); // Tu peux le garder pour confirmer que Sequelize est bien connecté à la DB
+  })
+  .catch((error) => {
+    console.error('Erreur lors de la synchronisation :', error);
   });
+
 
 
 app.use('/api/auth', userRoutes);
