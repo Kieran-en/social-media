@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { MdDelete, MdBorderColor } from "react-icons/md";
+import { MdDelete, MdBorderColor, MdOutlineComment } from "react-icons/md";
 import { FaThumbsUp } from "react-icons/fa";
-import { MdOutlineComment } from "react-icons/md";
 import { Tooltip } from 'react-tippy';
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +17,12 @@ import 'react-tippy/dist/tippy.css';
 
 dayjs.extend(relativeTime);
 
-const Post = React.forwardRef(({ picture, profileImg, content, username, userLoggedIn, postId, userId, changeModalState, comments, likes, changeDeleteModalState, date }, ref) => {
+const Post = React.forwardRef(({
+    picture, profileImg, content, username, userLoggedIn,
+    postId, userId, changeModalState, comments, likes,
+    changeDeleteModalState, date
+}, ref) => {
+
     const [showComment, setShowComment] = useState(false);
     const queryClient = useQueryClient();
     const token = useSelector(state => state.token);
@@ -26,11 +30,11 @@ const Post = React.forwardRef(({ picture, profileImg, content, username, userLog
     const role = useSelector(state => state.role);
     const navigate = useNavigate();
 
+    // Fetch likes and like status
     const { data: numLikes } = useQuery('numLikes', () => getNumLikes(postId));
     const { data: count } = useQuery(['isPostLiked', postId], () => isPostLiked(userId, postId));
 
-    const toggleShowComment = () => setShowComment(!showComment);
-
+    // Like post handler
     const likeMutation = useMutation(like, {
         onSuccess: () => Promise.all([
             queryClient.invalidateQueries(['isPostLiked', postId]),
@@ -46,13 +50,16 @@ const Post = React.forwardRef(({ picture, profileImg, content, username, userLog
         });
     };
 
-    const checkFile = (file) => {
-        const ext = file.split('.').pop();
-        return ext === 'mp4';
-    };
+    const toggleShowComment = () => setShowComment(!showComment);
+
+    const checkFile = (file) => file.split('.').pop() === 'mp4';
+
+    const canEdit = userLoggedIn === username;
+    const canDelete = (userLoggedIn === username) || (userData.role === "admin" && userLoggedIn !== username);
 
     return (
         <div ref={ref} className={style.postCard}>
+            {/* HEADER */}
             <div className={style.postHeader}>
                 <div className={style.profileSection} onClick={() => navigate(`/profilepage/${username}`)}>
                     <img src={profileImg} className={style.profileImg} />
@@ -62,11 +69,13 @@ const Post = React.forwardRef(({ picture, profileImg, content, username, userLog
                     </div>
                 </div>
 
-                {(userLoggedIn === username || userData.role === "admin") && (
+                {canDelete && (
                     <div className={style.iconGroup}>
-                        <Tooltip title="Modify Post?" arrow trigger="mouseenter" position="top">
-                            <MdBorderColor onClick={() => changeModalState(postId)} className={style.icons} />
-                        </Tooltip>
+                        {canEdit && (
+                            <Tooltip title="Modify Post?" arrow trigger="mouseenter" position="top">
+                                <MdBorderColor onClick={() => changeModalState(postId)} className={style.icons} />
+                            </Tooltip>
+                        )}
                         <Tooltip title="Delete Post?" arrow trigger="mouseenter" position="top">
                             <MdDelete onClick={() => changeDeleteModalState(postId)} className={style.icons} />
                         </Tooltip>
@@ -74,10 +83,10 @@ const Post = React.forwardRef(({ picture, profileImg, content, username, userLog
                 )}
             </div>
 
-            <div className={style.postContent}>
-                {content}
-            </div>
+            {/* CONTENT */}
+            <div className={style.postContent}>{content}</div>
 
+            {/* MEDIA */}
             {picture && (
                 checkFile(picture) ? (
                     <video controls className={style.media}>
@@ -89,6 +98,7 @@ const Post = React.forwardRef(({ picture, profileImg, content, username, userLog
                 )
             )}
 
+            {/* ACTIONS */}
             <div className={style.postActions}>
                 <div onClick={handleLike}>
                     <FaThumbsUp style={{ color: count > 0 ? '#0F6E5A' : 'inherit' }} /> {likes}
@@ -98,11 +108,12 @@ const Post = React.forwardRef(({ picture, profileImg, content, username, userLog
                 </div>
             </div>
 
-           {showComment && (
-  <div className={style.commentsContainer}>
-    <Commenttt comments={comments} postId={postId} />
-  </div>
-)}
+            {/* COMMENTS */}
+            {showComment && (
+                <div className={style.commentsContainer}>
+                    <Commenttt comments={comments} postId={postId} />
+                </div>
+            )}
         </div>
     );
 });
