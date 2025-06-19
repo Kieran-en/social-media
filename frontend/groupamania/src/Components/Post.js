@@ -14,6 +14,8 @@ import { getCurrentUser } from "../Services/userService";
 import Commenttt from "./Commenttt";
 import style from '../Styles/timeline.module.css';
 import 'react-tippy/dist/tippy.css';
+import { BsThreeDotsVertical } from "react-icons/bs";
+
 
 dayjs.extend(relativeTime);
 
@@ -29,6 +31,9 @@ const Post = React.forwardRef(({
     const userData = getCurrentUser(token);
     const role = useSelector(state => state.role);
     const navigate = useNavigate();
+    const [menuOpen, setMenuOpen] = useState(false);
+    const toggleMenu = () => setMenuOpen(prev => !prev);
+
 
     // Fetch likes and like status
     const { data: numLikes } = useQuery('numLikes', () => getNumLikes(postId));
@@ -69,18 +74,26 @@ const Post = React.forwardRef(({
                     </div>
                 </div>
 
-                {canDelete && (
-                    <div className={style.iconGroup}>
-                        {canEdit && (
-                            <Tooltip title="Modify Post?" arrow trigger="mouseenter" position="top">
-                                <MdBorderColor onClick={() => changeModalState(postId)} className={style.icons} />
-                            </Tooltip>
-                        )}
-                        <Tooltip title="Delete Post?" arrow trigger="mouseenter" position="top">
-                            <MdDelete onClick={() => changeDeleteModalState(postId)} className={style.icons} />
-                        </Tooltip>
-                    </div>
-                )}
+                {(canEdit || canDelete) && (
+  <div className={style.dropdownWrapper}>
+    <BsThreeDotsVertical onClick={toggleMenu} className={style.menuIcon} />
+    {menuOpen && (
+      <div className={style.dropdownMenu}>
+        {canEdit && (
+          <div className={style.menuItem} onClick={() => { toggleMenu(); changeModalState(postId); }}>
+            <MdBorderColor /> Edit Post
+          </div>
+        )}
+        {canDelete && (
+          <div className={style.menuItem} onClick={() => { toggleMenu(); changeDeleteModalState(postId); }}>
+            <MdDelete /> Delete Post
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+)}
+
             </div>
 
             {/* CONTENT */}
