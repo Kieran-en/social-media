@@ -15,8 +15,8 @@ function App() {
   <div className='App'>
     <BrowserRouter>
     <Routes>
-      <Route path='/' index element={<SignUp />} />
-      <Route path='/login' element={<Login />} />
+      <Route path='/' index element={<Login />} />
+      <Route path='/signup' element={<SignUp />} />
       <Route path='/timeline/:userlogged' element={
         <ProtectedRoute>
           <Timeline />

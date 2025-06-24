@@ -11,8 +11,8 @@ const Nav = () => {
             </div>
             <img src="" />
             <ul className={navStyle.list}>
-                <li><Link style={{color: 'green', textDecoration: 'none', marginRight: '20px'}} to='/'>SignUp</Link></li>
-                <li className=""><Link style={{color: 'green', textDecoration: 'none'}} to='/login'>Login</Link></li>
+                <li><Link style={{color: 'green', textDecoration: 'none', marginRight: '20px'}} to='/signup'>SignUp</Link></li>
+                <li className=""><Link style={{color: 'green', textDecoration: 'none'}} to='/'>Login</Link></li>
             </ul>
         </nav>
     )
