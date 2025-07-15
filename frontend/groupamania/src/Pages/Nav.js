@@ -1,21 +1,38 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import styles from '../Styles/nav.module.css';
 import navImg from '../Images/EEC.png';
-import navStyle from '../Styles/navbar.module.css';
 
 const Nav = () => {
     return (
-        <nav className={navStyle.nav}>
-            <div className="col-3 p-3">
-                 <img src={navImg} className={navStyle.img} alt='EEC Icon'/> Melen
+        <nav className={styles.navContainer}>
+            <NavLink to="/" className={styles.logoWrapper}>
+                <img src={navImg} className={styles.logoImg} alt="Logo Melen" />
+                <span className={styles.brandName}>Melen</span>
+            </NavLink>
+
+            <div className={styles.navActions}>
+                <NavLink
+                    to="/"
+                    end
+                    className={({ isActive }) =>
+                        `${styles.navLink} ${isActive ? styles.active : ''}`
+                    }
+                >
+                    Se connecter
+                </NavLink>
+
+                <NavLink
+                    to="/signup"
+                    className={({ isActive }) =>
+                        `${styles.navButton} ${isActive ? styles.active : ''}`
+                    }
+                >
+                    S'inscrire
+                </NavLink>
             </div>
-            <img src="" />
-            <ul className={navStyle.list}>
-                <li><Link style={{color: 'green', textDecoration: 'none', marginRight: '20px'}} to='/signup'>SignUp</Link></li>
-                <li className=""><Link style={{color: 'green', textDecoration: 'none'}} to='/'>Login</Link></li>
-            </ul>
         </nav>
-    )
-}
+    );
+};
 
 export default Nav;

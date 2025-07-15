@@ -1,34 +1,134 @@
-
-.img {
-    height: 70px;
-    width: 70px;
-    /* object-fit: cover; */
-}
-
-.list{
-    list-style: none;
-    font-size: 20px;
+.navContainer {
     display: flex;
-    margin-right: 50px;
-    margin-top: 10px;
-}
-
-.nav{
-    display: flex;
-    width: 100%;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    padding: 0 2rem;
+    height: 60px;
+    background-color: #fff;
+    border-bottom: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Ombre moderne */
+    gap: 2rem;
 }
 
-.icons{
-    color: #0F6E5A;
-    font-size: 1.5rem;
-    cursor: pointer;
+/* --- Section Gauche --- */
+.navLeft {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.profileImg{
+.logo {
+    height: 40px; /* Taille plus discrète */
+    width: 40px;
+}
+
+/* Barre de recherche */
+.searchBar {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 15px;
+    color: #65676b; /* Gris neutre */
+    font-size: 1rem;
+}
+
+.searchInput {
+    background-color: #f0f2f5; /* Fond gris clair typique */
+    border: none;
+    border-radius: 50px; /* Entièrement arrondi */
+    padding: 0.5rem 1rem 0.5rem 2.5rem; /* Padding pour ne pas écrire sur l'icône */
+    width: 250px;
+    transition: background-color 0.2s ease;
+}
+
+.searchInput:focus {
+    outline: none;
+    box-shadow: none;
+    background-color: #e4e6e9;
+}
+
+/* --- Section Droite --- */
+.navRight {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espace réduit entre les icônes */
+}
+
+/* Conteneur pour chaque icône pour un meilleur effet de survol */
+.iconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 45px;
     height: 45px;
     border-radius: 50%;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.iconWrapper:hover {
+    background-color: #f0f2f5; /* Fond gris au survol */
+}
+
+.navIcon {
+    color: #0F6E5A; /* Votre couleur de marque */
+    font-size: 1.5rem;
+}
+
+/* Image de profil */
+.profileImg {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ddd; /* Légère bordure pour la définir */
+}
+
+/* --- Dropdown Personnalisé --- */
+
+/* Ceci est la classe spéciale pour surcharger React-Bootstrap */
+.dropdownToggle {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    margin-left: 0.5rem;
+}
+/* Cache la petite flèche par défaut du dropdown */
+.dropdownToggle::after {
+    display: none;
+}
+
+.dropdownMenu {
+    border-radius: 8px !important;
+    border: 1px solid #ddd !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    padding: 0.5rem 0 !important;
+}
+
+.dropdownMenu :global(.dropdown-item) {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem 1rem !important;
+    font-weight: 20;
+    font-size: 20px;
+}
+.dropdownMenu :global(.dropdown-item:active) {
+    background-color: #e4e6e9;
+    color: #1c1e21;
+}
+
+.dropdownIcon {
+    font-size: 1rem;
+    color: #333;
+}
+
+.logoutItem :global(.dropdown-item) {
+    color: #d9534f; /* Couleur rouge pour la déconnexion */
 }

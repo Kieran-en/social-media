@@ -1,52 +1,84 @@
-import React, {useContext} from 'react'
-import { Row, Col, NavbarBrand } from "react-bootstrap";
-import { Navbar, Dropdown } from "react-bootstrap";
-// import navImg2 from '../Images/icon-left-font-monochrome-white.png';
-import navStyle from '../Styles/navbar.module.css';
+import React, { useEffect, useState } from 'react';
+import { Navbar, Dropdown, Form } from 'react-bootstrap';
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+
+// Icônes
+import { FaHome, FaUser, FaDoorOpen, FaSearch } from "react-icons/fa";
+import { MdOutlineMessage, MdNotifications } from "react-icons/md";
+
+import styles from '../Styles/navbar.module.css';
 import navImg from '../Images/EEC.png';
 import { getCurrentUser, logout } from "../Services/userService";
 import { deleteToken } from '../features/tokens/tokenSlice';
-import {useNavigate, useParams} from "react-router-dom";
-import {FaDoorOpen, FaImages, FaUser} from "react-icons/fa";
-import { MdOutlineMessage, MdNotifications } from "react-icons/md";
-import { FaHome } from "react-icons/fa";
-import { useDispatch, useSelector } from 'react-redux';
 
 export default function NavBar() {
     const navigate = useNavigate();
-    const dispatch = useDispatch()
-    const {userlogged} = useParams();
-    const token = useSelector(state => state.token)
-    const userData = getCurrentUser(token)
-    const profileImg = userData.profileImg
-    
-  return (
-    <div>
-        <Navbar fixed="top" className="justify-content-between px-3" style={{backgroundColor: 'white', borderBottom: '1px solid gray'}}>
-                <NavbarBrand className='color-green d-flex align-items-center gap-2' style={{cursor: 'pointer', color: '#0F6E5A'}} onClick={() => navigate(`/timeline/${userData.username}`)}>
-                  <img src={navImg} className={navStyle.img} alt='companyIcon'/> Melen
-                </NavbarBrand>
-                <Row>
-                <Col className='d-flex align-items-center gap-3'>
-                {userlogged ? <MdOutlineMessage className={navStyle.icons} onClick={() => navigate('/messages')} />
-                : <FaHome onClick={() => navigate(`/timeline/${userData.username}`)} className={navStyle.icons}/> }
-                <MdNotifications className={navStyle.icons}/>
-        <Dropdown>
-        <Dropdown.Toggle variant="" id="dropdown-basic">
-          <img src={profileImg} alt="profile-image" className={navStyle.profileImg}/>
-         </Dropdown.Toggle>
-        <Dropdown.Menu >
-            <Dropdown.Item eventKey='logout' onClick={() => {
-              logout()
-              dispatch(deleteToken())
-              navigate("/")
-              }}>LogOut <FaDoorOpen className="ml-5"/></Dropdown.Item>
-            <Dropdown.Item eventKey='profile' onClick={() => navigate(`/profilepage/${userData.username}`)  }>Visit Profile <FaUser className="ml-5" /></Dropdown.Item>
-        </Dropdown.Menu>
-        </Dropdown>
-         </Col>
-                </Row>       
+    const dispatch = useDispatch();
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        const user = getCurrentUser(); // va chercher token dans localStorage et décode
+        setUserData(user);
+    }, []);
+
+    const handleLogout = () => {
+      logout();
+      dispatch(deleteToken());
+      navigate("/");
+    };
+
+    if (!userData || !userData.username) {
+        return null; // Ou un loader, ou navbar pour non connecté
+    }
+
+    return (
+        <Navbar fixed="top" className={styles.navContainer}>
+            {/* PARTIE GAUCHE */}
+            <div className={styles.navLeft}>
+                <NavLink to={`/timeline/${userData.username}`}>
+                    <img src={navImg} className={styles.logo} alt='Logo Melen' />
+                </NavLink>
+                <div className={styles.searchBar}>
+                    <FaSearch className={styles.searchIcon} />
+                    <Form.Control 
+                        type="text" 
+                        placeholder="Rechercher sur Melen" 
+                        className={styles.searchInput}
+                    />
+                </div>
+            </div>
+
+            {/* PARTIE DROITE */}
+            <div className={styles.navRight}>
+                <NavLink to={`/timeline/${userData.username}`} className={styles.iconWrapper} title="Accueil">
+                    <FaHome className={styles.navIcon} />
+                </NavLink>
+                <NavLink to="/messages" className={styles.iconWrapper} title="Messages">
+                    <MdOutlineMessage className={styles.navIcon} />
+                </NavLink>
+                <div className={styles.iconWrapper} title="Notifications">
+                    <MdNotifications className={styles.navIcon} />
+                </div>
+                
+                <Dropdown align="end">
+                    <Dropdown.Toggle id="dropdown-profile" bsPrefix={styles.dropdownToggle}>
+                        <img src={userData.profileImg} alt="Profil" className={styles.profileImg} />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className={styles.dropdownMenu}>
+                        <Dropdown.Item onClick={() => navigate(`/profilepage/${userData.username}`)}>
+                            <FaUser className={styles.dropdownIcon} />
+                            <span>Voir le profil</span>
+                        </Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item onClick={handleLogout} className={styles.logoutItem}>
+                            <FaDoorOpen className={styles.dropdownIcon} />
+                            <span>Déconnexion</span>
+                        </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
         </Navbar>
-    </div>
-  )
+    );
 }

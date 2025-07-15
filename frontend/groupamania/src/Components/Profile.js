@@ -7,6 +7,7 @@ import { Navbar, Dropdown, Col, NavbarBrand } from "react-bootstrap";
 import navStyle from '../Styles/navbar.module.css';
 import { useNavigate, useParams } from "react-router-dom";
 import navImg from '../Images/EEC.png';
+import NavBar from "./NavBar";
 import 'react-tippy/dist/tippy.css';
 import { Tooltip } from 'react-tippy';
 import { follow, getCurrentUser, getFollowingCount, logout } from "../Services/userService";
@@ -52,29 +53,7 @@ const Profile = ({ email, profileImg, changeModalState, username, followers, fol
 
   return (
     <div style={{ backgroundColor: 'rgb(240, 236, 236)', height: '100vh' }}>
-      <Navbar className="justify-content-between p-3" style={{ backgroundColor: 'white', borderRadius: '10px' }}>
-        <NavbarBrand className='color-green d-flex align-items-center gap-2' style={{ cursor: 'pointer', color: 'green' }} onClick={() => navigate(`/timeline/${userData?.username}`)}>
-          <img src={navImg} className={navStyle.img} alt='companyIcon' /> Melen
-        </NavbarBrand>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
-          <Col
-            style={{ color: 'green', fontSize: '1.2rem', cursor: 'pointer', display: 'flex', gap: '0.3rem', alignItems: 'center' }}
-            onClick={() => navigate(`/timeline/${userProfileName}`)}>
-            Timeline<FaHome />
-          </Col>
-          <Col>
-            <Dropdown>
-              <Dropdown.Toggle variant="" id="dropdown-basic">
-                <img src={profileImg || '/default-profile.png'} alt="profile" className={navStyle.profileImg} />
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={handleLogOut}>LogOut <FaDoorOpen /></Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Col>
-        </div>
-      </Navbar>
-
+      <NavBar />
       <ProfileStyle style={{ backgroundColor: 'white', color: 'black' }}>
         <h1>User Profile</h1>
         <div className={style.imageDiv}>

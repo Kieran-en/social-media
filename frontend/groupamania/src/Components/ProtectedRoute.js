@@ -8,5 +8,5 @@ export default function ProtectedRoute({ children }) {
   //console.log("protect", token)
   const user = getCurrentUser(token)
   //console.log("Protect", user)
-  return user ? <>{children}</> : <Navigate to="/login" />;
+  return user ? <>{children}</> : <Navigate to="/" />;
 }

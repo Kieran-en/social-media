@@ -1,0 +1,256 @@
+/* src/Styles/adminPage.module.css */
+.adminContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.bodyContainer {
+  display: flex;
+  flex: 1;
+  margin-top: 70px;
+}
+
+/* Menu vertical gauche */
+.sidebar {
+  width: 240px;
+  background-color: white;
+  padding: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+.logoContainer {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid #edf2f7;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  background-color: #00753e;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.menuSection {
+  margin-bottom: 1.5rem;
+  padding: 0 1.5rem;
+}
+
+.menuHeading {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #a0aec0;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  color: #4a5568;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0. 5rem;
+  transition: all 0.2s;
+  margin-bottom: 0.3rem;
+}
+
+.link:hover {
+  background-color: #f8fafc;
+  color: #00753e;
+}
+
+.link.active {
+  background-color: rgba(0, 117, 62, 0.1);
+  color: #00753e;
+  font-weight: 500;
+}
+
+.icon {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.link.active .icon {
+  opacity: 1;
+}
+
+/* Contenu principal */
+.mainContent {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #f5f7fa;
+  overflow-y: auto;
+}
+
+.contentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.dateInfo {
+  font-size: 0.9rem;
+  color: #718096;
+}
+
+.welcomeCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+}
+
+.welcomeCard h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.welcomeCard p {
+  color: #718096;
+  margin-bottom: 0;
+}
+
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s;
+}
+
+.statCard:hover {
+  transform: translateY(-3px);
+}
+
+.statIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statContent h3 {
+  font-size: 1rem;
+  color: #718096;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+.statValue {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2d3748;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.statChange {
+  font-size: 0.9rem;
+  color: #48bb78;
+  font-weight: 500;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 1.5rem;
+}
+
+.gridCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+}
+
+.gridHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.gridHeader h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.viewAllBtn {
+  background: none;
+  border: none;
+  color: #00753e;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.activityList, .groupList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.activityItem, .groupItem {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.activityIcon, .groupIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00753e;
+  flex-shrink: 0;
+}
+
+.activityContent p, .groupContent p {
+  margin-bottom: 0.2rem;
+  color: #2d3748;
+}
+
+.activityContent small, .groupContent small {
+  color: #a0aec0;
+  font-size: 0.85rem;
+}

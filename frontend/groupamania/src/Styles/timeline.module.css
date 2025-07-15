@@ -297,3 +297,24 @@
 .menuItem:hover {
   background-color: #f2f2f2;
 }
+
+.adminLinkBox {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.adminButton {
+  background-color: #00753e;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.adminButton:hover {
+  background-color: #005c31;
+}

@@ -15,6 +15,7 @@ const ProfilePage = () => {
 
     return (
         <>
+        
         <Profile  username={userPageData && userPageData.name} 
         email={userPageData && userPageData.email} 
         followed_user_id = {userPageData && userPageData.id}

@@ -1,0 +1,78 @@
+/* Conteneur général */
+.navContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Logo */
+.logoWrapper {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logoImg {
+    height: 40px;
+    margin-right: 0.6rem;
+}
+
+.brandName {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #0F6E5A;
+}
+
+/* Section des actions (boutons) */
+.navActions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Lien classique */
+.navLink {
+    color: #0F6E5A;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.4rem 1rem;
+    transition: color 0.2s ease;
+    border-radius: 6px;
+}
+
+.navLink:hover {
+    color: #0a4d3e;
+}
+
+/* Bouton principal */
+.navButton {
+    background-color: transparent;
+    color: #0F6E5A;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.4rem 1.2rem;
+    border: 1.5px solid #0F6E5A;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+
+.navButton:hover {
+    background-color: #0a4d3e;
+    color: white;
+}
+
+.navButton:active {
+    transform: scale(0.97);
+}
+
+/* Style pour le lien actif */
+.active {
+    background-color: #0a4d3e;
+    color: white !important;
+    border: none;
+}

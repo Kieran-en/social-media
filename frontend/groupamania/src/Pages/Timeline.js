@@ -6,8 +6,10 @@ import Post from "../Components/Post";
 import Modal from "../Components/Modal";
 import DeleteModal from "../Components/DeleteModal";
 import RandomQuote from '../Components/Quotes';
+// import Admin from './Admin/Admin'; 
 import { FaImages } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import config from "../config.json";
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "react-query";
 import { useInView } from "react-intersection-observer";
@@ -31,6 +33,8 @@ const Timeline = () => {
   const queryClient = useQueryClient();
   const [postToModify, setPostToModify] = useState(null);
   const [postToDelete, setPostToDelete] = useState(null);
+  const navigate = useNavigate();
+
 
   const { username, userId } = userData || {};
 
@@ -180,6 +184,13 @@ const Timeline = () => {
       {/* Colonne droite */}
       <div className={style.rightCol}>
         <RandomQuote />
+        {userData?.role === 'admin' && (
+          <div className={style.adminLinkBox}>
+            <Link to="/admin" className={style.adminButton}>
+              ⚙️ Gérer la plateforme
+            </Link>
+          </div>
+        )}
       </div>
     </div>
 

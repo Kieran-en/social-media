@@ -7,6 +7,7 @@ const likeRoutes = require('./routes/like')
 const followRoutes = require('./routes/follow')
 const messageRoutes = require('./routes/message')
 const conversationRoutes = require('./routes/conversation')
+const userAdminRoutes = require('./routes/userAdmin');
 const mysql = require('mysql');
 const path = require('path');
 const db = require('./config');
@@ -32,7 +33,7 @@ db.authenticate()
   .then(() => console.log("Database connected sucessfully..."))
   .catch((error) => console.log('Error :' + error))
 
-  db.sync()
+  db.sync({ alter: true })
   .then(() => {
     console.log('Synched!'); // Tu peux le garder pour confirmer que Sequelize est bien connecté à la DB
   })
@@ -49,6 +50,7 @@ app.use('/api/like', likeRoutes);
 app.use('/api/follow', followRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/api/conversation', conversationRoutes);
+app.use('/api/users', userAdminRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;

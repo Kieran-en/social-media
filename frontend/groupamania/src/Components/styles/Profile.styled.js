@@ -6,7 +6,7 @@ box-shadow: 24px 34px 12px -22px rgba(0,0,0,0.16);
 display: flex;
 flex-direction: column;
 margin: auto;
-padding: 50px;
+padding: 100px;
 align-items: center;
 cursor: pointer;
 background-color: #242526;
