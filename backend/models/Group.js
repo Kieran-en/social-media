@@ -12,7 +12,12 @@ const Group = db.define('Group', {
   },
   profileImg: {
     type: DataTypes.STRING,
-    defaultValue: "http://localhost:3000/images/profile.png", // 🧼 petit nettoyage
+    defaultValue: "http://localhost:3000/images/profile.png",
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    allowNull: false,
   }
 });
 

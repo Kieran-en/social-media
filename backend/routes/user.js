@@ -2,15 +2,24 @@ const express = require('express');
 const router = express.Router();
 const userCtrl = require('../controllers/user');
 const auth = require('../middlewares/auth');
-const multer = require('../middlewares/multer-config');
+const upload = require('../middlewares/multer-config');  // renommé pour clarté
 
+// Créer un utilisateur
 router.post('/signup', userCtrl.signup);
+
+// Connexion
 router.post('/login', userCtrl.login);
+
+// Récupérer un utilisateur
 router.get('/:username', userCtrl.getUser);
-router.get('/friends/:username', userCtrl.getFriends); 
+
+// Liste d'amis
+router.get('/friends/:username', userCtrl.getFriends);
+
+// Supprimer un utilisateur
 router.delete('/:username', auth, userCtrl.deleteUser);
-router.put('/:userId', auth, multer, userCtrl.modifyUserData);
-//router.put('/:username', auth, userCtrl.modifyEmail);
+
+// Modifier un utilisateur (avec image de profil)
+router.put('/:userId', auth, upload.single('image'), userCtrl.modifyUserData);
 
 module.exports = router;
-

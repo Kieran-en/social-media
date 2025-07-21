@@ -21,3 +21,8 @@ export async function modifyPost(post){
 export async function deletePost(postToDelete){
     return await http.delete(`${config.apiEndpoint}/post/${postToDelete}`)
 }
+
+export function getAllPosts() {
+  return http.get(`${config.apiEndpoint}/post`);
+}
+

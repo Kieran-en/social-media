@@ -4,17 +4,14 @@ const User = require('../models/User');
 const fs = require('fs');
 
 exports.displayPosts = (req, res, next) => {
-    const page = parseInt(req.query.page);
-    const limit = 2;
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    Post.findAll({ include: User, 
-        order: [['updatedAt', 'DESC']], 
-        limit: limit, 
-        offset: startIndex})
-    .then(posts => res.status(200).json(posts))
-    .catch(error  => res.status(500).json({error}));
-}
+  Post.findAll({
+    include: User,
+    order: [['updatedAt', 'DESC']],
+  })
+  .then(posts => res.status(200).json(posts))
+  .catch(error => res.status(500).json({ error }));
+};
+
 
 exports.getPost = (req, res, next) => {
     Post.findOne({

@@ -3,7 +3,8 @@ import NavBar from '../../Components/NavBar';
 import AdminSideNav from './AdminSideNav';
 import styles from './adminPage.module.css';
 import { getAllUsers, suspendUser, reactivateUser, deleteUser } from '../../Services/userAdminService';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Dropdown, ButtonGroup } from 'react-bootstrap';
+import { ThreeDotsVertical } from 'react-bootstrap-icons';
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
@@ -13,22 +14,19 @@ function ManageUsers() {
   }, []);
 
   const fetchUsers = async () => {
-  try {
-    const res = await getAllUsers();
-    console.log("Réponse API :", res);
-    setUsers(res.data);
-  } catch (err) {
-    // 🔍 Affiche le détail de l'erreur (axios error par ex.)
-    if (err.response) {
-      console.error("Erreur backend :", err.response.data);
-      console.error("Code HTTP :", err.response.status);
-    } else if (err.request) {
-      console.error("Pas de réponse du serveur :", err.request);
-    } else {
-      console.error("Erreur autre :", err.message);
+    try {
+      const res = await getAllUsers();
+      setUsers(res.data);
+    } catch (err) {
+      if (err.response) {
+        console.error("Erreur backend :", err.response.data);
+      } else if (err.request) {
+        console.error("Pas de réponse du serveur :", err.request);
+      } else {
+        console.error("Erreur autre :", err.message);
+      }
     }
-  }
-};
+  };
 
   const handleSuspend = async (id) => {
     await suspendUser(id);
@@ -61,7 +59,7 @@ function ManageUsers() {
                 <th>Email</th>
                 <th>Rôle</th>
                 <th>Statut</th>
-                <th>Actions</th>
+                <th style={{ width: '100px' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -78,18 +76,30 @@ function ManageUsers() {
                     )}
                   </td>
                   <td>
-                    {user.isActive ? (
-                      <Button variant="warning" size="sm" onClick={() => handleSuspend(user.id)}>
-                        Suspendre
-                      </Button>
-                    ) : (
-                      <Button variant="success" size="sm" onClick={() => handleReactivate(user.id)}>
-                        Réactiver
-                      </Button>
-                    )}{' '}
-                    <Button variant="danger" size="sm" onClick={() => handleDelete(user.id)}>
-                      Supprimer
-                    </Button>
+                    <Dropdown as={ButtonGroup} align="end">
+                      <Dropdown.Toggle variant="light" size="sm" id={`dropdown-user-${user.id}`}>
+                        <ThreeDotsVertical />
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        {user.isActive ? (
+                          <Dropdown.Item onClick={() => handleSuspend(user.id)}>
+                            ⏸ Suspendre
+                          </Dropdown.Item>
+                        ) : (
+                          <Dropdown.Item onClick={() => handleReactivate(user.id)}>
+                            ▶ Réactiver
+                          </Dropdown.Item>
+                        )}
+                        <Dropdown.Divider />
+                        <Dropdown.Item 
+                          onClick={() => handleDelete(user.id)} 
+                          style={{ color: 'red' }}
+                        >
+                          🗑 Supprimer
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </td>
                 </tr>
               ))}
