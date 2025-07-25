@@ -5,7 +5,7 @@ const RandomQuote = () => {
   const [quote, setQuote] = useState({});
 
   useEffect(() => {
-    let isMounted = true;
+    let isMounted = true; // 🔐 flag de montage
 
     const fetchNewQuote = async () => {
       try {
@@ -15,18 +15,8 @@ const RandomQuote = () => {
           },
         });
         const data = await response.json();
-
         if (isMounted && data.length > 0) {
-          // Pick the first quote with 24 words or fewer
-          const validQuote = data.find(
-            (q) => q.quote.split(/\s+/).length <= 24
-          );
-
-          if (validQuote) {
-            setQuote(validQuote);
-          } else {
-            setQuote({ quote: 'No short quote found this time.', author: '' });
-          }
+          setQuote(data[0]);
         }
       } catch (error) {
         if (isMounted) {
@@ -35,12 +25,12 @@ const RandomQuote = () => {
       }
     };
 
-    fetchNewQuote(); // Fetch immediately
-    const interval = setInterval(fetchNewQuote, 120000); // Refresh every 2 minutes
+    fetchNewQuote(); // première citation immédiate
+    const interval = setInterval(fetchNewQuote, 120000); // toutes les 2 minutes
 
     return () => {
-      isMounted = false;
-      clearInterval(interval);
+      isMounted = false;      // 🔁 empêche setState après démontage
+      clearInterval(interval); // 🧹 nettoyage de l'intervalle
     };
   }, []);
 

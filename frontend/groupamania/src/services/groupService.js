@@ -41,4 +41,3 @@ export function deleteGroup(id) {
 export function addMemberToGroup(data) {
   return http.post(`${apiEndpoint}/addMember`, data);
 }
-

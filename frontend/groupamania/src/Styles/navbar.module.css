@@ -132,35 +132,3 @@
 .logoutItem :global(.dropdown-item) {
     color: #d9534f; /* Couleur rouge pour la déconnexion */
 }
-
-/* Responsive Navbar */
-
-/* Shrink search bar on medium screens */
-@media (max-width: 992px) {
-  .searchInput {
-    width: 150px;
-  }
-}
-
-/* Hide search bar entirely on very small screens */
-@media (max-width: 576px) {
-  .searchBar {
-    display: none;
-  }
-
-  .navContainer {
-    padding: 0 1rem;
-  }
-
-  .navRight {
-    gap: 0.3rem;
-  }
-}
-
-/* Hide the admin button on small screens */
-@media (max-width: 992px) {
-  .adminLinkBox {
-    display: none;
-  }
-}
-
