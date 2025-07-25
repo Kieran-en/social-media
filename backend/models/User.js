@@ -9,23 +9,23 @@ const Conversation = require('./Conversation');
 
 const User = db.define('User', {
   id: {
-    type: DataTypes.INTEGER, // ✅ remplacé Sequelize -> DataTypes
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
   profileImg: {
     type: DataTypes.STRING,
-    defaultValue: "http://localhost:3000/images/profile.png", // 🧼 petit nettoyage
+    defaultValue: "http://localhost:3000/images/profile.png",
   },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: false // ❌ Remove inline unique to avoid duplicate index creation
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: false // ❌ Same here; we'll define it manually below
   },
   role: {
     type: DataTypes.ENUM('user', 'admin'),
@@ -48,6 +48,19 @@ const User = db.define('User', {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   }
+}, {
+  indexes: [
+    {
+      unique: true,
+      fields: ['name']
+    },
+    {
+      unique: true,
+      fields: ['email']
+    }
+  ],
+  freezeTableName: true,
+  timestamps: true
 });
 
 // Relations
