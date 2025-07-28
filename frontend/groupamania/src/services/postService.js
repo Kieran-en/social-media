@@ -1,28 +1,29 @@
-import http from './httpService'
-import config from '../config.json'
+import http from './httpService';
+import config from '../config.json';
 
-export async function getPosts({pageParam = 1}){
-    const res = await http.get(`${config.apiEndpoint}/post?page=${pageParam}`)
-    return res.data;
+// Pagination (timeline)
+export async function getPosts(page = 1) {
+  const res = await http.get(`${config.apiEndpoint}/post?page=${page}`);
+  return res.data; // { posts, totalPosts, currentPage, totalPages }
 }
 
-export async function getData(){
-
+// Créer un post
+export async function createPost(post) {
+  return await http.post(`${config.apiEndpoint}/post`, post);
 }
 
-export async function createPost(post){
-    return await http.post(`${config.apiEndpoint}/post`, post)
+// Modifier un post
+export async function modifyPost(postId, post) {
+  return await http.put(`${config.apiEndpoint}/post/${postId}`, post);
 }
 
-export async function modifyPost(post){
-    return await http.put(`${config.apiEndpoint}/post`, post)
+// Supprimer un post
+export async function deletePost(postToDelete) {
+  return await http.delete(`${config.apiEndpoint}/post/${postToDelete}`);
 }
 
-export async function deletePost(postToDelete){
-    return await http.delete(`${config.apiEndpoint}/post/${postToDelete}`)
+// Récupérer TOUS les posts (pour Stats)
+export async function getAllPosts() {
+  const res = await http.get(`${config.apiEndpoint}/post/all`);
+  return res.data; // Array de posts
 }
-
-export function getAllPosts() {
-  return http.get(`${config.apiEndpoint}/post`);
-}
-

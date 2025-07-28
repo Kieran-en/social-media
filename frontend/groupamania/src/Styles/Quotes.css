@@ -1,48 +1,38 @@
-body, html {
-  margin: 0;
-  height: 100vh;
-}
-
 .quote-container {
   background-color: #ffffff;
-  padding: 1rem;
   padding: 2rem;
-  /* margin-top:30px; */
   border-radius: 15px;
   box-shadow: 0px 0px 10px rgba(0, 128, 0, 0.1);
-  margin-top: 20px;
-  margin-right: 30px;
   font-family: 'Segoe UI', sans-serif;
   color: #1d5934;
   width: 100%;
-  max-width: 300px;
+  max-width: 280px;
   max-height: 550px;
-}
-
-.page-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60vh;
- 
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
 }
 
+/* Quote text */
 .quote-text {
   font-size: 1.2rem;
-  text-align: center;
   margin: 1rem 0;
   font-style: italic;
+  line-height: 1.5;
 }
 
+/* Divider line */
+.quote-line {
+  height: 1px;
+  background-color: #1d5934;
+  margin: 1rem 0;
+}
+
+/* Author */
 .quote-author {
   text-align: right;
   font-size: 1rem;
   font-weight: 500;
   margin-top: 1rem;
-}
-
-.quote-line {
-  height: 1px;
-  background-color: #1d5934;
-  margin: 1rem 0;
 }

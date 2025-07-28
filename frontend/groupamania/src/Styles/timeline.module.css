@@ -1,7 +1,7 @@
 .timelineContainer {
   background-color: #f0f2f5;
   min-height: 100vh;
-  padding-top: 70px;
+  padding-top: 70px; /* Standard navbar offset */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,26 +9,46 @@
 
 .contentWrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-between; /* Keep 3 columns aligned horizontally */
+  align-items: flex-start;
   width: 100%;
   max-width: 1200px;
   gap: 20px;
-  padding: 20px;
+  padding: 0 20px; /* Horizontal padding only */
 }
 
+/* Left (Calendar) and Right (Quotes/Admin) sticky behavior */
+.leftCol,
+.rightCol {
+  flex: 1;
+  max-width: 280px;
+  height: fit-content;
+  position: sticky;
+  top: 100px; /* Leaves space from the navbar like LinkedIn's sidebars */
+  align-self: flex-start;
+}
+
+/* Center (Posts) */
+.centerCol {
+  flex: 2;
+  max-width: 680px;
+  margin-top: 20px; /* Posts column starts slightly lower for breathing room */
+}
+
+/* Post creation box */
 .postBox {
   background-color: white;
   width: 100%;
   max-width: 600px;
-  margin-top: 20px;
+  margin-top: 0;
   border-radius: 12px;
   padding: 16px;
 }
 
+/* Post form & text input */
 .postForm {
   display: flex;
   flex-direction: column;
-  /* gap: 10px; */
 }
 
 .avatar {
@@ -50,28 +70,6 @@
   margin: 15px;
 }
 
-.multimediaInput{
-    display: none;
-    color: gree
-} 
-
-.multimediaLabel{
-    border: 2px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 15px;
-    color: #0F6E5A;
-}
-
-.previewImage {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-top: 10px;
-}
-
 .mediaLabel {
   color: #0F6E5A;
   font-weight: bold;
@@ -80,6 +78,14 @@
 
 .mediaInput {
   display: none;
+}
+
+.previewImage {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 
 .postButton {
@@ -91,6 +97,7 @@
   font-weight: bold;
 }
 
+/* Post cards */
 .postCard {
   background-color: white;
   border-radius: 16px;
@@ -101,6 +108,7 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
+/* Post header & meta */
 .postHeader {
   display: flex;
   justify-content: space-between;
@@ -135,7 +143,7 @@
   color: #6e767d;
 }
 
-.iconGroup{
+.iconGroup {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -171,6 +179,7 @@
   color: #1d9bf0;
 }
 
+/* Comments */
 .commentSection {
   display: flex;
   align-items: flex-start;
@@ -183,15 +192,14 @@
   gap: 0px;
   margin-left: 12px;
   flex: 1;
-  min-width: 0; /* Prevents overflow */
+  min-width: 0;
 }
 
 .commentBubble {
   background-color: white;
   border-radius: 18px;
-  /* padding: 8px 16px; */
   word-break: break-word;
-  border-top-left-radius: 4px; /* Creates the speech bubble point */
+  border-top-left-radius: 4px;
 }
 
 .commentUsername {
@@ -237,71 +245,13 @@
   border-top: 1px solid #f0f2f5;
 }
 
-.leftCol,
-.rightCol {
-  flex: 1;
-  max-width: 300px;
-}
-
-.centerCol {
-  flex: 2;
-  max-width: 700px;
-}
-
-@media (max-width: 992px) {
-  .contentWrapper {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .leftCol, .rightCol {
-    max-width: 100%;
-  }
-
-  .centerCol {
-    max-width: 100%;
-  }
-}
-
-.dropdownWrapper {
-  position: relative;
-}
-
-.menuIcon {
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.dropdownMenu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 0.5rem;
-  z-index: 100;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  min-width: 150px;
-}
-
-.menuItem {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.menuItem:hover {
-  background-color: #f2f2f2;
-}
-
+/* Sticky admin button */
 .adminLinkBox {
   margin-top: 1rem;
   display: flex;
   justify-content: center;
+  position: sticky;
+  top: 400px; /* Below quote component */
 }
 
 .adminButton {
@@ -318,3 +268,37 @@
 .adminButton:hover {
   background-color: #005c31;
 }
+
+/* Mobile responsiveness */
+@media (max-width: 992px) {
+  .contentWrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .leftCol, .rightCol {
+    max-width: 100%;
+    position: static; /* Disable sticky on mobile */
+  }
+
+  .centerCol {
+    max-width: 100%;
+    margin-top: 0;
+  }
+}
+@media (max-width: 992px) {
+  .contentWrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .leftCol, .rightCol {
+    display: none; /* Hide Calendar and Quotes on small screens */
+  }
+
+  .centerCol {
+    max-width: 100%;
+    margin-top: 0;
+  }
+}
+

@@ -132,3 +132,31 @@
 .logoutItem :global(.dropdown-item) {
     color: #d9534f; /* Couleur rouge pour la déconnexion */
 }
+
+/* Hamburger button (hidden on desktop) */
+.hamburgerButton {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #0F6E5A;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .searchBar, .navRight {
+        display: none !important; /* Hide search and icons */
+    }
+
+    .hamburgerButton {
+        display: block;
+    }
+}
+
+/* Mobile search bar inside offcanvas */
+.mobileSearchBar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}

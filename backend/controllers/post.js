@@ -3,13 +3,31 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const fs = require('fs');
 
-exports.displayPosts = (req, res, next) => {
-  Post.findAll({
-    include: User,
-    order: [['updatedAt', 'DESC']],
-  })
-  .then(posts => res.status(200).json(posts))
-  .catch(error => res.status(500).json({ error }));
+exports.displayPosts = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5; // posts per page
+    const offset = (page - 1) * limit;
+
+    const totalPosts = await Post.count();
+
+    const posts = await Post.findAll({
+      include: User,
+      order: [['updatedAt', 'DESC']],
+      limit,
+      offset,
+    });
+
+    res.status(200).json({
+      posts,
+      totalPosts,
+      currentPage: page,
+      totalPages: Math.ceil(totalPosts / limit),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
 };
 
 
