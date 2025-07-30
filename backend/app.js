@@ -14,12 +14,16 @@ const db = require('./config');
 const cors = require('cors');
 const User = require('./models/User');
 const Post = require('./models/Post');
+const Event = require('./models/Event');
 const sequelize = require('sequelize');
 const groupRoutes = require('./routes/group');
 const groupMessageRoutes = require('./routes/groupMessage');
 const Group = require('./models/Group');
 const GroupMember = require('./models/GroupMember');
 const GroupMessage = require('./models/GroupMessage');
+const eventRoutes = require('./routes/eventRoutes');
+
+
 
 
 app.use((req, res, next) => {
@@ -59,5 +63,6 @@ app.use('/api/users', userAdminRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/groups', groupRoutes);
 app.use('/api/groupMessages', groupMessageRoutes);
+app.use('/api/events', eventRoutes);
 
 module.exports = app;

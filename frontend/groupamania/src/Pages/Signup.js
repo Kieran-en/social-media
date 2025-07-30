@@ -70,7 +70,7 @@ const SignUp = () => {
             .then(data => {
                console.log(data)
                if (data.message === 'User created!'){
-                   navigate(`/login`)
+                   navigate(`/`)
                }
                else {
                    alert('Unauthorized')

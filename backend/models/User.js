@@ -9,23 +9,23 @@ const Conversation = require('./Conversation');
 
 const User = db.define('User', {
   id: {
-    type: DataTypes.INTEGER, // ✅ remplacé Sequelize -> DataTypes
+    type: DataTypes.INTEGER, //  remplacé Sequelize -> DataTypes
     primaryKey: true,
     autoIncrement: true,
   },
   profileImg: {
     type: DataTypes.STRING,
-    defaultValue: "http://localhost:3000/images/profile.png", // 🧼 petit nettoyage
+    defaultValue: "http://localhost:3000/images/profile.png", //  petit nettoyage
   },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: false,
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: false,
   },
   role: {
     type: DataTypes.ENUM('user', 'admin'),

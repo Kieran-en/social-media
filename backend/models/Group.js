@@ -5,7 +5,7 @@ const Group = db.define('Group', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: false,
   },
   description: {
     type: DataTypes.TEXT,

@@ -7,6 +7,7 @@ import Timeline from './Pages/Timeline';
 import Admin from './Pages/Admin/Admin';
 import ManageUsers from './Pages/Admin/Users';
 import Groups from './Pages/Admin/Groups';
+import Events from './Pages/Admin/Events';
 import Stats from './Pages/Admin/Stats';
 import ErrorPage from './Pages/ErrorPage'
 import ProfilePage from './Pages/ProfilePage'
@@ -35,10 +36,26 @@ function App() {
           <MessagePage />
         </ProtectedRoute>} />
       <Route path='*' element={<ErrorPage />} />
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/admin/users" element={<ManageUsers />} />
-      <Route path="/admin/groups" element={<Groups />} />
-      <Route path="/admin/stats" element={<Stats />} />
+      <Route path="/admin" element={
+        <ProtectedRoute>
+          <Admin />
+        </ProtectedRoute>} />
+      <Route path="/admin/users" element={
+        <ProtectedRoute>
+          <ManageUsers />
+        </ProtectedRoute>} />
+      <Route path="/admin/groups" element={
+        <ProtectedRoute>
+          <Groups />
+        </ProtectedRoute>} />
+      <Route path="/admin/stats" element={
+        <ProtectedRoute>
+          <Stats />
+        </ProtectedRoute>} />
+      <Route path="/admin/events" element={
+        <ProtectedRoute>
+          <Events />
+          </ProtectedRoute>} />
     </Routes>
     </BrowserRouter>
   </div>
