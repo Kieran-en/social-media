@@ -29,7 +29,7 @@ function Visitor() {
 
       {/* About Section */}
       <section id="about" className={styles.section}>
-        <h2>About Us</h2>
+        <h2>À propos</h2>
         <p>
           Dans le souci de rapprocher les fidèles de Messa 1 vivant dans la zone de Melen / Biyem-assi, d'évangéliser les habitants des zones de 
           Melen et ses environs, en 1988, l'EEC de Messa 1 a pris l'initiative de créer une annexe nommée Melen/biyem-assi. Elle prendra vie en
@@ -60,10 +60,10 @@ function Visitor() {
 
       {/* Contacts Section */}
       <section id="contacts" className={styles.section}>
-        <h2>Contact Us</h2>
+        <h2>Contacts</h2>
         <p>Adresse: Marché Melen, près de la clôture de la GP</p>
         <p>Email: info@eecmelen.org</p>
-        <p>Phone: +(237) 222-31-12-25</p>
+        <p>Telephone: +(237) 222-31-12-25</p>
         <p>Fax: +(237) 222-31-12-25</p>
       </section>
     </div>

@@ -22,7 +22,7 @@ const Nav = () => {
                     offset={-70} // adjust for navbar height
                     className={styles.navLink}
                 >
-                    Home
+                    Accueil
                 </Link>
                 <Link
                     to="about"
@@ -31,7 +31,7 @@ const Nav = () => {
                     offset={-70}
                     className={styles.navLink}
                 >
-                    About
+                    À propos
                 </Link>
                 <Link
                     to="contacts"
