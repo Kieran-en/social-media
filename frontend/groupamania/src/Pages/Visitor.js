@@ -11,7 +11,7 @@ function Visitor() {
 
       {/* Home Section */}
       <section id="home" className={styles.section}>
-        <h1>Bienvenue a la paroisse EEC de Melen!</h1>
+        <h1>Bienvenue à la paroisse EEC de Melen!</h1>
         <div className={styles.imgView}>
             <img src={frontViewImage} alt="Placeholder" className={styles.placeholderImage} />
             <img src={insideViewImage} alt="inside view" className={styles.placeholderImage} />
