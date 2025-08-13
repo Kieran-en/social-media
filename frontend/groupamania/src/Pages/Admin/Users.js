@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import NavBar from '../../Components/NavBar';
 import AdminSideNav from './AdminSideNav';
 import styles from './adminPage.module.css';
-import { getAllUsers, suspendUser, reactivateUser, deleteUser } from '../../Services/userAdminService';
-import { Button, Table, Dropdown, ButtonGroup } from 'react-bootstrap';
+import { getAllUsers, suspendUser, reactivateUser, deleteUser, renameUser } from '../../Services/userAdminService';
+import { Button, Table, Dropdown, ButtonGroup, Modal, Form } from 'react-bootstrap';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [newRole, setNewRole] = useState('user');
 
   useEffect(() => {
     fetchUsers();
@@ -45,6 +48,22 @@ function ManageUsers() {
     }
   };
 
+  const openRoleModal = (user) => {
+    setSelectedUser(user);
+    setNewRole(user.role || 'user');
+    setShowRoleModal(true);
+  };
+
+  const handleRoleSubmit = async () => {
+    try {
+      await renameUser(selectedUser.id, newRole);
+      setShowRoleModal(false);
+      fetchUsers();
+    } catch (err) {
+      console.error('Erreur lors de la mise à jour du rôle:', err);
+    }
+  };
+
   return (
     <div className={styles.adminContainer}>
       <NavBar />
@@ -59,7 +78,7 @@ function ManageUsers() {
                 <th>Email</th>
                 <th>Rôle</th>
                 <th>Statut</th>
-                <th style={{ width: '100px' }}>Actions</th>
+                <th style={{ width: '130px' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -82,6 +101,10 @@ function ManageUsers() {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => openRoleModal(user)}>
+                          🏷 Nommer
+                        </Dropdown.Item>
+                        <Dropdown.Divider />
                         {user.isActive ? (
                           <Dropdown.Item onClick={() => handleSuspend(user.id)}>
                             ⏸ Suspendre
@@ -107,6 +130,31 @@ function ManageUsers() {
           </Table>
         </div>
       </div>
+
+      {/* Modale de nomination */}
+      <Modal show={showRoleModal} onHide={() => setShowRoleModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Nommer un utilisateur</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group controlId="formRoleSelect">
+            <Form.Label>Choisissez un nouveau rôle pour {selectedUser?.name} :</Form.Label>
+            <Form.Select value={newRole} onChange={(e) => setNewRole(e.target.value)}>
+              <option value="user">Utilisateur</option>
+              <option value="diacre">Diacre</option>
+              <option value="responsable_groupe">Responsable de groupe</option>
+            </Form.Select>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowRoleModal(false)}>
+            Annuler
+          </Button>
+          <Button variant="primary" onClick={handleRoleSubmit}>
+            Enregistrer
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

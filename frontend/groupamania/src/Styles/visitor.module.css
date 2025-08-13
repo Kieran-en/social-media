@@ -1,0 +1,67 @@
+.Pagecontainer {
+  background-color: #ffffff; /* blanc pur pour un look épuré */
+  font-family: 'Segoe UI', sans-serif;
+  color: #222;
+}
+
+/* Sections */
+.section {
+  min-height: 100vh;
+  padding: 80px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  scroll-margin-top: 100px; /* évite chevauchement navbar */
+}
+
+/* TITRES */
+.section h1, .section h2 {
+  color: #0F6E5A;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.section p, .section li {
+  line-height: 1.6;
+}
+
+/* HOME */
+#home {
+  background-color: #ffffff;
+  text-align: center;
+}
+
+.imgView {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 30px 0;
+}
+
+.imgView img {
+  height: 300px;
+  width: 450px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.imgView img:hover {
+  transform: scale(1.03);
+  box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
+}
+
+/* ABOUT */
+#about {
+  background-color: #f7fafc;
+  border-radius: 12px;
+  padding: 60px;
+}
+
+/* CONTACTS */
+#contacts {
+  background-color: #fff8e1;
+  border-radius: 12px;
+  padding: 60px;
+}

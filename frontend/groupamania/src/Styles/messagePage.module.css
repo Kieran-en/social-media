@@ -1,14 +1,60 @@
-.grid{
-    padding-top: 70px;
-    background-color: white;
-    display: grid;
-    grid-template-columns: 2fr 3fr 2fr;
-    grid-template-rows: calc(100vh - 150px);
-    padding: 0.5rem;
+.grid {
+  padding-top: 70px;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 2fr 3fr 2fr;
+  grid-template-rows: calc(100vh - 150px);
+  padding: 0.5rem;
+  gap: 0.5rem;
 }
 
 .grid > * {
-    padding-top: 6rem;
-    height: 99vh;
+  padding-top: 6rem;
+  height: 99vh;
 }
 
+/* Tablette (769px – 1024px) */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1.5fr 3fr;
+    grid-template-areas: "friends chat";
+  }
+
+  .friend_section {
+    grid-area: friends;
+  }
+
+  .chat_section {
+    grid-area: chat;
+  }
+
+  .online_section {
+    display: none;
+  }
+
+  .grid > * {
+    height: auto;
+    padding-top: 1rem;
+  }
+}
+
+/* Mobile (≤768px) */
+@media (max-width: 768px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grid > * {
+    height: auto;
+    padding-top: 1rem;
+  }
+
+  .friend_section, .chat_section {
+    width: 100%;
+  }
+
+  .online_section {
+    display: none;
+  }
+}

@@ -38,11 +38,11 @@ exports.login = (req, res, next) => {
             res.status(200).json({
     userId: user.id,
     username: user.name,
-    role: user.role,  // 👈 on peut aussi l'envoyer directement si tu veux l'utiliser côté frontend
+    role: user.role,  // on peut aussi l'envoyer directement si tu veux l'utiliser côté frontend
     token: jwt.sign({
         userId: user.id,
         username: user.name,
-        role: user.role, // 👈 AJOUT ICI
+        role: user.role, // AJOUT ICI
         profileImg: user.profileImg
     },
     'RANDOM_SECRET_KEY',

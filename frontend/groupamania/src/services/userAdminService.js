@@ -20,3 +20,6 @@ export function deleteUser(id) {
   return http.delete(`${apiEndpoint}/${id}`);
 }
 
+export function renameUser(id, newRole) {
+  return http.patch(`${apiEndpoint}/${id}/role`, { role: newRole });
+}

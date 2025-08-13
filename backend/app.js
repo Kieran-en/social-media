@@ -22,6 +22,7 @@ const Group = require('./models/Group');
 const GroupMember = require('./models/GroupMember');
 const GroupMessage = require('./models/GroupMessage');
 const eventRoutes = require('./routes/eventRoutes');
+const notificationRoutes = require('./routes/notificationRoutes')
 
 
 
@@ -64,5 +65,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/groups', groupRoutes);
 app.use('/api/groupMessages', groupMessageRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 module.exports = app;

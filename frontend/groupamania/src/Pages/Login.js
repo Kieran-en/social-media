@@ -1,83 +1,134 @@
-import React from 'react';
-import Nav from './Nav';
-import { useState} from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../Services/userService';
-import { useMutation, useQueryClient } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMutation } from 'react-query';
+import { useDispatch } from 'react-redux';
 import { setToken } from '../features/tokens/tokenSlice';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const  navigate = useNavigate();
-    const queryClient = useQueryClient();
-    const tokenn = useSelector((state) => state.token)
-    const dispatch = useDispatch()
+  const loginMutation = useMutation(login, {
+    onSuccess: (data) => {
+      const { token } = data;
+      dispatch(setToken(token));
+      localStorage.setItem('token', token);
+      if (data.hasOwnProperty('token')) {
+        navigate(`/timeline/${data.username}`);
+      }
+    },
+  });
 
-    const loginMutation = useMutation(login, {
-        onSuccess: (data) => {
-        let { token } = data
-        console.log(token)
-        dispatch(setToken(token))
-          localStorage.setItem('token', token)
-                if (data.hasOwnProperty('token')){
-                 navigate(`/timeline/${data.username}`);
-                }
-        }
-      })
+  const [values, setValues] = useState({ email: '', password: '' });
 
-    const [values, setValues] = useState({
-        email: '',
-        password: '',
-    })
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
 
-    const handleChange = (event) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    loginMutation.mutate(values);
+  };
 
-        setValues(values => ({
-            ...values, 
-            [event.target.name] : event.target.value
-        }));
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        loginMutation.mutate(values)
-        /**fetch(`${config.apiEndpoint}/auth/login`, {
-                method: 'POST',
-                headers: {
-                 'Content-Type': 'application/json',
-                },
-               body: JSON.stringify(values),
-            })
-            .then(response => response.json())
-            .then(data => {
-                let { token } = data
-                //setAccessToken(data.token);
-                //localStorage.setItem("userData", JSON.stringify(data))
-                localStorage.setItem('token', token)
-                if (data.hasOwnProperty('token')){
-                 navigate(`/timeline/${data.username}`);
-                }
-            }) */
-    }
-
-    return (
-        <div className='login' style={{color: 'green', backgroundColor: 'white', minHeight: '100vh'}}>
-            <Nav/>
-            <form className='container' onSubmit={handleSubmit}>
-                <div className='form-group mb-4 d-flex flex-column align-items-start'>
-                <label htmlFor='email' className='form-label'>Email:</label>
-                <input type='email' placeholder='Email' name='email' id='email' className='form-control' value={values.email} onChange={handleChange}></input>
-                </div>
-                <div className='form-group mb-4 d-flex flex-column align-items-start'>
-                <label htmlFor='password' className='form-label'>Password:</label>
-                <input type='password' placeholder='Password' name='password' id='password' value={values.password} onChange={handleChange} className='form-control'></input>
-                </div>
-                <button type='submit' className='btn w-100 p-2' style={{backgroundColor: '#0F6E5A', color: 'white'}}>Login</button>
-                </form>
-        </div>
-    )
-}
+  return (
+    <div
+      style={{
+        backgroundColor: '#f0f2f5',
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: 'white',
+          padding: '40px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          width: '100%',
+          maxWidth: '380px',
+        }}
+      >
+        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#0F6E5A' }}>
+          Connexion
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '15px' }}>
+            <label
+              htmlFor="email"
+              style={{
+                display: 'block',
+                marginBottom: '5px',
+                fontSize: '14px',
+                fontWeight: '500',
+              }}
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={values.email}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '8px 10px',
+                fontSize: '14px',
+                borderRadius: '6px',
+                border: '1px solid #ccc',
+              }}
+            />
+          </div>
+          <div style={{ marginBottom: '20px' }}>
+            <label
+              htmlFor="password"
+              style={{
+                display: 'block',
+                marginBottom: '5px',
+                fontSize: '14px',
+                fontWeight: '500',
+              }}
+            >
+              Mot de passe
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              value={values.password}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '8px 10px',
+                fontSize: '14px',
+                borderRadius: '6px',
+                border: '1px solid #ccc',
+              }}
+            />
+          </div>
+          <button
+            type="submit"
+            style={{
+              backgroundColor: '#0F6E5A',
+              color: 'white',
+              width: '100%',
+              padding: '10px',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '15px',
+              fontWeight: '500',
+              cursor: 'pointer',
+            }}
+          >
+            Se connecter
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 export default Login;

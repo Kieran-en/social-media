@@ -23,3 +23,12 @@ exports.deleteUserAdmin = (req, res) => {
     .then(() => res.status(200).json({ message: "Utilisateur supprimé" }))
     .catch(err => res.status(500).json({ error: err.message }));
 };
+
+exports.renameUser = (req, res) => {
+  const userId = req.params.id;
+  const { role } = req.body;
+
+  User.update({ role }, { where: { id: userId } })
+    .then(() => res.status(200).json({ message: "Rôle modifié avec succès" }))
+    .catch(err => res.status(500).json({ error: err.message }));
+};

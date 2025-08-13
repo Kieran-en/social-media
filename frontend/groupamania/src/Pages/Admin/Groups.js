@@ -9,9 +9,10 @@ import {
   createGroup, 
   updateGroup, 
   deleteGroup, 
-  suspendGroup,
-   reactivateGroup
+  suspendGroup, 
+  reactivateGroup 
 } from '../../Services/groupService';
+import { getAllUsers } from '../../Services/userAdminService';
 
 function Groups() {
   const [groups, setGroups] = useState([]);
@@ -22,9 +23,12 @@ function Groups() {
   const [profileImg, setProfileImg] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [groupLeaders, setGroupLeaders] = useState([]);
+  const [leaderId, setLeaderId] = useState('');
 
   useEffect(() => {
     fetchGroups();
+    fetchGroupLeaders();
   }, []);
 
   const fetchGroups = async () => {
@@ -36,10 +40,23 @@ function Groups() {
     }
   };
 
+  const fetchGroupLeaders = async () => {
+    try {
+      const res = await getAllUsers();
+       console.log("Tous les utilisateurs:", res.data);
+      const leaders = res.data.filter(user => user.role === 'responsable_groupe');
+       console.log("Leaders trouvés:", leaders);
+      setGroupLeaders(leaders);
+    } catch (err) {
+      console.error('Erreur lors du chargement des responsables de groupe', err);
+    }
+  };
+
   const handleOpenModal = (group = null) => {
     setEditingGroup(group);
     setGroupName(group ? group.name : '');
     setGroupDescription(group ? group.description : '');
+    setLeaderId(group?.leaderId || '');
     setProfileImg(null);
     setShowModal(true);
   };
@@ -52,6 +69,7 @@ function Groups() {
       const formData = new FormData();
       formData.append('name', groupName);
       formData.append('description', groupDescription);
+      formData.append('leaderId', leaderId);
       if (profileImg) formData.append('profileImg', profileImg);
 
       if (editingGroup) {
@@ -64,6 +82,7 @@ function Groups() {
       setEditingGroup(null);
       setGroupName('');
       setGroupDescription('');
+      setLeaderId('');
       setProfileImg(null);
       fetchGroups();
     } catch (err) {
@@ -81,16 +100,15 @@ function Groups() {
   };
 
   const handleReactivateGroup = async (id) => {
-  if (window.confirm("Voulez-vous réactiver ce groupe ?")) {
-    try {
-      await reactivateGroup(id);
-      fetchGroups();
-    } catch (err) {
-      setError("Erreur lors de la réactivation du groupe");
+    if (window.confirm("Voulez-vous réactiver ce groupe ?")) {
+      try {
+        await reactivateGroup(id);
+        fetchGroups();
+      } catch (err) {
+        setError("Erreur lors de la réactivation du groupe");
+      }
     }
-  }
-};
-
+  };
 
   const handleDeleteGroup = async (id) => {
     if (window.confirm("Voulez-vous vraiment supprimer ce groupe ?")) {
@@ -143,12 +161,12 @@ function Groups() {
                         <Dropdown.Menu>
                           <Dropdown.Item onClick={() => handleOpenModal(group)}>✏ Modifier</Dropdown.Item>
                           {group.isActive ? (
-    <Dropdown.Item onClick={() => handleSuspendGroup(group.id)}>⏸ Suspendre</Dropdown.Item>
-  ) : (
-    <Dropdown.Item onClick={() => handleReactivateGroup(group.id)} style={{ color: 'green' }}>
-      ▶ Réactiver
-    </Dropdown.Item>
-  )}
+                            <Dropdown.Item onClick={() => handleSuspendGroup(group.id)}>⏸ Suspendre</Dropdown.Item>
+                          ) : (
+                            <Dropdown.Item onClick={() => handleReactivateGroup(group.id)} style={{ color: 'green' }}>
+                              ▶ Réactiver
+                            </Dropdown.Item>
+                          )}
                           <Dropdown.Item 
                             onClick={() => handleDeleteGroup(group.id)} 
                             style={{ color: 'red' }}
@@ -168,13 +186,11 @@ function Groups() {
             </tbody>
           </Table>
 
-          {/* Modal pour création / modification */}
+          {/* Modal de création/modification */}
           <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Form onSubmit={handleSaveGroup}>
               <Modal.Header closeButton>
-                <Modal.Title>
-                  {editingGroup ? 'Modifier le groupe' : 'Créer un groupe'}
-                </Modal.Title>
+                <Modal.Title>{editingGroup ? 'Modifier le groupe' : 'Créer un groupe'}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form.Group className="mb-3">
@@ -195,6 +211,22 @@ function Groups() {
                     value={groupDescription}
                     onChange={(e) => setGroupDescription(e.target.value)}
                   />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Responsable du groupe</Form.Label>
+                  <Form.Select
+                    value={leaderId}
+                    onChange={(e) => setLeaderId(e.target.value)}
+                    required
+                  >
+                    <option value="">-- Sélectionner un responsable --</option>
+                    {groupLeaders.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.firstName} {user.lastName}
+                      </option>
+                    ))}
+                  </Form.Select>
                 </Form.Group>
 
                 <Form.Group>

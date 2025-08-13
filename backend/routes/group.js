@@ -22,4 +22,7 @@ router.put('/:id/reactivate', auth, groupCtrl.reactivateGroup);
 // Supprimer un groupe
 router.delete('/:id', auth, groupCtrl.deleteGroup);
 
+router.put('/groups/:id/leader', auth, groupCtrl.setGroupLeader);
+
+
 module.exports = router;

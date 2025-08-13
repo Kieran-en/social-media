@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../config');
+const User = require('./User');
 
 const Group = db.define('Group', {
   name: {
@@ -18,7 +19,20 @@ const Group = db.define('Group', {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
     allowNull: false,
-  }
+  },
+  leaderId: {
+  type: DataTypes.INTEGER,
+  allowNull: true, // Leader can be temporarily null
+  references: {
+    model: 'Users',
+    key: 'id',
+  },
+  onDelete: 'SET NULL', // Keeps the group, removes leader reference
+}
 });
+
+Group.belongsTo(User, { foreignKey: 'leaderId', as: 'leader' });
+User.hasMany(Group, { foreignKey: 'leaderId', as: 'ledGroups' });
+
 
 module.exports = Group;

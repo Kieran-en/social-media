@@ -13,6 +13,9 @@ router.put('/:id/suspend', auth, userCtrl.suspendUser);
 router.put('/:id/reactivate', auth, userCtrl.reactivateUser);
 
 // Supprimer un utilisateur
-router.delete('/:id', auth, userCtrl.deleteUserAdmin); // 
+router.delete('/:id', auth, userCtrl.deleteUserAdmin);
+
+// Modifier le rôle d'un utilisateur
+router.patch('/:id/role', auth, userCtrl.renameUser);
 
 module.exports = router;

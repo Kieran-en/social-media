@@ -1,21 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-let initialState = {};
+const initialState = {
+  id: null,
+  senderId: null,
+  receiverId: null,
+};
 
 export const conversationSlice = createSlice({
-    name: 'conversations',
-    initialState,
-    reducers: {
-        //setConversation here is an action name
-        setConversation: (state, action) => {
-            state =  {...state, senderId: action.payload.senderId, 
-                receiverId: action.payload.receiverId,
-                id: action.payload.id} 
-            return state
-        },
+  name: 'conversations',
+  initialState,
+  reducers: {
+    setConversation: (state, action) => {
+      return {
+        ...state,
+        id: action.payload.id,
+        senderId: action.payload.senderId,
+        receiverId: action.payload.receiverId,
+      };
+    },
+    clearConversation: () => {
+      return initialState;
     }
-})
+  }
+});
 
-export const { setConversation } = conversationSlice.actions;
+export const { setConversation, clearConversation } = conversationSlice.actions;
 
-export default conversationSlice.reducer
+export default conversationSlice.reducer;

@@ -160,3 +160,18 @@
     align-items: center;
     margin-bottom: 1rem;
 }
+
+.backButton {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: #0F6E5A;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+@media (min-width: 769px) {
+  .backButton {
+    display: none;
+  }
+}

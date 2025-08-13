@@ -94,5 +94,33 @@ socket.on('disconnect', () => {
     io.emit("getUsers", users) //for client to receive new user array after user is removed
 })
 
+// ENVOI DE NOTIFICATION
+socket.on('sendNotification', async ({ senderId, receiverId, type, text }) => {
+    console.log(`Notification: ${senderId} ➡️ ${receiverId} : ${text}`)
+
+    // Enregistrer la notification via ton backend
+    const axios = require('axios');
+    try {
+        const response = await axios.post('http://localhost:4000/api/notifications', {
+            senderId,
+            receiverId,
+            type,
+            text,
+            isRead: false
+        });
+
+        const notification = response.data;
+
+        // Trouver le socket de l'utilisateur ciblé
+        const receiver = getUser(receiverId);
+        if (receiver) {
+            io.to(receiver.socketId).emit('newNotification', notification);
+        }
+    } catch (error) {
+        console.error('Erreur lors de la création de la notification :', error.message);
+    }
+});
+
+
 });
 

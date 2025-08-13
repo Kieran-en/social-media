@@ -41,3 +41,8 @@ export function deleteGroup(id) {
 export function addMemberToGroup(data) {
   return http.post(`${apiEndpoint}/addMember`, data);
 }
+
+// Définir ou changer le leader d’un groupe
+export function setGroupLeader(groupId, leaderId) {
+  return http.put(`${apiEndpoint}/${groupId}/leader`, { leaderId });
+}

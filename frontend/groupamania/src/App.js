@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Visitor from './Pages/Visitor';
 import SignUp from './Pages/Signup';
 import Login from './Pages/Login';
 import Timeline from './Pages/Timeline';
@@ -13,6 +14,7 @@ import ErrorPage from './Pages/ErrorPage'
 import ProfilePage from './Pages/ProfilePage'
 import ProtectedRoute from './Components/ProtectedRoute';
 import MessagePage from './Pages/MessagePage';
+import Notification from './Pages/Notification';
 
 function App() {
 
@@ -20,7 +22,8 @@ function App() {
   <div className='App'>
     <BrowserRouter>
     <Routes>
-      <Route path='/' index element={<Login />} />
+      <Route path='/' element={<Visitor />} />
+      <Route path='/login' index element={<Login />} />
       <Route path='/signup' element={<SignUp />} />
       <Route path='/timeline/:userlogged' element={
         <ProtectedRoute>
@@ -34,6 +37,10 @@ function App() {
         <Route path='messages' element={
           <ProtectedRoute>
           <MessagePage />
+        </ProtectedRoute>} />
+      <Route path='/notifications' element={
+        <ProtectedRoute>
+          <Notification />
         </ProtectedRoute>} />
       <Route path='*' element={<ErrorPage />} />
       <Route path="/admin" element={

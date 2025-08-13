@@ -7,7 +7,7 @@ async function createGroup(req, res) {
   const { name, description } = req.body;
   try {
     const profileImg = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : undefined;
-    const group = await Group.create({ name, description, profileImg });
+    const group = await Group.create({ name, description, profileImg, leaderId: req.auth.userId });
     await GroupMember.create({ GroupId: group.id, UserId: req.auth.userId, role: 'admin' });
     res.status(201).json(group);
   } catch (error) {
@@ -90,6 +90,27 @@ async function getUserGroups(req, res) {
   }
 }
 
+// Définir un nouveau leader
+async function setGroupLeader(req, res) {
+  try {
+    const { id } = req.params; // id du groupe
+    const { leaderId } = req.body; // id du nouveau leader
+
+    const group = await Group.findByPk(id);
+    if (!group) return res.status(404).json({ message: "Groupe non trouvé" });
+
+    const user = await User.findByPk(leaderId);
+    if (!user) return res.status(404).json({ message: "Nouvel utilisateur non trouvé" });
+
+    group.leaderId = leaderId;
+    await group.save();
+
+    res.json({ message: "Nouveau leader défini", group });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 
 
 module.exports = {
@@ -99,4 +120,5 @@ module.exports = {
   deleteGroup,
   getUserGroups,
   reactivateGroup,
+  setGroupLeader,
 };

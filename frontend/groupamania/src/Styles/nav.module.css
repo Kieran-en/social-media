@@ -1,5 +1,10 @@
 /* Conteneur général */
 .navContainer {
+    position: fixed;         /* fixed at top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;           /* stays above all content */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -42,6 +47,7 @@
     padding: 0.4rem 1rem;
     transition: color 0.2s ease;
     border-radius: 6px;
+    cursor: pointer;
 }
 
 .navLink:hover {
