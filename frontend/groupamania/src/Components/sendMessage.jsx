@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useQueryClient, useMutation } from 'react-query';
 import { IoSendSharp } from "react-icons/io5";
+import { Paperclip, Smile } from "lucide-react";
 import { createMessage } from '../Services/messageService';
-import styles from '../Styles/sendMessage.module.css'
 import { useSelector } from 'react-redux';
 
 function SendMessage({conversationId, senderId, receiverId, senderName, socket, typing, setTyping}) {
     const conversation = useSelector(state => state.conversation)
     const [text, setText] = useState("");
     const queryClient = useQueryClient()
-    const textareaRef = useRef(null); // ✅ Ref for auto-resizing
+    const textareaRef = useRef(null);
 
     const createMessageMutation = useMutation(createMessage, {});
 
@@ -39,6 +39,7 @@ function SendMessage({conversationId, senderId, receiverId, senderName, socket, 
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (!text.trim()) return;
 
         socket.current && socket.current.emit('stop typing', { senderName, room: conversationId });
 
@@ -58,25 +59,50 @@ function SendMessage({conversationId, senderId, receiverId, senderName, socket, 
         setText("");
     };
 
-    // ✅ Auto-resize effect
+    // Auto-resize effect
     useEffect(() => {
         const textarea = textareaRef.current;
         if (textarea) {
             textarea.style.height = "auto";
-            textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`; // max-height limit
+            textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
         }
     }, [text]);
 
     return (
-        <div className={styles.box}>
-            <textarea
-                ref={textareaRef}
-                value={text}
-                onChange={handleChange}
-                className={styles.input}
-                placeholder="Send Message..."
-            />
-            <IoSendSharp className={styles.icon} onClick={handleSubmit} />
+        <div className="flex items-end gap-2">
+            <button className="p-2 hover:bg-gray-200 rounded-full transition-colors duration-200">
+                <Paperclip className="w-5 h-5 text-gray-500" />
+            </button>
+            <button className="p-2 hover:bg-gray-200 rounded-full transition-colors duration-200">
+                <Smile className="w-5 h-5 text-gray-500" />
+            </button>
+            <div className="flex-1 relative">
+                <textarea
+                    ref={textareaRef}
+                    value={text}
+                    onChange={handleChange}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSubmit(e);
+                        }
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-full resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pr-12"
+                    placeholder="Type a message..."
+                    rows="1"
+                />
+                <button
+                    onClick={handleSubmit}
+                    disabled={!text.trim()}
+                    className={`absolute right-2 bottom-2 p-2 rounded-full transition-all duration-200 ${
+                        text.trim()
+                            ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white hover:shadow-lg transform hover:scale-110'
+                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
+                >
+                    <IoSendSharp className="w-4 h-4" />
+                </button>
+            </div>
         </div>
     );
 }
