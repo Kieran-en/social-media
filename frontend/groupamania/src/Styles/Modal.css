@@ -1,60 +1,104 @@
+/* ========= Variables ========= */
+:root{
+    --bg: #fff;
+    --backdrop: rgba(0,0,0,.35);
+    --text: #1f2328;
+    --muted: #8a9099;
+    --border: #d5d9e0;
+    --border-hover: #b9c0c9;
+    --accent: #0F6E5A;
+    --radius: 10px;
+    --shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+/* ========= Backdrop ========= */
 .backdrop{
-display: flex;
-background-color: rgb(240, 236, 236);
-justify-content: center;
-align-items: center;
-position: fixed;
-width: 100%;
-height: 100%;
-top: 0;
-left: 0;
+    position: fixed; inset: 0;
+    display: flex; justify-content: center; align-items: center;
+    background-color: var(--backdrop);
+    backdrop-filter: blur(2px);
+    padding: 1rem;                 /* évite que le modal colle aux bords en mobile */
+    z-index: 999;
 }
 
+/* ========= Modal ========= */
 .modalll{
-width: clamp(50%, 500px, 90%);
-height: auto;
-display: flex;
-flex-direction: column;
-align-items: center;
-background-color: white;
-padding: 10px;
-border-radius: 10px;
-z-index: 99;
+    width: clamp(280px, 92vw, 480px);
+    background: var(--bg);
+    color: var(--text);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; align-items: stretch;
+    gap: .75rem;
+    padding: .9rem .95rem;         /* compact */
+    animation: modalIn .18s ease-out;
 }
 
+@keyframes modalIn{
+    from { opacity: 0; transform: translateY(6px) scale(.98); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* ========= Header ========= */
 .topModalll{
-    display: flex;
-    justify-content: space-between;
-    color: #A8ABAF;
-    width: 90%;
+    display: flex; align-items: center; justify-content: space-between;
+    color: var(--muted);
+    gap: .5rem;
 }
 
-span{
-    font-size: 24px;
+.modal-title{
+    font-size: .95rem;             /* plus petit qu’avant */
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
 }
 
+.modal-close{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color .18s ease, transform .18s ease;
+}
+.modal-close:hover{ background: rgba(0,0,0,.06); }
+.modal-close:active{ transform: translateY(1px); }
 
+/* ========= Zone de saisie ========= */
 textarea{
-    border: none;
-    background-color: white;
-    width: 90%;
-    resize: none;
-    margin-top: 10px;
-    color: black;
+    width: 100%;
+    min-height: 84px;              /* pas énorme */
+    max-height: 38vh;              /* limite si beaucoup de texte */
+    padding: .55rem .7rem;
+    font-size: .92rem;
+    line-height: 1.4;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
     outline: none;
+    resize: none;
+    overflow: auto;                 /* scroll si dépasse la limite */
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+textarea::placeholder{ color: var(--muted); }
+textarea:hover{ border-color: var(--border-hover); }
+textarea:focus{
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96,165,250,.18);
 }
 
+/* ========= Bouton ========= */
 .button{
-    width: 90%;
-    background-color: #0F6E5A;
-    color: white;
-    border-radius: 5px;
-    border: none;
-    margin-top: 10px;
-    padding: 3px;
+    width: 100%;
+    padding: .6rem .9rem;
+    font-size: .94rem;              /* plus discret */
+    border: none; border-radius: 8px;
+    background-color: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    transition: transform .15s ease, filter .15s ease, opacity .15s ease;
 }
-
-.button:active{
-    transform: translateY(-3px);
-}
+.button:hover{ filter: brightness(1.05); }
+.button:active{ transform: translateY(1px); }
+.button:disabled{ opacity: .6; cursor: not-allowed; }
 

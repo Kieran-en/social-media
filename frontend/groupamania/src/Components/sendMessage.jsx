@@ -76,31 +76,31 @@ function SendMessage({conversationId, senderId, receiverId, senderName, socket, 
             <button className="p-2 hover:bg-gray-200 rounded-full transition-colors duration-200">
                 <Smile className="w-5 h-5 text-gray-500" />
             </button>
-            <div className="flex-1 relative">
+            <div className="flex items-center w-full ">
                 <textarea
                     ref={textareaRef}
                     value={text}
                     onChange={handleChange}
-                    onKeyPress={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            handleSubmit(e);
-                        }
-                    }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-full resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pr-12"
+                    onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSubmit(e);
+                    }
+                }}
+                    className="flex-1 text-sm"
                     placeholder="Type a message..."
                     rows="1"
                 />
                 <button
                     onClick={handleSubmit}
                     disabled={!text.trim()}
-                    className={`absolute right-2 bottom-2 p-2 rounded-full transition-all duration-200 ${
+                    className={`ml-2 p-2 rounded-full transition-all duration-200 ${
                         text.trim()
                             ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white hover:shadow-lg transform hover:scale-110'
                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     }`}
                 >
-                    <IoSendSharp className="w-4 h-4" />
+                    <IoSendSharp className="w-5 h-5" />
                 </button>
             </div>
         </div>
