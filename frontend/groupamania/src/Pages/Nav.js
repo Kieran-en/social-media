@@ -81,7 +81,7 @@ const Nav = () => {
                             Se connecter
                         </NavLink>
 
-                        <NavLink
+                        {/* <NavLink
                             to="/signup"
                             className={({ isActive }) => `
                                 px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg
@@ -96,7 +96,7 @@ const Nav = () => {
                             `}
                         >
                             S'inscrire
-                        </NavLink>
+                        </NavLink> */}
                     </div>
 
                     <button

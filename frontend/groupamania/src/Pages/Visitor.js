@@ -238,7 +238,7 @@ function Visitor() {
 
             <footer className="bg-gray-900 text-white py-8 px-4">
                 <div className="max-w-7xl mx-auto text-center">
-                    <p className="text-gray-400">© 2024 EEC Melen. Tous droits réservés.</p>
+                    <p className="text-gray-400">© 2025 EEC Melen. Tous droits réservés.</p>
                 </div>
             </footer>
         </div>

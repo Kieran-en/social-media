@@ -148,7 +148,7 @@ const Timeline = () => {
   const allLoaded = !hasNextPage && allPostsCount > 0;
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-50">
         <NavBar showAdminInDropdown={windowWidth < 992} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
@@ -158,16 +158,16 @@ const Timeline = () => {
             {windowWidth >= 992 && (
                 <div className="lg:col-span-3">
                   <div className="sticky top-24">
-                    <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 mb-6 hover:shadow-2xl transition-all duration-300">
+                    <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 mb-6 hover:shadow-2xl transition-all duration-300">
                       <div className="flex items-center mb-4">
-                        <Calendar className="h-6 w-6 text-blue-500 mr-2" />
+                        <Calendar className="h-6 w-6 text-green-700 mr-2" />
                         <h3 className="font-bold text-gray-800">Calendrier</h3>
                       </div>
                       <CalendarWidget />
                     </div>
 
                     {/* Quick Links */}
-                    <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300">
+                    {/* <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300">
                       <h3 className="font-bold text-gray-800 mb-4">Liens rapides</h3>
                       <div className="space-y-3">
                         <Link to="/" className="flex items-center p-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-green-50 transition-all duration-300 group">
@@ -183,7 +183,7 @@ const Timeline = () => {
                           <span className="text-gray-700 group-hover:text-blue-600">Notifications</span>
                         </Link>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
             )}
@@ -191,20 +191,20 @@ const Timeline = () => {
             {/* Center - Main Feed */}
             <div className="lg:col-span-6">
               {/* Create Post Box */}
-              <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 mb-6 hover:shadow-2xl transition-all duration-300">
+              <div className="bg-white/80 backdrop-blur-md rounded-2xl  p-6 mb-6 hover:shadow-2xl transition-all duration-300">
                 <form onSubmit={handlePost}>
                   <div className="flex space-x-4 mb-4">
                     <img
                         src={userData?.profileImg || 'https://via.placeholder.com/50'}
                         alt='Profile'
-                        className="w-12 h-12 rounded-full object-cover ring-2 ring-blue-100 hover:ring-blue-300 transition-all duration-300"
+                        className="w-12 h-12 rounded-full object-cover ring-2 ring-green-100 hover:ring-green-500 transition-all duration-300"
                     />
                     <div className="flex-1">
                     <textarea
                         name="text"
                         value={text}
                         onChange={handleChange}
-                        className="w-full p-4 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                        className="w-full p-4 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-green-900 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
                         placeholder="Qu'est-ce qui se passe?"
                         rows="3"
                     />
@@ -234,7 +234,7 @@ const Timeline = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <label htmlFor='file-upload' className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-50 to-green-50 hover:from-blue-100 hover:to-green-100 cursor-pointer transition-all duration-200 group">
-                        <ImageIcon className="h-5 w-5 text-blue-500 group-hover:scale-110 transition-transform duration-200" />
+                        <ImageIcon className="h-5 w-5 text-green-900 group-hover:scale-110 transition-transform duration-200" />
                         <span className="text-sm font-medium text-gray-700">Media</span>
                       </label>
                       <input
@@ -252,7 +252,7 @@ const Timeline = () => {
                         disabled={!text && !file}
                         className={`flex items-center space-x-2 px-6 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                             text || file
-                                ? 'bg-gradient-to-r from-green-500 to-blue-500 text-white shadow-lg hover:shadow-xl hover:from-green-600 hover:to-blue-600'
+                                ? 'bg-gradient-to-r from-green-900 to-green-900 text-white hover:shadow-xl hover:from-green-600 hover:to-blue-600'
                                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                         }`}
                     >
@@ -293,7 +293,7 @@ const Timeline = () => {
                 <div className="lg:col-span-3">
                   <div className="sticky top-24">
                     {/* Random Quote */}
-                    <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 mb-6 hover:shadow-2xl transition-all duration-300">
+                    <div className="bg-white/80 backdrop-blur-md rounded-2xl  p-6 mb-6 hover:shadow-2xl transition-all duration-300">
                       <div className="flex items-center mb-4">
                         <span className="text-2xl mr-2">💭</span>
                         <h3 className="font-bold text-gray-800">Citation du jour</h3>
@@ -303,7 +303,7 @@ const Timeline = () => {
 
                     {/* Admin Panel Link */}
                     {userData?.role === 'admin' && (
-                        <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                        <div className="bg-gradient-to-br from-green-900 to-green-900 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105">
                           <Link
                               to="/admin"
                               className="flex items-center justify-center space-x-3 text-white font-bold"

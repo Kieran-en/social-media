@@ -42,13 +42,13 @@ const Login = () => {
 
             <div className="relative w-full max-w-md">
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-400 to-blue-500 rounded-full shadow-lg mb-4 hover:scale-110 transition-transform duration-300">
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-900 to-green-900 rounded-full mb-4 hover:scale-110 transition-transform duration-300">
                         <Church className="w-10 h-10 text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-green-900 to-green-900 bg-clip-text text-transparent">
                         EEC Melen
                     </h1>
-                    <p className="text-gray-600 mt-2">Bienvenue, connectez-vous à votre compte</p>
+                    <p className="text-green-900 mt-2">Bienvenue, connectez-vous à votre compte</p>
                 </div>
 
                 <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300">
@@ -144,7 +144,7 @@ const Login = () => {
                             className={`w-full flex items-center justify-center py-3 px-4 rounded-lg font-medium transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] ${
                                 loginMutation.isLoading
                                     ? 'bg-gray-400 cursor-not-allowed'
-                                    : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl'
+                                    : 'bg-gradient-to-r from-green-900 to-green-900 hover:from-green-900 hover:to-green-900 text-white shadow-lg hover:shadow-xl'
                             }`}
                         >
                             {loginMutation.isLoading ? (
