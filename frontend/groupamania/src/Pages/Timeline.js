@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CalendarWidget from "../Components/CalendarWidget";
 import Post from "../Components/Post";
-import Modal from "../Components/Modal";
+import Modal from "../Components/ModifyPostModal";
 import DeleteModal from "../Components/DeleteModal";
 import RandomQuote from '../Components/Quotes';
 import { ImageIcon, Send, Loader2, Calendar, Settings, Home, Users, Bell, MessageCircle } from "lucide-react";

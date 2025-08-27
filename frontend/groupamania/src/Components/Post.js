@@ -11,7 +11,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { like, getNumLikes, isPostLiked } from "../Services/likeService";
 import { getCurrentUser } from "../Services/userService";
 
-import Commenttt from "./Commenttt";
+import Commenttt from "./CommentSection";
 import style from '../Styles/timeline.module.css';
 import 'react-tippy/dist/tippy.css';
 import { BsThreeDotsVertical } from "react-icons/bs";

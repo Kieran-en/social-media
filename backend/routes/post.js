@@ -37,4 +37,8 @@ router.get('/all', auth, async (req, res) => {
   }
 });
 
+// Then dynamic ones
+router.get('/:id', auth, postCtrl.getPost);
+router.delete('/:id', auth, postCtrl.deletePost);
+
 module.exports = router;

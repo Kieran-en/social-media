@@ -96,7 +96,7 @@ function SendMessage({conversationId, senderId, receiverId, senderName, socket, 
                     disabled={!text.trim()}
                     className={`ml-2 p-2 rounded-full transition-all duration-200 ${
                         text.trim()
-                            ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white hover:shadow-lg transform hover:scale-110'
+                            ? 'bg-gradient-to-r from-green-700 to-green-900 text-white hover:shadow-lg transform hover:scale-110'
                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     }`}
                 >

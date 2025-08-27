@@ -1,35 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import Backdrop from './Backdrop';
-import { IoCloseCircleOutline } from "react-icons/io5";
-import '../Styles/ProfileModal.css';
-import style from '../Styles/profile.module.css';
-import { Tooltip } from 'react-tippy';
-import { useMutation, useQueryClient } from "react-query";
-import { getCurrentUser, modifyUser } from '../Services/userService';
-import { useSelector } from 'react-redux';
+// src/Components/ProfileModal.jsx
 
-function ProfileModal({ closeModal, username, email, profileImg }) {
+import React, { useState } from 'react';
+import { useMutation, useQueryClient } from "react-query";
+import { modifyUser } from '../Services/userService';
+import Backdrop from './Backdrop';
+import { X, Camera } from 'lucide-react'; 
+
+function ProfileModal({ closeModal, username, email, profileImg, userId }) {
     const queryClient = useQueryClient();
-    const [values, setValues] = useState({
-        name: username,
-        email: email,
+    
+    // --- FIX: Fournir une valeur de secours (fallback) à une chaîne vide '' ---
+    // Si 'username' ou 'email' est undefined, on utilise '' à la place.
+    const [values, setValues] = useState({ 
+        name: username || '', 
+        email: email || '' 
     });
+    // --- FIN DU FIX ---
+
     const [file, setFile] = useState(null);
     const [formErrors, setFormErrors] = useState({});
-    const token = useSelector(state => state.token);
-    const [userId, setUserId] = useState(null);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const userData = await getCurrentUser(token);
-                setUserId(userData.userId);
-            } catch (err) {
-                console.error("Error fetching user data", err);
-            }
-        };
-        fetchUser();
-    }, [token]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -37,28 +26,33 @@ function ProfileModal({ closeModal, username, email, profileImg }) {
     };
 
     const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
+        if (event.target.files && event.target.files[0]) {
+            setFile(event.target.files[0]);
+        }
     };
 
+    // Fonction de validation du formulaire (maintenant sécurisée)
     const validateForm = () => {
         const errors = {};
+        // values.name sera '' au lieu de undefined, donc .trim() ne crashera pas.
         if (values.name.trim().length < 4) {
-            errors.name = 'Name should be at least 4 characters long';
+            errors.name = 'Username must be at least 4 characters long.';
         }
-        if (!values.email) {
-            errors.email = 'Please insert an email';
-        } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(values.email)) {
-            errors.email = 'Invalid email format';
+        // Même logique pour l'email
+        if (!values.email || !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(values.email)) {
+            errors.email = 'Please enter a valid email address.';
         }
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
-
+    
     const updateUserMutation = useMutation(modifyUser, {
         onSuccess: () => {
-            queryClient.invalidateQueries(['user', userId]);
+            queryClient.invalidateQueries(['user', values.name]); // Utiliser le nouveau nom pour l'invalidation
+            closeModal();
         },
         onError: (error) => {
+            alert("An error occurred while updating the profile. Please try again.");
             console.error("Error updating user:", error);
         }
     });
@@ -71,86 +65,72 @@ function ProfileModal({ closeModal, username, email, profileImg }) {
             const userInfo = new FormData();
             userInfo.append('name', values.name);
             userInfo.append('email', values.email);
-            if (file) userInfo.append('image', file);
+            if (file) {
+              userInfo.append('image', file);
+            }
             userInfo.append('id', userId);
 
             updateUserMutation.mutate(userInfo);
-            closeModal();
         }
     };
 
+    const imagePreviewUrl = file 
+      ? URL.createObjectURL(file) 
+      : profileImg || `https://ui-avatars.com/api/?name=${username || ''}`;
+
     return (
         <Backdrop closeModal={closeModal}>
-            <div className='modall' onClick={(e) => e.stopPropagation()}>
-                <div className='topModalll'>
-                    <span>Hey, {username}!</span>
-                    <span>
-                        <IoCloseCircleOutline style={{ cursor: 'pointer' }} onClick={closeModal} />
-                    </span>
+            <div className='bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto' onClick={(e) => e.stopPropagation()}>
+                <div className='flex justify-between items-center p-4 border-b border-gray-200'>
+                    <h2 className='text-lg font-semibold text-gray-800'>Edit Profile</h2>
+                    <button onClick={closeModal} className='text-gray-400 hover:text-gray-600'>
+                        <X size={24} />
+                    </button>
                 </div>
-
-                <div style={{
-                    display: 'flex',
-                    width: '90%',
-                    justifyContent: 'flex-start',
-                    marginBottom: '10px',
-                    alignItems: 'center'
-                }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Tooltip trigger="mouseenter" title="Change Profile Image" arrow="true" position="top">
-                                <img src={file ? URL.createObjectURL(file) : profileImg} alt="profile-image" className={style.profileImg} />
-                            </Tooltip>
-                            <label htmlFor='upload-profile' className='uplaod-profileLabel'>Modify profile Image</label>
-                            <input id='upload-profile' name='image' type='file' className='uplaod-profileInput' onChange={handleFileChange} />
-                        </div>
-                        {file &&
-                            <img src={URL.createObjectURL(file)} alt="preview"
-                                style={{
-                                    width: '80px',
-                                    height: '80px',
-                                    objectFit: 'cover',
-                                    borderRadius: '50%',
-                                    alignSelf: 'flex-end'
-                                }} />}
+                <form onSubmit={handleSubmit} className='p-6 space-y-6'>
+                    <div className='flex flex-col items-center'>
+                        <label htmlFor="profile-upload" className="cursor-pointer group relative">
+                            <img src={imagePreviewUrl} alt="profile-preview" className="w-24 h-24 rounded-full object-cover border-2 border-gray-200" />
+                            <div className="absolute inset-0 bg-black bg-opacity-40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Camera size={28} className="text-white" />
+                            </div>
+                        </label>
+                        <input id="profile-upload" name="image" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                     </div>
-                </div>
-
-                <div className='textAreas'>
-                    <textarea
-                        name='name'
-                        placeholder="New Name"
-                        value={values.name}
-                        onChange={handleChange}
-                    />
-                    {formErrors.name && (
-                        <p style={{ fontSize: '14px' }} className="text-warning">{formErrors.name}</p>
-                    )}
-                    <textarea
-                        name='email'
-                        placeholder="New Email"
-                        value={values.email}
-                        onChange={handleChange}
-                    />
-                    {formErrors.email && (
-                        <p style={{ fontSize: '12px' }} className="text-warning">{formErrors.email}</p>
-                    )}
-                </div>
-
-                <button
-                    type='submit'
-                    style={{
-                        border: 'none',
-                        width: '90%',
-                        padding: '3px',
-                        borderRadius: '10px',
-                        backgroundColor: '#0F6E5A',
-                        color: 'white'
-                    }}
-                    onClick={handleSubmit}
-                >
-                    Update
-                </button>
+                    <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            value={values.name}
+                            onChange={handleChange}
+                        />
+                        {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
+                    </div>
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            value={values.email}
+                            onChange={handleChange}
+                        />
+                        {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
+                    </div>
+                    <div className="pt-4">
+                        <button
+                            type="submit"
+                            disabled={updateUserMutation.isLoading}
+                            className="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            {updateUserMutation.isLoading ? 'Updating...' : 'Save Changes'}
+                        </button>
+                    </div>
+                </form>
             </div>
         </Backdrop>
     );
