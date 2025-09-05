@@ -23,3 +23,8 @@ export function deleteUser(id) {
 export function renameUser(id, newRole) {
   return http.patch(`${apiEndpoint}/${id}/role`, { role: newRole });
 }
+
+// Créer un nouvel utilisateur (pour diacres et admins)
+export function createUser(userData) {
+  return http.post(`${apiEndpoint}/create`, userData);
+}

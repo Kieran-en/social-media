@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
+const diacreAuth = require('../middlewares/diacreAuth');
 const userCtrl = require('../controllers/userAdmin'); 
+
+// Créer un nouvel utilisateur (diacres et admins)
+router.post('/create', diacreAuth, userCtrl.createUserByDiacre);
 
 // Récupérer tous les utilisateurs
 router.get('/', auth, userCtrl.getAllUsers);

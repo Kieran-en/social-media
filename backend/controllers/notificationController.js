@@ -1,21 +1,11 @@
-const Notification = require('../models/Notification');
-const User = require('../models/User')
+const NotificationService = require('../services/notificationService');
+const auth = require('../middlewares/auth');
 
+// Récupérer les notifications d'un utilisateur
 exports.getByUser = async (req, res) => {
   try {
-    const notifications = await Notification.findAll({
-      where: { receiverId: req.params.userId },
-      order: [['createdAt', 'DESC']],
-      include: [
-        {
-          model: User,
-          as: 'sender',
-          attributes: ['id', 'name', 'profileImg'],
-          required: false, // Prevent Sequelize from crashing on missing user
-        },
-      ],
-    });
-
+    const userId = req.params.userId;
+    const notifications = await NotificationService.getUserNotifications(userId);
     res.json(notifications);
   } catch (err) {
     console.error('Error fetching notifications:', err);
@@ -23,14 +13,63 @@ exports.getByUser = async (req, res) => {
   }
 };
 
+// Marquer toutes les notifications comme lues
 exports.markAllRead = async (req, res) => {
   try {
-    await Notification.update(
-      { isRead: true },
-      { where: { receiverId: req.params.userId, isRead: false } }
-    );
+    const userId = req.params.userId;
+    await NotificationService.markAllAsRead(userId);
     res.json({ success: true });
   } catch (err) {
+    console.error('Error marking notifications as read:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Marquer une notification comme lue
+exports.markAsRead = async (req, res) => {
+  try {
+    const { notificationId } = req.params;
+    const userId = req.auth.userId;
+    
+    await NotificationService.markAsRead(notificationId, userId);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error marking notification as read:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Compter les notifications non lues
+exports.getUnreadCount = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const count = await NotificationService.getUnreadCount(userId);
+    res.json({ unreadCount: count });
+  } catch (err) {
+    console.error('Error getting unread count:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Créer une notification (pour les tests)
+exports.createNotification = async (req, res) => {
+  try {
+    const { senderId, receiverId, type, text, postId, commentId, messageId, eventId } = req.body;
+    
+    const notification = await NotificationService.createNotification({
+      senderId,
+      receiverId,
+      type,
+      text,
+      postId,
+      commentId,
+      messageId,
+      eventId
+    });
+    
+    res.status(201).json(notification);
+  } catch (err) {
+    console.error('Error creating notification:', err);
     res.status(500).json({ error: err.message });
   }
 }; 

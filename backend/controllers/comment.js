@@ -1,6 +1,7 @@
 const Comment = require('../models/Comment');
 const Post = require('../models/Post')
 const User = require('../models/User')
+const NotificationService = require('../services/notificationService');
 
 exports.creatComment = (req, res, next) => {
     //const commentObject = req.body.comment;
@@ -15,7 +16,24 @@ exports.creatComment = (req, res, next) => {
         include: [Post, User]
     })
     comment.save()
-    .then(() => res.status(201).json({message: 'Comment Created'}))
+    .then(async (savedComment) => {
+      // Envoyer des notifications pour le commentaire
+      try {
+        // Récupérer l'auteur du post
+        const post = await Post.findByPk(req.body.PostId);
+        if (post) {
+          await NotificationService.notifyComment(
+            savedComment.id, 
+            req.body.PostId, 
+            req.body.userId, 
+            post.UserId
+          );
+        }
+      } catch (notifError) {
+        console.error('Erreur lors de l\'envoi de notifications de commentaire:', notifError);
+      }
+      res.status(201).json({message: 'Comment Created'});
+    })
     .catch((error) => res.status(500).json({error}))
 }
 

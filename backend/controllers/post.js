@@ -2,6 +2,7 @@ const Comment = require('../models/Comment');
 const Post = require('../models/Post');
 const User = require('../models/User');
 const fs = require('fs');
+const NotificationService = require('../services/notificationService');
 
 exports.displayPosts = async (req, res, next) => {
   try {
@@ -62,7 +63,15 @@ exports.createPost = (req, res, next) => {
         include: [ User ]
       })
     post.save()
-    .then(() => res.status(201).json({message: 'Post Created!'}))
+    .then(async (savedPost) => {
+      // Envoyer des notifications aux followers
+      try {
+        await NotificationService.notifyNewPost(savedPost.id, req.body.userId);
+      } catch (notifError) {
+        console.error('Erreur lors de l\'envoi de notifications:', notifError);
+      }
+      res.status(201).json({message: 'Post Created!'});
+    })
     .catch(error => res.status(400).json({error}));
 }
 

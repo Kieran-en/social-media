@@ -22,7 +22,7 @@ const Group = require('./models/Group');
 const GroupMember = require('./models/GroupMember');
 const GroupMessage = require('./models/GroupMessage');
 const eventRoutes = require('./routes/eventRoutes');
-const notificationRoutes = require('./routes/notificationRoutes')
+const notificationRoutes = require('./routes/notificationRoutes');
 
 
 

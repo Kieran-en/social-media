@@ -12,6 +12,7 @@ import { getPosts, createPost } from "../Services/postService";
 import { getComments } from "../Services/commentService";
 import { getCurrentUser, getUser } from "../Services/userService";
 import NavBar from "../Components/NavBar";
+import QuickCreateUser from "../Components/QuickCreateUser";
 import { useSelector } from "react-redux";
 
 const Timeline = () => {
@@ -341,6 +342,15 @@ const Timeline = () => {
         {/* Modals */}
         {modalOpen && <Modal closeModal={() => setModalOpen(false)} postToModify={postToModify} />}
         {deleteModalOpen && <DeleteModal closeModal={() => setDeleteModalOpen(false)} postToDelete={postToDelete} />}
+
+        {/* Bouton flottant pour créer un utilisateur (diacres et admins) */}
+        <QuickCreateUser 
+          currentUserRole={userData?.role} 
+          onUserCreated={() => {
+            // Optionnel: rafraîchir les données si nécessaire
+            console.log('Nouvel utilisateur créé depuis Timeline');
+          }}
+        />
 
       </div>
   );

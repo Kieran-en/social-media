@@ -2,6 +2,7 @@ const Like = require('../models/Like');
 const User = require('../models/User');
 const Post = require('../models/Post');
 const { Op } = require("sequelize");
+const NotificationService = require('../services/notificationService');
 
 
 exports.likeOrDislike = (req, res, next) => {
@@ -16,7 +17,18 @@ exports.likeOrDislike = (req, res, next) => {
             include: [ User, Post ]
           })
           Post.increment({likes: 1}, { where: {id: postId}})
-          .then(() => res.status(200).json({message: 'Post Liked!'}))
+          .then(async () => {
+            // Envoyer une notification pour le like
+            try {
+              const post = await Post.findByPk(postId);
+              if (post) {
+                await NotificationService.notifyLike(postId, userId, post.UserId);
+              }
+            } catch (notifError) {
+              console.error('Erreur lors de l\'envoi de notification de like:', notifError);
+            }
+            res.status(200).json({message: 'Post Liked!'});
+          })
           .catch(error => res.status(500).json({error}))
         }
 

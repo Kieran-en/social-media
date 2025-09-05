@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Follow = require('../models/Follow')
 const { Op } = require("sequelize");
+const NotificationService = require('../services/notificationService');
 
 exports.followOrUnfollow = (req, res, next) => {
     const {following_user_id, followed_user_id, follow} = req.body;
@@ -17,7 +18,15 @@ exports.followOrUnfollow = (req, res, next) => {
             User.increment({followers: 1}, { where: {id: followed_user_id}}),
             User.increment({following: 1}, { where: {id: following_user_id}})
         ])
-          .then(() => res.status(200).json({message: 'You successfully followed this boy/girl!'}))
+          .then(async () => {
+            // Envoyer une notification pour le follow
+            try {
+              await NotificationService.notifyFollow(following_user_id, followed_user_id);
+            } catch (notifError) {
+              console.error('Erreur lors de l\'envoi de notification de follow:', notifError);
+            }
+            res.status(200).json({message: 'You successfully followed this boy/girl!'});
+          })
           .catch(error => res.status(500).json({error}))
         }
 

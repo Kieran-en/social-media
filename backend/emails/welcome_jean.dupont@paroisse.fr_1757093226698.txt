@@ -1,0 +1,42 @@
+
+========================================
+📧 EMAIL DE BIENVENUE - GROUPAMANIA
+========================================
+
+Bonjour Jean Dupont,
+
+Bienvenue dans notre communauté paroissiale !
+
+🔐 VOS INFORMATIONS DE CONNEXION :
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📧 Email : jean.dupont@paroisse.fr
+🔑 Mot de passe : motdepasse123
+👤 Rôle : Fidèle
+
+🚀 CONNEXION :
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Lien de connexion : http://localhost:4000/login
+
+💡 QUE POUVEZ-VOUS FAIRE ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• 📝 Partager des messages et photos avec la communauté
+• 👥 Rejoindre des groupes paroissiaux  
+• 📅 Consulter les événements et célébrations
+• 💬 Échanger avec d'autres fidèles
+• 🔔 Recevoir les notifications importantes
+
+📞 BESOIN D'AIDE ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Email : support@groupamania.fr
+Téléphone : +33 1 23 45 67 89
+
+⚠️  SÉCURITÉ :
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Pour votre sécurité, nous vous recommandons de changer 
+votre mot de passe lors de votre première connexion.
+
+========================================
+Cet email a été généré automatiquement par Groupamania
+Paroisse de [Nom de votre paroisse] - Tous droits réservés
+========================================
+  
