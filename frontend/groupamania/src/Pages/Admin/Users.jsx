@@ -44,7 +44,13 @@ export default function ManageUsers() {
   const handleReactivate = async (id) => { await reactivateUser(id); fetchUsers(); };
   const handleDelete = async (id) => {
     if (!window.confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) return;
-    await deleteUser(id); fetchUsers();
+    try {
+      await deleteUser(id);
+      fetchUsers();
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      setError('Erreur lors de la suppression de l\'utilisateur. Veuillez réessayer.');
+    }
   };
 
   const openRoleModal = (user) => {

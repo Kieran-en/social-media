@@ -31,6 +31,38 @@ exports.displayPosts = async (req, res, next) => {
   }
 };
 
+// Nouvelle fonction pour récupérer les posts d'un utilisateur spécifique
+exports.getUserPosts = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10; // posts per page
+    const offset = (page - 1) * limit;
+
+    const totalPosts = await Post.count({
+      where: { UserId: userId }
+    });
+
+    const posts = await Post.findAll({
+      where: { UserId: userId },
+      include: User,
+      order: [['updatedAt', 'DESC']],
+      limit,
+      offset,
+    });
+
+    res.status(200).json({
+      posts,
+      totalPosts,
+      currentPage: page,
+      totalPages: Math.ceil(totalPosts / limit),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+};
+
 
 exports.getPost = (req, res, next) => {
     Post.findOne({

@@ -74,12 +74,14 @@ Conversation.belongsTo(User, { foreignKey: 'senderId' });
 User.belongsToMany(User, {
   as: 'following_user_id',
   through: Follow,
-  foreignKey: 'following_user_id'
+  foreignKey: 'following_user_id',
+  onDelete: 'CASCADE'
 });
 User.belongsToMany(User, {
   as: 'followed_user_id',
   through: Follow,
-  foreignKey: 'followed_user_id'
+  foreignKey: 'followed_user_id',
+  onDelete: 'CASCADE'
 });
 
 module.exports = User;

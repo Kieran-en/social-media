@@ -11,7 +11,13 @@ const GroupMember = db.define('GroupMember', {
 });
 
 // Relations many-to-many
-User.belongsToMany(Group, { through: GroupMember });
-Group.belongsToMany(User, { through: GroupMember });
+User.belongsToMany(Group, { 
+  through: GroupMember,
+  onDelete: 'CASCADE'
+});
+Group.belongsToMany(User, { 
+  through: GroupMember,
+  onDelete: 'CASCADE'
+});
 
 module.exports = GroupMember;

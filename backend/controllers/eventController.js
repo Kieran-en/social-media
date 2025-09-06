@@ -29,7 +29,7 @@ exports.getAllEvents = async (req, res) => {
 // Modifier un événement
 exports.updateEvent = async (req, res) => {
   const { id } = req.params;
-  const { title, description, date, location } = req.body;
+  const { title, description, date, location, state } = req.body;
 
   try {
     const event = await Event.findByPk(id);
@@ -39,6 +39,7 @@ exports.updateEvent = async (req, res) => {
     event.description = description || event.description;
     event.date = date || event.date;
     event.location = location || event.location;
+    event.state = state || event.state;
 
     await event.save();
     res.json(event);

@@ -27,3 +27,9 @@ export async function getAllPosts() {
   const res = await http.get(`${config.apiEndpoint}/post/all`);
   return res.data; // Array de posts
 }
+
+// Récupérer les posts d'un utilisateur spécifique
+export async function getUserPosts(userId, page = 1) {
+  const res = await http.get(`${config.apiEndpoint}/post/user/${userId}?page=${page}`);
+  return res.data; // { posts, totalPosts, currentPage, totalPages }
+}

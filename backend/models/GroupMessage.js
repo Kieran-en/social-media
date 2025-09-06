@@ -11,7 +11,10 @@ const GroupMessage = db.define('GroupMessage', {
 });
 
 // Relations
-User.hasMany(GroupMessage, { foreignKey: 'senderId' });
+User.hasMany(GroupMessage, { 
+  foreignKey: 'senderId',
+  onDelete: 'CASCADE'
+});
 GroupMessage.belongsTo(User, { foreignKey: 'senderId' });
 
 Group.hasMany(GroupMessage, { foreignKey: 'groupId' });

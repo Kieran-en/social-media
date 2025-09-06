@@ -18,7 +18,7 @@ router.put('/:id', auth, upload.single('image'), postCtrl.modifyPost);
 // Récupérer les posts (avec pagination pour timeline)
 router.get('/', auth, postCtrl.displayPosts);
 
-// Récupérer tous les posts (sans pagination) pour l’admin/stats
+// Récupérer tous les posts (sans pagination) pour l'admin/stats
 // CETTE ROUTE DOIT ÊTRE AVANT /:id
 router.get('/all', auth, async (req, res) => {
     try {
@@ -37,6 +37,9 @@ router.get('/all', auth, async (req, res) => {
         res.status(500).json({ error: 'Erreur lors du chargement des posts.' });
     }
 });
+
+// Récupérer les posts d'un utilisateur spécifique
+router.get('/user/:userId', auth, postCtrl.getUserPosts);
 
 // Récupérer un post spécifique (route dynamique)
 router.get('/:id', auth, postCtrl.getPost);

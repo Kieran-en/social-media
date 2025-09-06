@@ -3,7 +3,7 @@ import AdminLayout from './AdminLayout';
 import styles from './adminPage.module.css';
 import { Button, Table, Modal, Form, Dropdown, ButtonGroup, Spinner, Alert } from 'react-bootstrap';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
-import { getAllEvents, createEvent, updateEvent, deleteEvent } from '../../Services/eventService';
+import { getAllEvents, createEvent, updateEvent, deleteEvent, toggleEventState } from '../../Services/eventService';
 
 export default function Events() {
   const [events, setEvents] = useState([]);
@@ -19,6 +19,7 @@ export default function Events() {
   const [location, setLocation] = useState('');
   const [state, setState] = useState('OK');
   const [saving, setSaving] = useState(false);
+  const [togglingState, setTogglingState] = useState(null);
 
   const formatDate = (value) =>
       new Date(value).toLocaleString('fr-FR', {
@@ -82,12 +83,17 @@ export default function Events() {
   };
 
   const handleToggleState = async (event) => {
+    setTogglingState(event.id);
     try {
-      const updatedState = event.state === 'OK' ? 'CANCELED' : 'OK';
-      await updateEvent(event.id, { ...event, state: updatedState });
+      console.log(`🔄 Changement de statut pour l'événement ${event.id} (${event.title}) - Statut actuel: ${event.state}`);
+      await toggleEventState(event.id);
+      console.log('✅ Statut changé avec succès');
       fetchEvents();
-    } catch {
+    } catch (error) {
+      console.error('❌ Erreur lors du changement de statut:', error);
       setError("Erreur lors du changement d'état");
+    } finally {
+      setTogglingState(null);
     }
   };
 
@@ -142,8 +148,15 @@ export default function Events() {
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
                             <Dropdown.Item onClick={() => handleOpenModal(ev)}>✏ Modifier</Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleToggleState(ev)}>
-                              {ev.state === 'OK' ? '❌ Annuler' : '✅ Confirmer'}
+                            <Dropdown.Item 
+                              onClick={() => handleToggleState(ev)}
+                              disabled={togglingState === ev.id}
+                            >
+                              {togglingState === ev.id ? (
+                                <>⏳ Changement...</>
+                              ) : (
+                                <>{ev.state === 'OK' ? '❌ Annuler' : '✅ Confirmer'}</>
+                              )}
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => handleDeleteEvent(ev.id)} className="text-danger">
                               🗑 Supprimer

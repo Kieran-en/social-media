@@ -102,27 +102,37 @@ exports.deleteUser = (req, res, next) => {
 }
 
 
-exports.modifyUserData = (req, res, next) => {
-    console.log(req.file)
-    console.log(req.body.name)
-    console.log(req.body.email)
+exports.modifyUserData = async (req, res, next) => {
+    try {
+        console.log(req.file)
+        console.log(req.body.name)
+        console.log(req.body.email)
 
-    const userObject = req.file ? {
-        name: req.body.name,
-        email: req.body.email,
-        profileImg: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : {
-        name: req.body.name,
-        email: req.body.email,
-    }
-
-    User.update({
-        ...userObject
-    }, {
-        where : {
-            id: req.auth.userId
+        const userObject = req.file ? {
+            name: req.body.name,
+            email: req.body.email,
+            profileImg: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : {
+            name: req.body.name,
+            email: req.body.email,
         }
-    })
-    .then(() => res.status(201).json({message: 'User data updated!'}))
-    .catch(error => res.status(500).json({error}))
+
+        // Si un nouveau mot de passe est fourni, le hasher
+        if (req.body.newPassword) {
+            const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+            userObject.password = hashedPassword;
+        }
+
+        await User.update({
+            ...userObject
+        }, {
+            where : {
+                id: req.auth.userId
+            }
+        });
+
+        res.status(201).json({message: 'User data updated!'});
+    } catch (error) {
+        res.status(500).json({error});
+    }
 }

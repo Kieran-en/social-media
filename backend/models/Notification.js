@@ -22,7 +22,15 @@ const Notification = db.define('Notification', {
 });
 
 //  associations
-Notification.belongsTo(User, { as: 'sender', foreignKey: 'senderId' });
-Notification.belongsTo(User, { as: 'receiver', foreignKey: 'receiverId' });
+Notification.belongsTo(User, { 
+  as: 'sender', 
+  foreignKey: 'senderId',
+  onDelete: 'CASCADE'
+});
+Notification.belongsTo(User, { 
+  as: 'receiver', 
+  foreignKey: 'receiverId',
+  onDelete: 'CASCADE'
+});
 
 module.exports = Notification;
