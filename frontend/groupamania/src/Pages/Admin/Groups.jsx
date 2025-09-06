@@ -37,9 +37,17 @@ export default function Groups() {
 
   const fetchLeaders = async () => {
     try {
+      console.log('🔄 Récupération des utilisateurs...');
       const res = await getAllUsers();
-      setGroupLeaders((res.data || []).filter(u => u.role === 'responsable_groupe'));
-    } catch { /* silencieux */ }
+      console.log('📥 Utilisateurs reçus:', res.data);
+      
+      const leaders = (res.data || []).filter(u => u.role === 'responsable_groupe');
+      console.log('👥 Responsables de groupe filtrés:', leaders);
+      
+      setGroupLeaders(leaders);
+    } catch (error) {
+      console.error('❌ Erreur lors de la récupération des responsables:', error);
+    }
   };
 
   const handleOpenModal = (group = null) => {
@@ -183,9 +191,15 @@ export default function Groups() {
                 <Form.Select value={leaderId} onChange={(e) => setLeaderId(e.target.value)} required>
                   <option value="">-- Sélectionner un responsable --</option>
                   {groupLeaders.map((u) => (
-                      <option key={u.id} value={u.id}>{u.firstName} {u.lastName}</option>
+                      <option key={u.id} value={u.id}>{u.name}</option>
                   ))}
                 </Form.Select>
+                {groupLeaders.length === 0 && (
+                  <Form.Text className="text-warning">
+                    ⚠️ Aucun utilisateur avec le rôle "Responsable de groupe" trouvé. 
+                    Créez d'abord un utilisateur avec ce rôle dans la section Utilisateurs.
+                  </Form.Text>
+                )}
               </Form.Group>
               <Form.Group>
                 <Form.Label>Image de profil</Form.Label>

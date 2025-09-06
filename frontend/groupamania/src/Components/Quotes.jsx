@@ -5,7 +5,7 @@ const RandomQuote = () => {
   const [quote, setQuote] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchNewQuote = async () => {
+  const fetchNewQuote = async (isMounted) => {
     setIsLoading(true);
     try {
       let data;
@@ -25,13 +25,15 @@ const RandomQuote = () => {
           attempts < 5
           );
 
-      if (data.length > 0) {
+      if (data.length > 0 && isMounted) {
         setQuote(data[0]);
       }
     } catch (error) {
       console.error('Erreur lors de la récupération de la citation :', error);
     } finally {
-      setIsLoading(false);
+      if (isMounted) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -39,12 +41,12 @@ const RandomQuote = () => {
     let isMounted = true;
 
     if (isMounted) {
-      fetchNewQuote();
+      fetchNewQuote(isMounted);
     }
 
     const interval = setInterval(() => {
       if (isMounted) {
-        fetchNewQuote();
+        fetchNewQuote(isMounted);
       }
     }, 120000);
 
@@ -62,7 +64,7 @@ const RandomQuote = () => {
             <h3 className="font-bold text-gray-800">Quote of the Day</h3>
           </div>
           <button
-              onClick={fetchNewQuote}
+              onClick={() => fetchNewQuote(true)}
               disabled={isLoading}
               className="p-2 hover:bg-white/50 rounded-full transition-all duration-200 group"
           >

@@ -16,16 +16,18 @@ exports.likeOrDislike = (req, res, next) => {
         },{
             include: [ User, Post ]
           })
-          Post.increment({likes: 1}, { where: {id: postId}})
           .then(async () => {
+            Post.increment({likes: 1}, { where: {id: postId}});
             // Envoyer une notification pour le like
             try {
+              console.log('👍 Like créé, envoi de notification...');
               const post = await Post.findByPk(postId);
               if (post) {
                 await NotificationService.notifyLike(postId, userId, post.UserId);
+                console.log('✅ Notification de like envoyée');
               }
             } catch (notifError) {
-              console.error('Erreur lors de l\'envoi de notification de like:', notifError);
+              console.error('❌ Erreur lors de l\'envoi de notification de like:', notifError);
             }
             res.status(200).json({message: 'Post Liked!'});
           })
@@ -40,8 +42,10 @@ exports.likeOrDislike = (req, res, next) => {
         },{
             include: [ User, Post ]
           })
-          Post.increment({dislikes: 1}, { where: {id: postId}})
-          .then(() => res.status(200).json({message: 'Post Disiked!'}))
+          .then(() => {
+            Post.increment({dislikes: 1}, { where: {id: postId}});
+            res.status(200).json({message: 'Post Disliked!'});
+          })
           .catch(error => res.status(500).json({error}))
     }
 
@@ -49,10 +53,8 @@ exports.likeOrDislike = (req, res, next) => {
     else {
         //Find Like in like table whose postId and userId are those send from the frontend
         Like.findOne({ where: {
-           // PostId: postId, UserId: userId
             [Op.and]: [{PostId : postId}, {UserId : userId}]
-        }
-     })
+        }})
         .then(like => {
             if (!like){
                 return res.status(404).json({error: 'Like not found!'})
@@ -60,25 +62,25 @@ exports.likeOrDislike = (req, res, next) => {
                 if(like.like === 1){
                     console.log(like.PostId)
                     console.log(like.like)
-                Post.increment({likes: -1}, { where: {id: like.PostId}})
-                Like.destroy({
-                    where: {
-                        [Op.and]: [{PostId : postId}, {UserId : userId}]
-                    }
-                    })
-                    .then(() =>{
-                         return res.status(200).json({message: 'Post Sucessfully unliked!'})
-                        })
-                    .catch(error => res.status(500).json({error}))
-                }
-                else if (like.like === -1){
-                    Post.increment({dislikes: -1}, { where: {id: like.PostId}})
+                    Post.increment({likes: -1}, { where: {id: like.PostId}});
                     Like.destroy({
                         where: {
                             [Op.and]: [{PostId : postId}, {UserId : userId}]
                         }
                     })
-                    .then(() => res.status(200).json({message: 'Post Sucessfully undisliked!'}))
+                    .then(() =>{
+                         return res.status(200).json({message: 'Post Successfully unliked!'})
+                        })
+                    .catch(error => res.status(500).json({error}))
+                }
+                else if (like.like === -1){
+                    Post.increment({dislikes: -1}, { where: {id: like.PostId}});
+                    Like.destroy({
+                        where: {
+                            [Op.and]: [{PostId : postId}, {UserId : userId}]
+                        }
+                    })
+                    .then(() => res.status(200).json({message: 'Post Successfully undisliked!'}))
                     .catch(error => res.status(500).json({error}))
                 }
         })

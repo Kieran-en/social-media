@@ -29,9 +29,11 @@ export default function ManageUsers() {
     setLoadingList(true);
     try {
       const res = await getAllUsers();
+      console.log('📥 Réponse API Users:', res);
       setUsers(res.data || []);
       setError('');
     } catch (err) {
+      console.error('❌ Erreur lors du chargement des utilisateurs:', err);
       setError('Erreur lors du chargement des utilisateurs');
     } finally {
       setLoadingList(false);

@@ -19,6 +19,7 @@ exports.creatComment = (req, res, next) => {
     .then(async (savedComment) => {
       // Envoyer des notifications pour le commentaire
       try {
+        console.log('💬 Commentaire créé, envoi de notification...');
         // Récupérer l'auteur du post
         const post = await Post.findByPk(req.body.PostId);
         if (post) {
@@ -28,9 +29,10 @@ exports.creatComment = (req, res, next) => {
             req.body.userId, 
             post.UserId
           );
+          console.log('✅ Notification de commentaire envoyée');
         }
       } catch (notifError) {
-        console.error('Erreur lors de l\'envoi de notifications de commentaire:', notifError);
+        console.error('❌ Erreur lors de l\'envoi de notifications de commentaire:', notifError);
       }
       res.status(201).json({message: 'Comment Created'});
     })

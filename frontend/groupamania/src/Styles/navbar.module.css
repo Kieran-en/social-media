@@ -78,6 +78,15 @@
 .navIcon {
     color: #0F6E5A; /* Votre couleur de marque */
     font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Style spécial pour l'icône de notifications */
+.notificationIcon {
+    color: #0F6E5A;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
 /* Image de profil */
@@ -168,6 +177,36 @@
   color: #0F6E5A;
   margin-right: 1rem;
   cursor: pointer;
+}
+
+/* Point de notification simple */
+.notificationDot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #ff4444;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    border: 2px solid white;
+}
+
+/* Conteneur de notification avec position relative */
+.notificationWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.notificationWrapper:hover {
+    background-color: #f0f2f5;
 }
 
 @media (min-width: 769px) {

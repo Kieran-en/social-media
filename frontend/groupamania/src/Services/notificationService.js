@@ -19,3 +19,13 @@ export function getAllNotifications() {
 export function markAsRead(notificationId) {
   return http.put(`${apiEndpoint}/${notificationId}/read`);
 }
+
+// Mark all notifications as read for a user
+export function markAllAsRead(userId) {
+  return http.put(`${apiEndpoint}/markRead/${userId}`);
+}
+
+// Get unread count for a user
+export function getUnreadCount(userId) {
+  return http.get(`${apiEndpoint}/${userId}/unread-count`);
+}

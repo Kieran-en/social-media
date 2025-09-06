@@ -66,9 +66,11 @@ exports.createPost = (req, res, next) => {
     .then(async (savedPost) => {
       // Envoyer des notifications aux followers
       try {
+        console.log('📝 Post créé, envoi des notifications...');
         await NotificationService.notifyNewPost(savedPost.id, req.body.userId);
+        console.log('✅ Notifications envoyées avec succès');
       } catch (notifError) {
-        console.error('Erreur lors de l\'envoi de notifications:', notifError);
+        console.error('❌ Erreur lors de l\'envoi de notifications:', notifError);
       }
       res.status(201).json({message: 'Post Created!'});
     })

@@ -28,7 +28,7 @@ export default function Commenttt({postId, comments}) {
             text: commentText,
             PostId: postId,
             userId: userId
-        })
+        });
     }
 
     const handleChange = (e) => {

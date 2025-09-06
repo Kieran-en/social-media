@@ -1,6 +1,8 @@
 const Notification = require('../models/Notification');
 const User = require('../models/User');
+const Comment = require('../models/Comment');
 const { getIo } = require('../socket');
+const { Op } = require('sequelize');
 
 class NotificationService {
   // Créer une notification
@@ -37,7 +39,10 @@ class NotificationService {
       // Envoyer la notification en temps réel via Socket.io
       const io = getIo();
       if (io) {
+        console.log(`📢 Envoi notification via Socket.io à l'utilisateur ${receiverId}`);
         io.to(receiverId.toString()).emit('newNotification', notificationWithSender);
+      } else {
+        console.log('⚠️ Socket.io non initialisé');
       }
 
       console.log(`📢 Notification créée: ${type} - ${text}`);
@@ -52,29 +57,36 @@ class NotificationService {
   // Notifications pour les nouvelles publications
   static async notifyNewPost(postId, authorId) {
     try {
-      // Récupérer tous les utilisateurs qui suivent l'auteur
-      const followers = await User.findAll({
-        include: [{
-          model: User,
-          as: 'following_user_id',
-          where: { id: authorId },
-          through: { attributes: [] }
-        }]
+      // Récupérer l'auteur du post
+      const author = await User.findByPk(authorId);
+      if (!author) {
+        console.log('Auteur non trouvé pour le post:', authorId);
+        return;
+      }
+
+      // Pour l'instant, notifier tous les utilisateurs (sauf l'auteur)
+      // Plus tard, on implémentera le système de follow
+      const allUsers = await User.findAll({
+        where: { id: { [Op.ne]: authorId } },
+        attributes: ['id', 'name']
       });
 
-      // Créer une notification pour chaque follower
+      console.log(`📢 Notification de nouveau post: ${allUsers.length} utilisateurs à notifier`);
+
+      // Créer une notification pour chaque utilisateur
       const notifications = [];
-      for (const follower of followers) {
+      for (const user of allUsers) {
         const notification = await this.createNotification({
           senderId: authorId,
-          receiverId: follower.id,
+          receiverId: user.id,
           type: 'post',
-          text: `${follower.name} a publié un nouveau post`,
+          text: `${author.name} a publié un nouveau post`,
           postId: postId
         });
         if (notification) notifications.push(notification);
       }
 
+      console.log(`📢 ${notifications.length} notifications de post créées`);
       return notifications;
     } catch (error) {
       console.error('Erreur lors de la notification de nouveau post:', error);
@@ -86,11 +98,15 @@ class NotificationService {
     try {
       // Notifier l'auteur du post (sauf si c'est le même que le commentateur)
       if (commenterId !== postAuthorId) {
+        // Récupérer le nom du commentateur
+        const commenter = await User.findByPk(commenterId);
+        const commenterName = commenter ? commenter.name : 'Quelqu\'un';
+        
         await this.createNotification({
           senderId: commenterId,
           receiverId: postAuthorId,
           type: 'comment',
-          text: `${commenterId} a commenté votre post`,
+          text: `${commenterName} a commenté votre post`,
           postId: postId,
           commentId: commentId
         });
@@ -127,11 +143,15 @@ class NotificationService {
     try {
       // Notifier l'auteur du post (sauf si c'est le même que celui qui like)
       if (likerId !== postAuthorId) {
+        // Récupérer le nom de l'utilisateur qui like
+        const liker = await User.findByPk(likerId);
+        const likerName = liker ? liker.name : 'Quelqu\'un';
+        
         await this.createNotification({
           senderId: likerId,
           receiverId: postAuthorId,
           type: 'like',
-          text: `${likerId} a aimé votre post`,
+          text: `${likerName} a aimé votre post`,
           postId: postId
         });
       }
@@ -157,11 +177,15 @@ class NotificationService {
   // Notifications pour les messages
   static async notifyMessage(messageId, senderId, receiverId) {
     try {
+      // Récupérer le nom de l'expéditeur
+      const sender = await User.findByPk(senderId);
+      const senderName = sender ? sender.name : 'Quelqu\'un';
+      
       await this.createNotification({
         senderId: senderId,
         receiverId: receiverId,
         type: 'message',
-        text: `${senderId} vous a envoyé un message`,
+        text: `${senderName} vous a envoyé un message`,
         messageId: messageId
       });
     } catch (error) {

@@ -1,14 +1,15 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { markAsRead } from '../Services/notificationService';
 
-function NotificationCard({ notification, isEmpty = false }) {
+function NotificationCard({ notification, isEmpty = false, onMarkAsRead }) {
   if (isEmpty) {
     return (
       <div
         style={{
-          border: "1px solid #ccc",
+          border: "1px solid #e0e0e0",
           backgroundColor: "#f8f9fa",
-          padding: "16px",
+          padding: "20px",
           borderRadius: "8px",
           marginBottom: "12px",
           color: "#6c757d",
@@ -16,40 +17,72 @@ function NotificationCard({ notification, isEmpty = false }) {
           textAlign: "center",
         }}
       >
-        🔕 You have no notifications for now.
+        🔕 Aucune notification pour le moment.
       </div>
     );
   }
 
   if (!notification) return null;
 
-  const { text, createdAt, read } = notification;
+  const { text, createdAt, isRead } = notification;
+
+  const handleClick = async () => {
+    if (!isRead && onMarkAsRead) {
+      try {
+        await markAsRead(notification.id);
+        onMarkAsRead(notification.id);
+      } catch (error) {
+        console.error('Erreur lors du marquage de la notification comme lue:', error);
+      }
+    }
+  };
 
   return (
     <div
+      onClick={handleClick}
       style={{
-        border: read ? "1px solid #ccc" : "2px solid #007bff",
-        backgroundColor: read ? "#f9f9f9" : "#e6f0ff",
+        border: "1px solid #e0e0e0",
+        backgroundColor: isRead ? "#ffffff" : "#f8f9fa",
         padding: "16px",
         borderRadius: "8px",
         marginBottom: "12px",
-        boxShadow: read ? "none" : "0 0 5px rgba(0,123,255,0.3)",
+        transition: "all 0.2s ease",
+        cursor: isRead ? "default" : "pointer",
+        opacity: isRead ? 0.7 : 1,
       }}
     >
-      <p style={{ marginBottom: 8, fontWeight: read ? "normal" : "bold" }}>
+      <p style={{ 
+        marginBottom: 8, 
+        fontWeight: isRead ? "400" : "600",
+        color: isRead ? "#666" : "#1a1a1a",
+        fontSize: "14px",
+        lineHeight: "1.4"
+      }}>
         {text}
       </p>
-      <small style={{ color: "#666" }}>
-        {createdAt
-          ? formatDistanceToNow(new Date(createdAt), { addSuffix: true })
-          : "Just now"}
-      </small>
-      {notification.sender && (
-  <p style={{ margin: 0, fontSize: '0.85em', color: '#555' }}>
-    From: {notification.sender.name}
-  </p>
-)}
-
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <small style={{ color: "#999", fontSize: "12px" }}>
+          {createdAt
+            ? formatDistanceToNow(new Date(createdAt), { addSuffix: true })
+            : "À l'instant"}
+        </small>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          {!isRead && (
+            <div style={{
+              width: "6px",
+              height: "6px",
+              backgroundColor: "#6c757d",
+              borderRadius: "50%",
+              flexShrink: 0
+            }}></div>
+          )}
+          {notification.sender && (
+            <small style={{ color: "#666", fontSize: "12px" }}>
+              {notification.sender.name}
+            </small>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

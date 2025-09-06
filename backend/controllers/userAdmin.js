@@ -57,7 +57,10 @@ exports.createUserByDiacre = async (req, res) => {
 };
 
 exports.getAllUsers = (req, res) => {
-  User.findAll()
+  User.findAll({
+    attributes: ['id', 'name', 'email', 'role', 'isActive', 'profileImg', 'followers', 'following', 'createdAt'],
+    order: [['createdAt', 'DESC']]
+  })
     .then(users => res.status(200).json(users))
     .catch(err => res.status(500).json({ error: err.message }));
 };

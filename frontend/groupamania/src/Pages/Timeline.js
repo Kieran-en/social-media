@@ -61,7 +61,7 @@ const Timeline = () => {
   useQuery(['user'], () => getUser(username));
 
   const mutation = useMutation(createPost, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries("posts");
       setText('');
       setFile(null);

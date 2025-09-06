@@ -26,7 +26,7 @@ function getUser(userId) {
  */
 function init(server) {
   io = new Server(server, {
-    cors: { origin: ["http://localhost:4000"] }
+    cors: { origin: ["http://localhost:3000", "http://localhost:4000"] }
   });
 
   io.on("connection", socket => {
@@ -59,7 +59,7 @@ function init(server) {
       // 1) Persist in DB via your REST endpoint
       try {
         const { data: notification } = await axios.post(
-          "http://localhost:4000/api/notifications",
+          "http://localhost:3000/api/notifications",
           { senderId, receiverId, type, text, isRead: false }
         );
 
