@@ -163,11 +163,15 @@ class NotificationService {
   // Notifications pour les follows
   static async notifyFollow(followerId, followedId) {
     try {
+      // Récupérer le nom de l'utilisateur qui suit
+      const follower = await User.findByPk(followerId);
+      const followerName = follower ? follower.name : 'Quelqu\'un';
+      
       await this.createNotification({
         senderId: followerId,
         receiverId: followedId,
         type: 'follow',
-        text: `${followerId} vous suit maintenant`
+        text: `${followerName} vous suit maintenant`
       });
     } catch (error) {
       console.error('Erreur lors de la notification de follow:', error);
