@@ -61,3 +61,9 @@ export async function getFriends(userToGetFriends){
 export function getJwt(){
     return localStorage.getItem(tokenKey)
 }
+
+// Fonction de recherche d'utilisateurs
+export async function searchUsers(query, page = 1, limit = 10) {
+    const res = await http.get(`${config.apiEndpoint}/auth/search/users?query=${encodeURIComponent(query)}&page=${page}&limit=${limit}`)
+    return res.data
+}

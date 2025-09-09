@@ -1,0 +1,131 @@
+.resultsContainer {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.resultsHeader {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e1e5e9;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.usersList {
+    padding: 8px;
+}
+
+.userCard {
+    margin-bottom: 8px;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.userCard:hover {
+    border-color: #0F6E5A;
+    box-shadow: 0 2px 8px rgba(15, 110, 90, 0.15);
+    transform: translateY(-1px);
+}
+
+.userCard.currentUser {
+    border-color: #0F6E5A;
+    background: #f0f8f7;
+}
+
+.avatarContainer {
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e1e5e9;
+}
+
+.userInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.userName {
+    color: #1c1e21;
+    font-weight: 600;
+    margin: 0;
+}
+
+.userEmail {
+    font-size: 0.85rem;
+    color: #65676b;
+    word-break: break-all;
+}
+
+.loadingContainer {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.errorContainer {
+    padding: 20px;
+}
+
+.noResultsContainer {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.noResultsIcon {
+    font-size: 3rem;
+    color: #bcc0c4;
+}
+
+/* Scrollbar personnalisée */
+.resultsContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+.resultsContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.resultsContainer::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.resultsContainer::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .resultsContainer {
+        max-height: 300px;
+    }
+    
+    .userCard {
+        margin-bottom: 6px;
+    }
+    
+    .avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .userName {
+        font-size: 0.9rem;
+    }
+    
+    .userEmail {
+        font-size: 0.8rem;
+    }
+}

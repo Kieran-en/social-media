@@ -22,4 +22,7 @@ router.delete('/:username', auth, userCtrl.deleteUser);
 // Modifier un utilisateur (avec image de profil)
 router.put('/:userId', auth, upload.single('image'), userCtrl.modifyUserData);
 
+// Rechercher des utilisateurs
+router.get('/search/users', auth, userCtrl.searchUsers);
+
 module.exports = router;

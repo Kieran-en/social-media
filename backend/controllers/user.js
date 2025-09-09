@@ -136,3 +136,58 @@ exports.modifyUserData = async (req, res, next) => {
         res.status(500).json({error});
     }
 }
+
+// Fonction de recherche d'utilisateurs
+exports.searchUsers = async (req, res, next) => {
+    try {
+        const { query, page = 1, limit = 10 } = req.query;
+        
+        if (!query || query.trim().length < 2) {
+            return res.status(400).json({ 
+                message: 'La requête de recherche doit contenir au moins 2 caractères' 
+            });
+        }
+
+        const offset = (page - 1) * limit;
+        const searchTerm = `%${query.trim()}%`;
+
+        // Recherche par nom ou email
+        const users = await User.findAll({
+            where: {
+                [require('sequelize').Op.or]: [
+                    { name: { [require('sequelize').Op.like]: searchTerm } },
+                    { email: { [require('sequelize').Op.like]: searchTerm } }
+                ],
+                isActive: true // Seulement les utilisateurs actifs
+            },
+            attributes: ['id', 'name', 'email', 'profileImg', 'role', 'followers', 'following'],
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            order: [['name', 'ASC']]
+        });
+
+        const totalUsers = await User.count({
+            where: {
+                [require('sequelize').Op.or]: [
+                    { name: { [require('sequelize').Op.like]: searchTerm } },
+                    { email: { [require('sequelize').Op.like]: searchTerm } }
+                ],
+                isActive: true
+            }
+        });
+
+        res.status(200).json({
+            users,
+            totalUsers,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(totalUsers / limit),
+            hasMore: offset + users.length < totalUsers
+        });
+    } catch (error) {
+        console.error('Erreur lors de la recherche d\'utilisateurs:', error);
+        res.status(500).json({ 
+            message: 'Erreur lors de la recherche d\'utilisateurs',
+            error: error.message 
+        });
+    }
+}

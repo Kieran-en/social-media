@@ -12,6 +12,7 @@ import navImg from '../Images/EEC.png';
 import { getCurrentUser, logout } from "../Services/userService";
 import { deleteToken } from '../features/tokens/tokenSlice';
 import { clearConversation } from '../features/conversations/conversationSlice';
+import SearchBar from './SearchBar';
 
 export default function NavBar({ showAdminInDropdown = false }) {
     const navigate = useNavigate();
@@ -150,11 +151,10 @@ export default function NavBar({ showAdminInDropdown = false }) {
 
                 {/* DESKTOP SEARCH BAR */}
                 <div className={`${styles.searchBar} d-none d-md-flex`}>
-                    <FaSearch className={styles.searchIcon} />
-                    <Form.Control 
-                        type="text" 
-                        placeholder="Rechercher sur Melen" 
-                        className={styles.searchInput}
+                    <SearchBar
+                        placeholder="Rechercher des utilisateurs..."
+                        onUserClick={(user) => navigate(`/profilepage/${user.name}`)}
+                        currentUserId={userId}
                     />
                 </div>
 
@@ -218,11 +218,13 @@ export default function NavBar({ showAdminInDropdown = false }) {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <div className={styles.mobileSearchBar}>
-                        <FaSearch className={styles.searchIcon} />
-                        <Form.Control 
-                            type="text" 
-                            placeholder="Rechercher sur Melen" 
-                            className={styles.searchInput}
+                        <SearchBar
+                            placeholder="Rechercher des utilisateurs..."
+                            onUserClick={(user) => {
+                                navigate(`/profilepage/${user.name}`);
+                                setShowMenu(false);
+                            }}
+                            currentUserId={userId}
                         />
                     </div>
                     <Nav className="flex-column mt-3" style={{ gap: '8px' }}>

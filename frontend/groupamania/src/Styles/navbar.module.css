@@ -27,28 +27,9 @@
     position: relative;
     display: flex;
     align-items: center;
-}
-
-.searchIcon {
-    position: absolute;
-    left: 15px;
-    color: #65676b; /* Gris neutre */
-    font-size: 1rem;
-}
-
-.searchInput {
-    background-color: #f0f2f5; /* Fond gris clair typique */
-    border: none;
-    border-radius: 50px; /* Entièrement arrondi */
-    padding: 0.5rem 1rem 0.5rem 2.5rem; /* Padding pour ne pas écrire sur l'icône */
-    width: 250px;
-    transition: background-color 0.2s ease;
-}
-
-.searchInput:focus {
-    outline: none;
-    box-shadow: none;
-    background-color: #e4e6e9;
+    flex: 1;
+    max-width: 400px;
+    margin: 0 1rem;
 }
 
 /* --- Section Droite --- */
@@ -168,6 +149,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
+    width: 100%;
 }
 
 .backButton {
