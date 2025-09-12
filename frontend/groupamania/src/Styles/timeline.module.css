@@ -138,6 +138,12 @@
   font-weight: bold;
 }
 
+.groupIndicator {
+  font-size: 12px;
+  color: #65676b;
+  font-style: italic;
+}
+
 .timestamp {
   font-size: 12px;
   color: #6e767d;

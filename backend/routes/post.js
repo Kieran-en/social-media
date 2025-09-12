@@ -24,9 +24,21 @@ router.get('/all', auth, async (req, res) => {
     try {
         const Post = require('../models/Post');
         const User = require('../models/User');
+        const Group = require('../models/Group');
 
         const posts = await Post.findAll({
-            include: User,
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'name', 'profileImg']
+                },
+                {
+                    model: Group,
+                    as: 'group',
+                    attributes: ['id', 'name', 'profileImg'],
+                    required: false
+                }
+            ],
             order: [['createdAt', 'DESC']],
         });
 

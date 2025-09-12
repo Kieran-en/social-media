@@ -7,9 +7,10 @@ import { useSelector } from "react-redux";
 import { getCurrentUser } from "../Services/userService";
 import { joinGroup, leaveGroup, requestToJoinGroup, getUserJoinRequestStatus } from "../Services/groupService";
 // Assurez-vous d'avoir installé lucide-react : npm install lucide-react
-import { Pencil, MessageSquare, UserPlus, UserCheck, Users, Crown, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Pencil, MessageSquare, UserPlus, UserCheck, Users, Crown, Clock, CheckCircle, XCircle, PenTool } from 'lucide-react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import GroupJoinRequestsModal from './GroupJoinRequestsModal';
+import GroupPostModal from './GroupPostModal';
 
 // Le composant GroupProfile est basé sur le composant Profile des utilisateurs
 const GroupProfile = ({ 
@@ -30,6 +31,7 @@ const GroupProfile = ({
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [joinMessage, setJoinMessage] = useState('');
   const [showRequestsModal, setShowRequestsModal] = useState(false);
+  const [showPostModal, setShowPostModal] = useState(false);
   const queryClient = useQueryClient();
   const token = useSelector(state => state.token);
   const userData = getCurrentUser(token);
@@ -148,6 +150,15 @@ const GroupProfile = ({
                 <Pencil size={18} />
                 Modifier le groupe
               </button>
+              {/* Bouton pour créer un post au nom du groupe */}
+              <button 
+                onClick={() => setShowPostModal(true)}
+                className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow"
+              >
+                <PenTool size={18} />
+                Publier
+              </button>
+              
               {/* Bouton pour voir les demandes d'adhésion (responsables seulement) */}
               <button 
                 onClick={() => setShowRequestsModal(true)}
@@ -258,6 +269,17 @@ const GroupProfile = ({
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Modal pour créer un post au nom du groupe (responsables seulement) */}
+      {isGroupAdmin && (
+        <GroupPostModal
+          show={showPostModal}
+          onHide={() => setShowPostModal(false)}
+          groupId={groupId}
+          groupName={name}
+          groupImage={profileImg}
+        />
+      )}
 
       {/* Modal pour gérer les demandes d'adhésion (responsables seulement) */}
       {isGroupAdmin && (

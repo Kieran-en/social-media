@@ -59,22 +59,51 @@ exports.createUserByDiacre = async (req, res) => {
 exports.getAllUsers = (req, res) => {
   User.findAll({
     attributes: ['id', 'name', 'email', 'role', 'isActive', 'profileImg', 'followers', 'following', 'createdAt'],
+    where: {
+      role: {
+        [require('sequelize').Op.ne]: 'admin' // Exclure les administrateurs
+      }
+    },
     order: [['createdAt', 'DESC']]
   })
     .then(users => res.status(200).json(users))
     .catch(err => res.status(500).json({ error: err.message }));
 };
 
-exports.suspendUser = (req, res) => {
-  User.update({ isActive: false }, { where: { id: req.params.id } })
-    .then(() => res.status(200).json({ message: "Utilisateur suspendu" }))
-    .catch(err => res.status(500).json({ error: err.message }));
+exports.suspendUser = async (req, res) => {
+  try {
+    // Vérifier que ce n'est pas un admin
+    const user = await User.findByPk(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+    if (user.role === 'admin') {
+      return res.status(403).json({ message: "Impossible de suspendre un administrateur" });
+    }
+
+    await User.update({ isActive: false }, { where: { id: req.params.id } });
+    res.status(200).json({ message: "Utilisateur suspendu" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-exports.reactivateUser = (req, res) => {
-  User.update({ isActive: true }, { where: { id: req.params.id } })
-    .then(() => res.status(200).json({ message: "Utilisateur réactivé" }))
-    .catch(err => res.status(500).json({ error: err.message }));
+exports.reactivateUser = async (req, res) => {
+  try {
+    // Vérifier que ce n'est pas un admin
+    const user = await User.findByPk(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+    if (user.role === 'admin') {
+      return res.status(403).json({ message: "Impossible de réactiver un administrateur via cette interface" });
+    }
+
+    await User.update({ isActive: true }, { where: { id: req.params.id } });
+    res.status(200).json({ message: "Utilisateur réactivé" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 exports.deleteUserAdmin = async (req, res) => {
@@ -82,15 +111,16 @@ exports.deleteUserAdmin = async (req, res) => {
   
   try {
     const userId = req.params.id;
-    console.log(`🗑️ Tentative de suppression de l'utilisateur ID: ${userId}`);
-    
-    // Vérifier que l'utilisateur existe
+
+    // Vérifier que ce n'est pas un admin
     const user = await User.findByPk(userId);
     if (!user) {
-      console.log(`❌ Utilisateur ID ${userId} non trouvé`);
-      return res.status(404).json({ error: "Utilisateur non trouvé" });
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
-
+    if (user.role === 'admin') {
+      return res.status(403).json({ message: "Impossible de supprimer un administrateur via cette interface" });
+    }
+    console.log(`🗑️ Tentative de suppression de l'utilisateur ID: ${userId}`);
     console.log(`✅ Utilisateur trouvé: ${user.name} (${user.email})`);
 
     // Désactiver les vérifications de clés étrangères
@@ -162,6 +192,21 @@ exports.deleteUserAdmin = async (req, res) => {
 exports.renameUser = (req, res) => {
   const userId = req.params.id;
   const { role } = req.body;
+
+  // 🔒 SÉCURITÉ: Empêcher la promotion au rôle admin
+  if (role === 'admin') {
+    return res.status(403).json({ 
+      message: 'Impossible de promouvoir un utilisateur au rôle administrateur. Les comptes admin doivent être créés directement dans la base de données.' 
+    });
+  }
+
+  // Vérifier que le rôle est valide
+  const validRoles = ['user', 'diacre', 'responsable_groupe'];
+  if (!validRoles.includes(role)) {
+    return res.status(400).json({ 
+      message: `Rôle invalide. Rôles autorisés: ${validRoles.join(', ')}` 
+    });
+  }
 
   User.update({ role }, { where: { id: userId } })
     .then(() => res.status(200).json({ message: "Rôle modifié avec succès" }))

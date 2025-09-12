@@ -1,6 +1,7 @@
 const Comment = require('../models/Comment');
 const Post = require('../models/Post');
 const User = require('../models/User');
+const Group = require('../models/Group');
 const fs = require('fs');
 const NotificationService = require('../services/notificationService');
 
@@ -13,7 +14,18 @@ exports.displayPosts = async (req, res, next) => {
     const totalPosts = await Post.count();
 
     const posts = await Post.findAll({
-      include: User,
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'profileImg']
+        },
+        {
+          model: Group,
+          as: 'group',
+          attributes: ['id', 'name', 'profileImg'],
+          required: false // LEFT JOIN pour inclure les posts sans groupe
+        }
+      ],
       order: [['updatedAt', 'DESC']],
       limit,
       offset,
@@ -45,7 +57,18 @@ exports.getUserPosts = async (req, res, next) => {
 
     const posts = await Post.findAll({
       where: { UserId: userId },
-      include: User,
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'profileImg']
+        },
+        {
+          model: Group,
+          as: 'group',
+          attributes: ['id', 'name', 'profileImg'],
+          required: false
+        }
+      ],
       order: [['updatedAt', 'DESC']],
       limit,
       offset,

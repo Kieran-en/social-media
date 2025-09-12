@@ -150,10 +150,10 @@ export default function ManageUsers() {
             <Form.Group controlId="formRoleSelect">
               <Form.Label>Choisissez un nouveau rôle pour {selectedUser?.name} :</Form.Label>
               <Form.Select value={newRole} onChange={(e) => setNewRole(e.target.value)}>
-                <option value="user">Utilisateur</option>
-                <option value="diacre">Diacre</option>
-                <option value="responsable_groupe">Responsable de groupe</option>
-                <option value="admin">Admin</option>
+                <option value="user">👤 Fidèle</option>
+                <option value="diacre">⛪ Diacre</option>
+                <option value="responsable_groupe">👥 Responsable de groupe</option>
+                {/* Option "admin" supprimée pour éviter la prolifération des comptes administrateurs */}
               </Form.Select>
             </Form.Group>
           </Modal.Body>

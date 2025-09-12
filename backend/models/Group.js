@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../config');
 const User = require('./User');
+const Post = require('./Post');
 
 const Group = db.define('Group', {
   name: {
@@ -34,5 +35,8 @@ const Group = db.define('Group', {
 Group.belongsTo(User, { foreignKey: 'leaderId', as: 'leader' });
 User.hasMany(Group, { foreignKey: 'leaderId', as: 'ledGroups' });
 
+// Association avec les posts
+Group.hasMany(Post, { foreignKey: 'GroupId', as: 'posts' });
+Post.belongsTo(Group, { foreignKey: 'GroupId', as: 'group' });
 
 module.exports = Group;

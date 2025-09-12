@@ -116,3 +116,12 @@ export function processJoinRequest(requestId, action, responseMessage = '') {
     responseMessage
   });
 }
+
+// ========================= SERVICES POUR LES POSTS DE GROUPES =========================
+
+// Créer un post au nom d'un groupe
+export function createGroupPost(groupId, postData) {
+  return http.post(`${apiEndpoint}/${groupId}/posts`, postData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+}

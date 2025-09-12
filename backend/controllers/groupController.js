@@ -241,19 +241,101 @@ async function getGroupPosts(req, res) {
       return res.status(404).json({ message: "Groupe non trouvé" });
     }
 
-    // TODO: Récupérer les posts du groupe
-    // Pour l'instant, retourner une liste vide
-    const posts = [];
-    const totalPosts = 0;
-    const totalPages = Math.ceil(totalPosts / limit);
+    // Récupérer les posts du groupe
+    const { count, rows: posts } = await Post.findAndCountAll({
+      where: { 
+        GroupId: id,
+        isGroupPost: true 
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'profileImg']
+        },
+        {
+          model: Group,
+          as: 'group',
+          attributes: ['id', 'name', 'profileImg']
+        }
+      ],
+      order: [['createdAt', 'DESC']],
+      limit: limit,
+      offset: offset
+    });
+
+    const totalPages = Math.ceil(count / limit);
 
     res.json({
       posts,
       currentPage: page,
       totalPages,
-      totalPosts
+      totalPosts: count,
+      hasMore: page < totalPages
     });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Créer un post au nom d'un groupe
+async function createGroupPost(req, res) {
+  try {
+    const { id: groupId } = req.params;
+    const { text } = req.body;
+    const userId = req.auth.userId;
+    const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
+
+    // Vérifier que l'utilisateur est responsable du groupe ou admin
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+      return res.status(404).json({ message: "Groupe non trouvé" });
+    }
+
+    const userMember = await GroupMember.findOne({
+      where: { UserId: userId, GroupId: groupId }
+    });
+
+    const isLeader = group.leaderId === userId;
+    const isAdmin = userMember && userMember.role === 'admin';
+
+    if (!isLeader && !isAdmin) {
+      return res.status(403).json({ message: "Seuls les responsables et administrateurs du groupe peuvent publier au nom du groupe" });
+    }
+
+    // Créer le post
+    const post = await Post.create({
+      text,
+      imageUrl,
+      UserId: userId,
+      GroupId: groupId,
+      isGroupPost: true,
+      likes: 0,
+      dislikes: 0
+    });
+
+    // Récupérer le post complet avec les associations
+    const fullPost = await Post.findByPk(post.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'profileImg']
+        },
+        {
+          model: Group,
+          as: 'group',
+          attributes: ['id', 'name', 'profileImg']
+        }
+      ]
+    });
+
+    console.log(`📝 Nouveau post de groupe créé: ${group.name} par ${userId}`);
+
+    res.status(201).json({
+      message: "Post publié au nom du groupe avec succès",
+      post: fullPost
+    });
+  } catch (error) {
+    console.error('❌ Erreur lors de la création du post de groupe:', error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -809,6 +891,7 @@ module.exports = {
   setGroupLeader,
   getGroupById,
   getGroupPosts,
+  createGroupPost,
   getGroupMembers,
   getUserGroupMembership,
   joinGroup,

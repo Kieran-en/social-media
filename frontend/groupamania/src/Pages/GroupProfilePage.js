@@ -171,6 +171,8 @@ const GroupProfilePage = () => {
                         date={post.createdAt}
                         userLoggedIn={currentUser?.username}
                         comments={[]}
+                        isGroupPost={post.isGroupPost}
+                        groupData={post.group}
                       />
                     ))}
                   </div>

@@ -141,6 +141,8 @@ const Timeline = () => {
               date={post.createdAt}
               userLoggedIn={userlogged}
               comments={comments}
+              isGroupPost={post.isGroupPost}
+              groupData={post.group}
           />
       ))
   );

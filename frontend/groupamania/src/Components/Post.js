@@ -22,7 +22,7 @@ dayjs.extend(relativeTime);
 const Post = React.forwardRef(({
     picture, profileImg, content, username, userLoggedIn,
     postId, userId, changeModalState, comments, likes,
-    changeDeleteModalState, date
+    changeDeleteModalState, date, isGroupPost, groupData
 }, ref) => {
 
     const [showComment, setShowComment] = useState(false);
@@ -66,10 +66,25 @@ const Post = React.forwardRef(({
         <div ref={ref} className={style.postCard}>
             {/* HEADER */}
             <div className={style.postHeader}>
-                <div className={style.profileSection} onClick={() => navigate(`/profilepage/${username}`)}>
-                    <img src={profileImg} className={style.profileImg} />
+                <div className={style.profileSection} onClick={() => {
+                    if (isGroupPost && groupData) {
+                        navigate(`/group/${groupData.id}`);
+                    } else {
+                        navigate(`/profilepage/${username}`);
+                    }
+                }}>
+                    <img 
+                        src={isGroupPost && groupData ? groupData.profileImg : profileImg} 
+                        className={style.profileImg} 
+                        alt={isGroupPost && groupData ? groupData.name : username}
+                    />
                     <div className={style.usernameBlock}>
-                        <span className={style.username}>{username}</span>
+                        <span className={style.username}>
+                            {isGroupPost && groupData ? groupData.name : username}
+                        </span>
+                        {isGroupPost && groupData && (
+                            <span className={style.groupIndicator}>Publication du groupe</span>
+                        )}
                         <span className={style.timestamp}>{dayjs(date).fromNow()}</span>
                     </div>
                 </div>

@@ -59,6 +59,9 @@ router.get('/:id', auth, groupCtrl.getGroupById);
 // Récupérer les posts d'un groupe
 router.get('/:id/posts', auth, groupCtrl.getGroupPosts);
 
+// Créer un post au nom d'un groupe (responsables et admins seulement)
+router.post('/:id/posts', auth, upload.single('image'), groupCtrl.createGroupPost);
+
 // Récupérer les membres d'un groupe
 router.get('/:id/members', auth, groupCtrl.getGroupMembers);
 
