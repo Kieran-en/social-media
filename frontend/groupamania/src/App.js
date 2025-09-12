@@ -12,6 +12,8 @@ import Events from './Pages/Admin/Events';
 import Stats from './Pages/Admin/Stats';
 import ErrorPage from './Pages/ErrorPage'
 import ProfilePage from './Pages/ProfilePage'
+import GroupProfilePage from './Pages/GroupProfilePage'
+import GroupsPage from './Pages/GroupsPage'
 import ProtectedRoute from './Components/ProtectedRoute';
 import MessagePage from './Pages/MessagePage';
 import Notification from './Pages/Notification';
@@ -33,6 +35,14 @@ function App() {
       <Route path='/profilepage/:user' element={
         <ProtectedRoute>
           <ProfilePage/>
+        </ProtectedRoute>} />
+      <Route path='/groups' element={
+        <ProtectedRoute>
+          <GroupsPage/>
+        </ProtectedRoute>} />
+      <Route path='/group/:groupId' element={
+        <ProtectedRoute>
+          <GroupProfilePage/>
         </ProtectedRoute>} />
         <Route path='messages' element={
           <ProtectedRoute>

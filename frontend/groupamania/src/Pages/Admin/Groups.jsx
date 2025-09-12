@@ -5,8 +5,10 @@ import { Button, Table, Modal, Form, Image, Dropdown, ButtonGroup, Alert, Spinne
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import { getAllGroups, createGroup, updateGroup, deleteGroup, suspendGroup, reactivateGroup } from '../../Services/groupService';
 import { getAllUsers } from '../../Services/userAdminService';
+import { useNavigate } from 'react-router-dom';
 
 export default function Groups() {
+  const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
   const [groupLeaders, setGroupLeaders] = useState([]);
   const [loadingList, setLoadingList] = useState(false);
@@ -151,6 +153,7 @@ export default function Groups() {
                             <ThreeDotsVertical />
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
+                            <Dropdown.Item onClick={() => navigate(`/group/${g.id}`)}>👁 Voir le profil</Dropdown.Item>
                             <Dropdown.Item onClick={() => handleOpenModal(g)}>✏ Modifier</Dropdown.Item>
                             {g.isActive ? (
                                 <Dropdown.Item onClick={() => handleSuspendGroup(g.id)}>⏸ Suspendre</Dropdown.Item>

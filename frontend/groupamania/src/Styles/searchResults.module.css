@@ -38,6 +38,15 @@
     background: #f0f8f7;
 }
 
+.userCard.groupCard {
+    border-left: 4px solid #3498db;
+}
+
+.userCard.groupCard:hover {
+    border-color: #3498db;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
+}
+
 .avatarContainer {
     margin-right: 12px;
     flex-shrink: 0;

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Navbar, Dropdown, Nav, Form, Offcanvas } from 'react-bootstrap';
+import { Navbar, Dropdown, Nav, Offcanvas } from 'react-bootstrap';
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
-import { FaHome, FaUser, FaDoorOpen, FaSearch, FaCog } from "react-icons/fa";
+import { FaHome, FaUser, FaDoorOpen, FaCog, FaUsers } from "react-icons/fa";
 import { MdOutlineMessage, MdNotifications } from "react-icons/md";
 
 import styles from '../Styles/navbar.module.css';
@@ -12,7 +12,7 @@ import navImg from '../Images/EEC.png';
 import { getCurrentUser, logout } from "../Services/userService";
 import { deleteToken } from '../features/tokens/tokenSlice';
 import { clearConversation } from '../features/conversations/conversationSlice';
-import SearchBar from './SearchBar';
+import UnifiedSearchBar from './UnifiedSearchBar';
 
 export default function NavBar({ showAdminInDropdown = false }) {
     const navigate = useNavigate();
@@ -62,12 +62,15 @@ export default function NavBar({ showAdminInDropdown = false }) {
 
     // Charger les notifications existantes au montage du composant
     useEffect(() => {
-        if (!userId) return;
+        if (!userData) return;
+        
+        const currentUserId = userData.userId || userData.id;
+        if (!currentUserId) return;
 
         const loadNotifications = async () => {
             try {
                 const { getNotifications } = await import('../Services/notificationService');
-                const { data } = await getNotifications(userId);
+                const { data } = await getNotifications(currentUserId);
                 
                 // Séparer les messages des autres notifications
                 const messageNotifications = data?.filter(n => n.type === 'message') || [];
@@ -81,7 +84,7 @@ export default function NavBar({ showAdminInDropdown = false }) {
         };
 
         loadNotifications();
-    }, [userId]);
+    }, [userData]);
 
     // Debug: Afficher le nombre de notifications non lues (en mode développement uniquement)
     useEffect(() => {
@@ -151,9 +154,10 @@ export default function NavBar({ showAdminInDropdown = false }) {
 
                 {/* DESKTOP SEARCH BAR */}
                 <div className={`${styles.searchBar} d-none d-md-flex`}>
-                    <SearchBar
-                        placeholder="Rechercher des utilisateurs..."
+                    <UnifiedSearchBar
+                        placeholder="Rechercher des utilisateurs ou groupes..."
                         onUserClick={(user) => navigate(`/profilepage/${user.name}`)}
+                        onGroupClick={(group) => navigate(`/group/${group.id}`)}
                         currentUserId={userId}
                     />
                 </div>
@@ -218,10 +222,14 @@ export default function NavBar({ showAdminInDropdown = false }) {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <div className={styles.mobileSearchBar}>
-                        <SearchBar
-                            placeholder="Rechercher des utilisateurs..."
+                        <UnifiedSearchBar
+                            placeholder="Rechercher des utilisateurs ou groupes..."
                             onUserClick={(user) => {
                                 navigate(`/profilepage/${user.name}`);
+                                setShowMenu(false);
+                            }}
+                            onGroupClick={(group) => {
+                                navigate(`/group/${group.id}`);
                                 setShowMenu(false);
                             }}
                             currentUserId={userId}
@@ -255,6 +263,10 @@ export default function NavBar({ showAdminInDropdown = false }) {
                                 )}
                                 Notifications
                             </span>
+                        </Nav.Link>
+                        <Nav.Link onClick={() => navigate('/groups')} style={{ display: 'flex', alignItems: 'center' }}>
+                            <FaUsers className={styles.navIcon} style={{ marginRight: '8px' }} />
+                            Découvrir les groupes
                         </Nav.Link>
                         {userData.role === 'admin' && (
                             <Nav.Link onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center' }}>
