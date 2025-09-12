@@ -91,3 +91,28 @@ export function unfollowGroup(groupId) {
 export function searchGroups(query, page = 1, limit = 10) {
   return http.get(`${apiEndpoint}/search?query=${encodeURIComponent(query)}&page=${page}&limit=${limit}`);
 }
+
+// ========================= SERVICES POUR LES DEMANDES D'ADHÉSION =========================
+
+// Demander à rejoindre un groupe
+export function requestToJoinGroup(groupId, message = '') {
+  return http.post(`${apiEndpoint}/${groupId}/request-join`, { message });
+}
+
+// Vérifier le statut de demande d'un utilisateur pour un groupe
+export function getUserJoinRequestStatus(groupId) {
+  return http.get(`${apiEndpoint}/${groupId}/join-request-status`);
+}
+
+// Récupérer les demandes d'adhésion pour un groupe (responsables seulement)
+export function getGroupJoinRequests(groupId) {
+  return http.get(`${apiEndpoint}/${groupId}/join-requests`);
+}
+
+// Traiter une demande d'adhésion (approuver/rejeter)
+export function processJoinRequest(requestId, action, responseMessage = '') {
+  return http.post(`${apiEndpoint}/join-requests/${requestId}/process`, {
+    action,
+    responseMessage
+  });
+}

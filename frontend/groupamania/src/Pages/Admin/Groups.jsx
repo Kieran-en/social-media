@@ -39,12 +39,8 @@ export default function Groups() {
 
   const fetchLeaders = async () => {
     try {
-      console.log('🔄 Récupération des utilisateurs...');
       const res = await getAllUsers();
-      console.log('📥 Utilisateurs reçus:', res.data);
-      
       const leaders = (res.data || []).filter(u => u.role === 'responsable_groupe');
-      console.log('👥 Responsables de groupe filtrés:', leaders);
       
       setGroupLeaders(leaders);
     } catch (error) {

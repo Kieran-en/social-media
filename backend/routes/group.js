@@ -12,6 +12,29 @@ router.get('/search/test', auth, (req, res) => {
   res.json({ message: 'Endpoint de recherche de groupes accessible', timestamp: new Date().toISOString() });
 });
 
+// Route utilitaire pour assigner des leaders manquants (admin seulement)
+router.post('/assign-missing-leaders', auth, groupCtrl.assignMissingLeaders);
+
+// Route pour corriger le leader du groupe GAL
+router.post('/fix-gal-leader', auth, groupCtrl.fixGroupLeader);
+
+// Route de diagnostic pour tous les groupes
+router.get('/debug-all', auth, groupCtrl.debugAllGroups);
+
+// ========================= ROUTES POUR LES DEMANDES D'ADHÉSION =========================
+
+// Demander à rejoindre un groupe
+router.post('/:id/request-join', auth, groupCtrl.requestToJoinGroup);
+
+// Vérifier le statut de demande d'un utilisateur pour un groupe
+router.get('/:id/join-request-status', auth, groupCtrl.getUserJoinRequestStatus);
+
+// Récupérer les demandes d'adhésion pour un groupe (responsables seulement)
+router.get('/:id/join-requests', auth, groupCtrl.getGroupJoinRequests);
+
+// Traiter une demande d'adhésion (approuver/rejeter)
+router.post('/join-requests/:requestId/process', auth, groupCtrl.processJoinRequest);
+
 // Rechercher des groupes
 router.get('/search', auth, groupCtrl.searchGroups);
 

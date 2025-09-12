@@ -1,5 +1,6 @@
 const Group = require('../models/Group');
 const GroupMember = require('../models/GroupMember');
+const GroupJoinRequest = require('../models/GroupJoinRequest');
 const User = require('../models/User');
 const Post = require('../models/Post');
 const { Op } = require('sequelize');
@@ -19,6 +20,11 @@ async function createGroup(req, res) {
 
 // Modifier un groupe
 async function updateGroup(req, res) {
+  console.log('📝 MODIFICATION DE GROUPE - Données reçues:', {
+    groupId: req.params.id,
+    body: req.body,
+    leaderId: req.body.leaderId
+  });
   try {
     const { id } = req.params;
     const { name, description } = req.body;
@@ -82,7 +88,54 @@ async function deleteGroup(req, res) {
   }
 }
 
-// Récupérer les groupes de l’utilisateur connecté (ou tous si admin)
+// Route de diagnostic pour voir tous les groupes et leurs leaders
+async function debugAllGroups(req, res) {
+  try {
+    console.log('🔍 DIAGNOSTIC COMPLET DE TOUS LES GROUPES...');
+    
+    // Récupérer tous les groupes sans association
+    const allGroups = await Group.findAll({
+      attributes: ['id', 'name', 'leaderId'],
+      order: [['name', 'ASC']]
+    });
+    
+    console.log('📊 Groupes trouvés:', allGroups.length);
+    
+    // Pour chaque groupe, récupérer le leader manuellement
+    const groupsWithLeaderInfo = await Promise.all(
+      allGroups.map(async (group) => {
+        let leaderInfo = null;
+        if (group.leaderId) {
+          leaderInfo = await User.findByPk(group.leaderId, {
+            attributes: ['id', 'name', 'role']
+          });
+        }
+        
+        const result = {
+          groupId: group.id,
+          groupName: group.name,
+          leaderId: group.leaderId,
+          leaderFound: leaderInfo ? 'OUI' : 'NON',
+          leaderName: leaderInfo ? leaderInfo.name : 'AUCUN',
+          leaderRole: leaderInfo ? leaderInfo.role : 'N/A'
+        };
+        
+        console.log(`  - ${group.name}: leaderId=${group.leaderId}, leader=${leaderInfo ? leaderInfo.name : 'AUCUN'}`);
+        return result;
+      })
+    );
+    
+    res.json({
+      message: 'Diagnostic complet des groupes',
+      groups: groupsWithLeaderInfo
+    });
+  } catch (error) {
+    console.error('❌ Erreur diagnostic:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Récupérer les groupes de l'utilisateur connecté (ou tous si admin)
 async function getUserGroups(req, res) {
   try {
     const groups = await Group.findAll(); // Admin: retourne tout
@@ -132,6 +185,27 @@ async function getGroupById(req, res) {
     
     if (!group) {
       return res.status(404).json({ message: "Groupe non trouvé" });
+    }
+
+    console.log('🔍 Groupe trouvé:', {
+      id: group.id,
+      name: group.name,
+      leaderId: group.leaderId,
+      leader: group.leader ? group.leader.name : 'Aucun leader',
+      leaderData: group.leader ? {
+        id: group.leader.id,
+        name: group.leader.name,
+        role: group.leader.role
+      } : null
+    });
+
+    // Debug spécial pour le groupe GAL
+    if (group.name === 'GAL') {
+      console.log('🚨 DEBUG SPÉCIAL GAL:', {
+        leaderId: group.leaderId,
+        leaderTrouve: group.leader ? 'OUI' : 'NON',
+        nomLeader: group.leader ? group.leader.name : 'AUCUN'
+      });
     }
 
     // Compter les membres
@@ -317,6 +391,88 @@ async function unfollowGroup(req, res) {
   }
 }
 
+// Fonction pour corriger le leader du groupe GAL
+async function fixGroupLeader(req, res) {
+  try {
+    console.log('🔧 CORRECTION DU LEADER DU GROUPE GAL...');
+    
+    // Trouver le groupe GAL
+    const group = await Group.findOne({ where: { name: 'GAL' } });
+    if (!group) {
+      return res.status(404).json({ message: 'Groupe GAL non trouvé' });
+    }
+    
+    // Trouver un utilisateur avec le rôle responsable_groupe (qui n'est pas "EEC Melen")
+    const newLeader = await User.findOne({
+      where: { 
+        role: 'responsable_groupe',
+        name: { [Op.ne]: 'EEC Melen' }
+      }
+    });
+    
+    if (!newLeader) {
+      return res.status(400).json({ message: 'Aucun responsable de groupe disponible' });
+    }
+    
+    // Mettre à jour le leader
+    await group.update({ leaderId: newLeader.id });
+    
+    console.log(`✅ Leader du groupe GAL mis à jour: ${newLeader.name} (ID: ${newLeader.id})`);
+    
+    res.json({
+      message: `Leader du groupe GAL mis à jour avec succès`,
+      oldLeaderId: group.leaderId,
+      newLeader: {
+        id: newLeader.id,
+        name: newLeader.name,
+        role: newLeader.role
+      }
+    });
+  } catch (error) {
+    console.error('❌ Erreur lors de la correction:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Fonction utilitaire pour assigner des leaders manquants
+async function assignMissingLeaders(req, res) {
+  try {
+    // Trouver tous les groupes sans leader
+    const groupsWithoutLeader = await Group.findAll({
+      where: { leaderId: null }
+    });
+
+    console.log(`🔧 Groupes sans leader trouvés: ${groupsWithoutLeader.length}`);
+
+    // Trouver un responsable de groupe par défaut
+    const defaultLeader = await User.findOne({
+      where: { role: 'responsable_groupe' }
+    });
+
+    if (!defaultLeader) {
+      return res.status(400).json({ 
+        message: "Aucun utilisateur avec le rôle 'responsable_groupe' trouvé" 
+      });
+    }
+
+    // Assigner le leader par défaut à tous les groupes sans leader
+    const updatePromises = groupsWithoutLeader.map(group => {
+      return group.update({ leaderId: defaultLeader.id });
+    });
+
+    await Promise.all(updatePromises);
+
+    res.json({ 
+      message: `${groupsWithoutLeader.length} groupes ont été assignés au leader ${defaultLeader.name}`,
+      updatedGroups: groupsWithoutLeader.length,
+      leader: defaultLeader.name
+    });
+  } catch (error) {
+    console.error('❌ Erreur lors de l\'assignation des leaders:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
 // Rechercher des groupes
 async function searchGroups(req, res) {
   try {
@@ -357,12 +513,36 @@ async function searchGroups(req, res) {
 
     console.log('📊 Groupes filtrés:', filteredGroups.length);
 
-    // Version simplifiée des détails
-    const groupsWithDetails = filteredGroups.map(group => ({
-      ...group.toJSON(),
-      leader: null, // Temporairement désactivé pour tester
-      memberCount: 0 // Temporairement désactivé pour tester
-    }));
+    // Ajouter les informations du leader et le nombre de membres
+    const groupsWithDetails = await Promise.all(
+      filteredGroups.map(async (group) => {
+        try {
+          // Récupérer le leader
+          let leader = null;
+          if (group.leaderId) {
+            leader = await User.findByPk(group.leaderId, {
+              attributes: ['id', 'name', 'profileImg']
+            });
+          }
+
+          // Récupérer le nombre de membres
+          const memberCount = await GroupMember.count({ where: { GroupId: group.id } });
+          
+          return {
+            ...group.toJSON(),
+            leader: leader ? leader.toJSON() : null,
+            memberCount
+          };
+        } catch (detailError) {
+          console.error('Erreur lors de la récupération des détails du groupe:', detailError);
+          return {
+            ...group.toJSON(),
+            leader: null,
+            memberCount: 0
+          };
+        }
+      })
+    );
 
     const totalPages = Math.ceil(filteredGroups.length / parseInt(limit));
 
@@ -384,6 +564,241 @@ async function searchGroups(req, res) {
   }
 }
 
+// ========================= SYSTÈME DE DEMANDES D'ADHÉSION =========================
+
+// Demander à rejoindre un groupe
+async function requestToJoinGroup(req, res) {
+  try {
+    const { id: groupId } = req.params;
+    const userId = req.auth.userId;
+    const { message } = req.body;
+
+    // Vérifier si le groupe existe et est actif
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+      return res.status(404).json({ message: "Groupe non trouvé" });
+    }
+    if (!group.isActive) {
+      return res.status(400).json({ message: "Ce groupe n'accepte plus de nouvelles demandes" });
+    }
+
+    // Vérifier si l'utilisateur est déjà membre
+    const existingMember = await GroupMember.findOne({
+      where: { UserId: userId, GroupId: groupId }
+    });
+    if (existingMember) {
+      return res.status(400).json({ message: "Vous êtes déjà membre de ce groupe" });
+    }
+
+    // Vérifier si une demande existe déjà
+    const existingRequest = await GroupJoinRequest.findOne({
+      where: { UserId: userId, GroupId: groupId }
+    });
+    if (existingRequest) {
+      if (existingRequest.status === 'pending') {
+        return res.status(400).json({ message: "Vous avez déjà une demande en attente pour ce groupe" });
+      }
+      if (existingRequest.status === 'rejected') {
+        return res.status(400).json({ message: "Votre demande précédente a été refusée. Contactez le responsable du groupe." });
+      }
+    }
+
+    // Créer la demande
+    const joinRequest = await GroupJoinRequest.create({
+      UserId: userId,
+      GroupId: groupId,
+      message: message || null,
+      status: 'pending'
+    });
+
+    console.log(`📨 Nouvelle demande d'adhésion: User ${userId} → Group ${groupId}`);
+
+    res.status(201).json({
+      message: "Votre demande d'adhésion a été envoyée avec succès",
+      requestId: joinRequest.id
+    });
+  } catch (error) {
+    console.error('❌ Erreur lors de la demande d\'adhésion:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Récupérer les demandes d'adhésion pour un groupe (responsables seulement)
+async function getGroupJoinRequests(req, res) {
+  try {
+    const { id: groupId } = req.params;
+    const userId = req.auth.userId;
+
+    // Vérifier si l'utilisateur est responsable du groupe
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+      return res.status(404).json({ message: "Groupe non trouvé" });
+    }
+
+    const userMember = await GroupMember.findOne({
+      where: { UserId: userId, GroupId: groupId }
+    });
+
+    const isLeader = group.leaderId === userId;
+    const isAdmin = userMember && userMember.role === 'admin';
+
+    if (!isLeader && !isAdmin) {
+      return res.status(403).json({ message: "Accès refusé. Seuls les responsables et administrateurs du groupe peuvent voir les demandes." });
+    }
+
+    // Récupérer les demandes
+    const joinRequests = await GroupJoinRequest.findAll({
+      where: { GroupId: groupId },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name', 'profileImg', 'email']
+        },
+        {
+          model: User,
+          as: 'reviewer',
+          attributes: ['id', 'name'],
+          required: false
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.json({
+      groupName: group.name,
+      totalRequests: joinRequests.length,
+      pendingRequests: joinRequests.filter(r => r.status === 'pending').length,
+      requests: joinRequests
+    });
+  } catch (error) {
+    console.error('❌ Erreur lors de la récupération des demandes:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Traiter une demande d'adhésion (approuver/rejeter)
+async function processJoinRequest(req, res) {
+  try {
+    const { requestId } = req.params;
+    const { action, responseMessage } = req.body; // action: 'approve' ou 'reject'
+    const reviewerId = req.auth.userId;
+
+    // Récupérer la demande
+    const joinRequest = await GroupJoinRequest.findByPk(requestId, {
+      include: [
+        { model: User, as: 'user', attributes: ['id', 'name', 'email'] },
+        { model: Group, as: 'group', attributes: ['id', 'name', 'leaderId'] }
+      ]
+    });
+
+    if (!joinRequest) {
+      return res.status(404).json({ message: "Demande non trouvée" });
+    }
+
+    if (joinRequest.status !== 'pending') {
+      return res.status(400).json({ message: "Cette demande a déjà été traitée" });
+    }
+
+    // Vérifier les permissions
+    const userMember = await GroupMember.findOne({
+      where: { UserId: reviewerId, GroupId: joinRequest.GroupId }
+    });
+
+    const isLeader = joinRequest.group.leaderId === reviewerId;
+    const isAdmin = userMember && userMember.role === 'admin';
+
+    if (!isLeader && !isAdmin) {
+      return res.status(403).json({ message: "Accès refusé" });
+    }
+
+    // Traiter la demande
+    if (action === 'approve') {
+      // Ajouter l'utilisateur au groupe
+      await GroupMember.create({
+        UserId: joinRequest.UserId,
+        GroupId: joinRequest.GroupId,
+        role: 'member'
+      });
+
+      // Mettre à jour la demande
+      await joinRequest.update({
+        status: 'approved',
+        responseMessage: responseMessage || 'Demande approuvée',
+        reviewedBy: reviewerId,
+        reviewedAt: new Date()
+      });
+
+      console.log(`✅ Demande approuvée: ${joinRequest.user.name} rejoint ${joinRequest.group.name}`);
+
+      res.json({
+        message: `${joinRequest.user.name} a été ajouté(e) au groupe avec succès`,
+        action: 'approved'
+      });
+
+    } else if (action === 'reject') {
+      await joinRequest.update({
+        status: 'rejected',
+        responseMessage: responseMessage || 'Demande refusée',
+        reviewedBy: reviewerId,
+        reviewedAt: new Date()
+      });
+
+      console.log(`❌ Demande refusée: ${joinRequest.user.name} pour ${joinRequest.group.name}`);
+
+      res.json({
+        message: "Demande refusée",
+        action: 'rejected'
+      });
+
+    } else {
+      return res.status(400).json({ message: "Action invalide. Utilisez 'approve' ou 'reject'" });
+    }
+
+  } catch (error) {
+    console.error('❌ Erreur lors du traitement de la demande:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// Vérifier le statut de demande d'un utilisateur pour un groupe
+async function getUserJoinRequestStatus(req, res) {
+  try {
+    const { id: groupId } = req.params;
+    const userId = req.auth.userId;
+
+    // Vérifier si déjà membre
+    const existingMember = await GroupMember.findOne({
+      where: { UserId: userId, GroupId: groupId }
+    });
+
+    if (existingMember) {
+      return res.json({
+        isMember: true,
+        hasRequest: false,
+        requestStatus: null
+      });
+    }
+
+    // Vérifier s'il y a une demande
+    const joinRequest = await GroupJoinRequest.findOne({
+      where: { UserId: userId, GroupId: groupId },
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.json({
+      isMember: false,
+      hasRequest: !!joinRequest,
+      requestStatus: joinRequest ? joinRequest.status : null,
+      requestId: joinRequest ? joinRequest.id : null
+    });
+
+  } catch (error) {
+    console.error('❌ Erreur lors de la vérification du statut:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   createGroup,
   updateGroup,
@@ -401,4 +816,11 @@ module.exports = {
   followGroup,
   unfollowGroup,
   searchGroups,
+  assignMissingLeaders,
+  fixGroupLeader,
+  debugAllGroups,
+  requestToJoinGroup,
+  getGroupJoinRequests,
+  processJoinRequest,
+  getUserJoinRequestStatus,
 };

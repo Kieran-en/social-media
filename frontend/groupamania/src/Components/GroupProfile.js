@@ -1,13 +1,15 @@
 // src/Components/GroupProfile.jsx
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import { getCurrentUser } from "../Services/userService";
-import { joinGroup, leaveGroup } from "../Services/groupService";
+import { joinGroup, leaveGroup, requestToJoinGroup, getUserJoinRequestStatus } from "../Services/groupService";
 // Assurez-vous d'avoir installé lucide-react : npm install lucide-react
-import { Pencil, MessageSquare, UserPlus, UserCheck, Users, Crown } from 'lucide-react';
+import { Pencil, MessageSquare, UserPlus, UserCheck, Users, Crown, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Modal, Button, Form } from 'react-bootstrap';
+import GroupJoinRequestsModal from './GroupJoinRequestsModal';
 
 // Le composant GroupProfile est basé sur le composant Profile des utilisateurs
 const GroupProfile = ({ 
@@ -24,10 +26,46 @@ const GroupProfile = ({
   leader
 }) => {
   const navigate = useNavigate();
+  const [joinRequestStatus, setJoinRequestStatus] = useState(null);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [joinMessage, setJoinMessage] = useState('');
+  const [showRequestsModal, setShowRequestsModal] = useState(false);
   const queryClient = useQueryClient();
   const token = useSelector(state => state.token);
   const userData = getCurrentUser(token);
   const currentUserId = userData?.userId;
+
+  // Vérifier le statut de demande d'adhésion au chargement
+  useEffect(() => {
+    if (groupId && currentUserId && !isGroupMember) {
+      getUserJoinRequestStatus(groupId)
+        .then(response => {
+          setJoinRequestStatus(response.data);
+        })
+        .catch(error => {
+          console.error('Erreur lors de la vérification du statut:', error);
+        });
+    }
+  }, [groupId, currentUserId, isGroupMember]);
+
+  // Mutation pour demander à rejoindre le groupe
+  const requestJoinMutation = useMutation(
+    ({ groupId, message }) => requestToJoinGroup(groupId, message),
+    {
+      onSuccess: () => {
+        // Rafraîchir le statut
+        getUserJoinRequestStatus(groupId)
+          .then(response => setJoinRequestStatus(response.data));
+        setShowJoinModal(false);
+        setJoinMessage('');
+        // Optionnel: Afficher une notification de succès
+      },
+      onError: (error) => {
+        console.error('Erreur lors de la demande:', error);
+        // Optionnel: Afficher une notification d'erreur
+      }
+    }
+  );
 
   // Mutations pour rejoindre/quitter un groupe
   const joinGroupMutation = useMutation(
@@ -102,26 +140,65 @@ const GroupProfile = ({
         {/* Section des boutons d'action */}
         <div className="p-6 flex justify-center gap-4 flex-wrap">
           {isGroupAdmin ? (
-            <button 
-              onClick={changeModalState}
-              className="flex items-center gap-2 px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors shadow"
-            >
-              <Pencil size={18} />
-              Modifier le groupe
-            </button>
-          ) : (
             <>
               <button 
-                onClick={handleJoinGroup}
-                className={`flex items-center gap-2 px-6 py-2 rounded-lg transition-colors shadow ${
-                  isGroupMember 
-                    ? 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
+                onClick={changeModalState}
+                className="flex items-center gap-2 px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors shadow"
               >
-                {isGroupMember ? <UserCheck size={18} /> : <UserPlus size={18} />}
-                {isGroupMember ? 'Membre' : 'Rejoindre'}
+                <Pencil size={18} />
+                Modifier le groupe
               </button>
+              {/* Bouton pour voir les demandes d'adhésion (responsables seulement) */}
+              <button 
+                onClick={() => setShowRequestsModal(true)}
+                className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow"
+              >
+                <Clock size={18} />
+                Demandes
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Logique des boutons selon le statut de l'utilisateur */}
+              {isGroupMember ? (
+                <button 
+                  onClick={handleJoinGroup}
+                  className="flex items-center gap-2 px-6 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow"
+                >
+                  <UserCheck size={18} />
+                  Membre
+                </button>
+              ) : joinRequestStatus?.hasRequest ? (
+                // L'utilisateur a déjà fait une demande
+                <button 
+                  disabled
+                  className={`flex items-center gap-2 px-6 py-2 rounded-lg shadow cursor-not-allowed ${
+                    joinRequestStatus.requestStatus === 'pending' 
+                      ? 'bg-yellow-100 text-yellow-700 border border-yellow-300'
+                      : joinRequestStatus.requestStatus === 'rejected'
+                      ? 'bg-red-100 text-red-700 border border-red-300'
+                      : 'bg-green-100 text-green-700 border border-green-300'
+                  }`}
+                >
+                  {joinRequestStatus.requestStatus === 'pending' && <Clock size={18} />}
+                  {joinRequestStatus.requestStatus === 'rejected' && <XCircle size={18} />}
+                  {joinRequestStatus.requestStatus === 'approved' && <CheckCircle size={18} />}
+                  {joinRequestStatus.requestStatus === 'pending' && 'Demande en attente'}
+                  {joinRequestStatus.requestStatus === 'rejected' && 'Demande refusée'}
+                  {joinRequestStatus.requestStatus === 'approved' && 'Demande approuvée'}
+                </button>
+              ) : (
+                // L'utilisateur peut faire une demande
+                <button 
+                  onClick={() => setShowJoinModal(true)}
+                  className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow"
+                  disabled={requestJoinMutation.isLoading}
+                >
+                  <UserPlus size={18} />
+                  {requestJoinMutation.isLoading ? 'Envoi...' : 'Demander à rejoindre'}
+                </button>
+              )}
+              
               <button 
                 onClick={handleMessage}
                 className="flex items-center gap-2 px-6 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow"
@@ -142,6 +219,55 @@ const GroupProfile = ({
           </button>
         </div>
       </div>
+
+      {/* Modal pour demander à rejoindre le groupe */}
+      <Modal show={showJoinModal} onHide={() => setShowJoinModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Demander à rejoindre {name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={(e) => {
+            e.preventDefault();
+            requestJoinMutation.mutate({ groupId, message: joinMessage });
+          }}>
+            <Form.Group className="mb-3">
+              <Form.Label>Message de motivation (optionnel)</Form.Label>
+              <Form.Control 
+                as="textarea" 
+                rows={3}
+                value={joinMessage}
+                onChange={(e) => setJoinMessage(e.target.value)}
+                placeholder="Expliquez pourquoi vous souhaitez rejoindre ce groupe..."
+              />
+              <Form.Text className="text-muted">
+                Ce message sera visible par les responsables du groupe.
+              </Form.Text>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-secondary" onClick={() => setShowJoinModal(false)}>
+            Annuler
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={() => requestJoinMutation.mutate({ groupId, message: joinMessage })}
+            disabled={requestJoinMutation.isLoading}
+          >
+            {requestJoinMutation.isLoading ? 'Envoi...' : 'Envoyer la demande'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal pour gérer les demandes d'adhésion (responsables seulement) */}
+      {isGroupAdmin && (
+        <GroupJoinRequestsModal
+          show={showRequestsModal}
+          onHide={() => setShowRequestsModal(false)}
+          groupId={groupId}
+          groupName={name}
+        />
+      )}
     </div>
   );
 };
