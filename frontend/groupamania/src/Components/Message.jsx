@@ -15,22 +15,21 @@ export default function Message({ own, text, timeSent, sender }) {
     const senderImage = sender?.profileImg || `https://ui-avatars.com/api/?name=${senderName}&background=random`;
 
     return (
-        <div className={`flex ${own ? 'justify-end' : 'justify-start'} mb-4`}>
-            <div className={`flex ${own ? 'flex-row-reverse' : 'flex-row'} items-end gap-2 max-w-[70%]`}>
+        <div className={`flex ${own ? 'justify-end' : 'justify-start'} mb-3`}>
+            <div className={`flex ${own ? 'flex-row-reverse' : 'flex-row'} items-end gap-2 max-w-[85%] sm:max-w-[75%] md:max-w-[70%]`}>
                 <img
-                    // MODIFIED: Use the profile image from the 'sender' prop
                     src={senderImage}
-                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover flex-shrink-0"
                     alt={`${senderName}'s profile`}
                 />
                 <div className={`relative group ${
                     own
-                        ? 'bg-gradient-to-br from-green-700 to-green-900 text-white'
-                        : 'bg-gray-100 text-gray-800'
-                } rounded-2xl px-4 py-2 shadow-md hover:shadow-lg transition-shadow duration-200`}>
-                    <p className="text-sm leading-relaxed">{text}</p>
+                        ? 'bg-gradient-to-br from-green-600 to-green-800 text-white'
+                        : 'bg-white text-gray-800 border border-gray-200'
+                } rounded-2xl px-3 py-2 sm:px-4 sm:py-2 shadow-sm hover:shadow-md transition-all duration-200`}>
+                    <p className="text-sm sm:text-base leading-relaxed break-words">{text}</p>
                     <span className={`text-xs ${
-                        own ? 'text-blue-100' : 'text-gray-500'
+                        own ? 'text-green-100' : 'text-gray-400'
                     } mt-1 block`}>
                         {dayjs(timeSent).fromNow()}
                     </span>

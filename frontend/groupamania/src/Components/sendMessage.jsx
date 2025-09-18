@@ -69,38 +69,38 @@ function SendMessage({conversationId, senderId, receiverId, senderName, socket, 
     }, [text]);
 
     return (
-        <div className="flex items-end gap-2">
-            <button className="p-2 hover:bg-gray-200 rounded-full transition-colors duration-200">
-                <Paperclip className="w-5 h-5 text-gray-500" />
+        <div className="flex items-end gap-2 sm:gap-3">
+            <button className="hidden sm:flex p-2 hover:bg-gray-100 rounded-full transition-colors duration-200">
+                <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
             </button>
-            <button className="p-2 hover:bg-gray-200 rounded-full transition-colors duration-200">
-                <Smile className="w-5 h-5 text-gray-500" />
+            <button className="hidden sm:flex p-2 hover:bg-gray-100 rounded-full transition-colors duration-200">
+                <Smile className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
             </button>
-            <div className="flex items-center w-full ">
+            <div className="flex items-end w-full bg-gray-100 rounded-2xl border border-gray-200 focus-within:border-green-500 transition-colors duration-200">
                 <textarea
                     ref={textareaRef}
                     value={text}
                     onChange={handleChange}
                     onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSubmit(e);
-                    }
-                }}
-                    className="flex-1 text-sm"
-                    placeholder="Type a message..."
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSubmit(e);
+                        }
+                    }}
+                    className="flex-1 text-sm sm:text-base p-3 bg-transparent resize-none focus:outline-none placeholder-gray-500"
+                    placeholder="Tapez votre message..."
                     rows="1"
                 />
                 <button
                     onClick={handleSubmit}
                     disabled={!text.trim()}
-                    className={`ml-2 p-2 rounded-full transition-all duration-200 ${
+                    className={`m-1 p-2 rounded-full transition-all duration-200 ${
                         text.trim()
-                            ? 'bg-gradient-to-r from-green-700 to-green-900 text-white hover:shadow-lg transform hover:scale-110'
-                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            ? 'bg-gradient-to-r from-green-600 to-green-800 text-white hover:shadow-md transform hover:scale-105'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     }`}
                 >
-                    <IoSendSharp className="w-5 h-5" />
+                    <IoSendSharp className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
             </div>
         </div>

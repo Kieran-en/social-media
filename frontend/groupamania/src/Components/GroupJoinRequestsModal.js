@@ -26,7 +26,17 @@ const GroupJoinRequestsModal = ({ show, onHide, groupId, groupName }) => {
     setError('');
     try {
       const response = await getGroupJoinRequests(groupId);
-      setRequests(response.data.requests || []);
+      // Filtrer les demandes avec des utilisateurs valides
+      const validRequests = (response.data.requests || []).filter(request => 
+        request && request.user && request.user.id
+      );
+      setRequests(validRequests);
+      
+      // Avertir s'il y a des demandes invalides
+      const invalidCount = (response.data.requests || []).length - validRequests.length;
+      if (invalidCount > 0) {
+        console.warn(`${invalidCount} demande(s) avec des données utilisateur manquantes ont été filtrées`);
+      }
     } catch (err) {
       setError('Erreur lors du chargement des demandes');
       console.error('Erreur:', err);
@@ -128,14 +138,14 @@ const GroupJoinRequestsModal = ({ show, onHide, groupId, groupName }) => {
                       <div className="d-flex justify-content-between align-items-start mb-2">
                         <div className="d-flex align-items-center">
                           <img
-                            src={request.user.profileImg || `https://ui-avatars.com/api/?name=${request.user.name}&background=random&size=32`}
-                            alt={request.user.name}
+                            src={request.user?.profileImg || `https://ui-avatars.com/api/?name=${request.user?.name || 'User'}&background=random&size=32`}
+                            alt={request.user?.name || 'Utilisateur'}
                             className="rounded-circle me-2"
                             style={{ width: 32, height: 32, objectFit: 'cover' }}
                           />
                           <div>
-                            <strong>{request.user.name}</strong>
-                            <small className="d-block text-muted">{request.user.email}</small>
+                            <strong>{request.user?.name || 'Utilisateur inconnu'}</strong>
+                            <small className="d-block text-muted">{request.user?.email || 'Email non disponible'}</small>
                           </div>
                         </div>
                         <div className="text-end">
@@ -238,14 +248,14 @@ const GroupJoinRequestsModal = ({ show, onHide, groupId, groupName }) => {
                       <div className="d-flex justify-content-between align-items-start mb-2">
                         <div className="d-flex align-items-center">
                           <img
-                            src={request.user.profileImg || `https://ui-avatars.com/api/?name=${request.user.name}&background=random&size=32`}
-                            alt={request.user.name}
+                            src={request.user?.profileImg || `https://ui-avatars.com/api/?name=${request.user?.name || 'User'}&background=random&size=32`}
+                            alt={request.user?.name || 'Utilisateur'}
                             className="rounded-circle me-2"
                             style={{ width: 32, height: 32, objectFit: 'cover' }}
                           />
                           <div>
-                            <strong>{request.user.name}</strong>
-                            <small className="d-block text-muted">{request.user.email}</small>
+                            <strong>{request.user?.name || 'Utilisateur inconnu'}</strong>
+                            <small className="d-block text-muted">{request.user?.email || 'Email non disponible'}</small>
                           </div>
                         </div>
                         <div className="text-end">
@@ -255,7 +265,7 @@ const GroupJoinRequestsModal = ({ show, onHide, groupId, groupName }) => {
                           </small>
                           {request.reviewer && (
                             <small className="d-block text-muted">
-                              par {request.reviewer.name}
+                              par {request.reviewer?.name || 'Administrateur'}
                             </small>
                           )}
                         </div>

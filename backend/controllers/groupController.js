@@ -735,7 +735,8 @@ async function getGroupJoinRequests(req, res) {
         {
           model: User,
           as: 'user',
-          attributes: ['id', 'name', 'profileImg', 'email']
+          attributes: ['id', 'name', 'profileImg', 'email'],
+          required: false // Permet de récupérer les demandes même si l'utilisateur n'existe plus
         },
         {
           model: User,
@@ -747,11 +748,14 @@ async function getGroupJoinRequests(req, res) {
       order: [['createdAt', 'DESC']]
     });
 
+    // Filtrer les demandes avec des utilisateurs valides
+    const validJoinRequests = joinRequests.filter(request => request.user && request.user.id);
+
     res.json({
       groupName: group.name,
-      totalRequests: joinRequests.length,
-      pendingRequests: joinRequests.filter(r => r.status === 'pending').length,
-      requests: joinRequests
+      totalRequests: validJoinRequests.length,
+      pendingRequests: validJoinRequests.filter(r => r.status === 'pending').length,
+      requests: validJoinRequests
     });
   } catch (error) {
     console.error('❌ Erreur lors de la récupération des demandes:', error);

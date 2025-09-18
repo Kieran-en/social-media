@@ -70,22 +70,38 @@ function ChatSection({ loggedinUserData, socket }) {
     }, [messages, isTyping]);
 
     return (
-        <div className="flex flex-col h-full bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex flex-col h-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+            {/* Header de la conversation */}
+            {conversationId && receiver && (
+                <div className="flex items-center p-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-blue-50">
+                    <img
+                        src={receiver.profileImg || `https://ui-avatars.com/api/?name=${receiver.username}&background=random`}
+                        className="w-10 h-10 rounded-full object-cover mr-3"
+                        alt={`${receiver.username}'s profile`}
+                    />
+                    <div>
+                        <h3 className="font-semibold text-gray-800">{receiver.username}</h3>
+                        <p className="text-sm text-gray-500">En ligne</p>
+                    </div>
+                </div>
+            )}
+            
+            <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50">
                 {Object.keys(conversation).length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
                         <MessageCircle className="w-16 h-16 text-gray-300 mb-4" />
-                        <p className="text-gray-500 font-medium">No opened conversation</p>
-                        <p className="text-gray-400 text-sm">Select a chat to start messaging!</p>
+                        <p className="text-gray-500 font-medium text-lg">Aucune conversation ouverte</p>
+                        <p className="text-gray-400 text-sm">Sélectionnez un chat pour commencer à discuter !</p>
                     </div>
                 ) : (
                     <>
-                        {messages && messages.map((message) => {
+                        {messages && messages.map((message, index) => {
                             const isOwnMessage = message.senderId === loggedinUserId;
                             const senderData = isOwnMessage ? loggedinUserData : receiver;
+                            const isLastMessage = index === messages.length - 1;
 
                             return (
-                                <div ref={scrollRef} key={message.id}>
+                                <div key={message.id} ref={isLastMessage ? scrollRef : null}>
                                     <Message
                                         own={isOwnMessage}
                                         text={message.text}
@@ -110,7 +126,7 @@ function ChatSection({ loggedinUserData, socket }) {
             </div>
             
             {conversationId && (
-                <div className="border-t bg-gray-50 p-4">
+                <div className="border-t border-gray-200 bg-white p-3">
                     <SendMessage
                         conversationId={conversationId}
                         senderId={loggedinUserId}
