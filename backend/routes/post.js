@@ -4,14 +4,14 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
 const postCtrl = require('../controllers/post');
-const upload = require('../middlewares/multer-config');
+const { upload, handleMulterError } = require('../middlewares/multer-config');
 
 // --- Routes POST, PUT ---
 // Créer un post avec image
-router.post('/', auth, upload.single('image'), postCtrl.createPost);
+router.post('/', auth, upload.single('image'), handleMulterError, postCtrl.createPost);
 
 // Modifier un post
-router.put('/:id', auth, upload.single('image'), postCtrl.modifyPost);
+router.put('/:id', auth, upload.single('image'), handleMulterError, postCtrl.modifyPost);
 
 
 // --- Routes GET (les plus spécifiques en premier) ---

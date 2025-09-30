@@ -28,8 +28,9 @@ exports.createUserByDiacre = async (req, res) => {
       });
     }
 
-    // Hacher le mot de passe
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hacher le mot de passe avec la configuration de sécurité
+    const { bcrypt: bcryptConfig } = require('../config/security');
+    const hashedPassword = await bcrypt.hash(password, bcryptConfig.rounds);
 
     // Créer l'utilisateur
     const newUser = await User.create({

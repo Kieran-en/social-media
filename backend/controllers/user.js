@@ -1,59 +1,121 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { jwt: jwtConfig, bcrypt: bcryptConfig } = require('../config/security');
 
-exports.signup = (req, res, next) => {
-    const {name, email, password, confirmedPassword} = req.body;
+exports.signup = async (req, res, next) => {
+    try {
+        const { name, email, password, confirmedPassword } = req.body;
 
-        bcrypt.hash(password, 10)
-        .then(async (hash) => {
-           const user = await User.build({
-                name: name,
-                email: email,
-                password: hash,
-            })
-            user.save()
-            .then(() =>  res.status(201).json({message: 'User created!'}))
-            .catch(error => {return res.status(400).json({error})})
-        })
-        .catch(error => {return res.status(500).json({error})})
+        // Validation des mots de passe
+        if (password !== confirmedPassword) {
+            return res.status(400).json({
+                error: 'Les mots de passe ne correspondent pas'
+            });
+        }
 
+        // Vérifier si l'utilisateur existe déjà
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(409).json({
+                error: 'Un utilisateur avec cet email existe déjà'
+            });
+        }
+
+        // Hacher le mot de passe avec le niveau de sécurité configuré
+        const hash = await bcrypt.hash(password, bcryptConfig.rounds);
+        
+        const user = await User.create({
+            name: name,
+            email: email,
+            password: hash,
+            isActive: true
+        });
+
+        // Ne pas retourner le mot de passe
+        const { password: _, ...userWithoutPassword } = user.toJSON();
+        
+        res.status(201).json({
+            message: 'Utilisateur créé avec succès',
+            user: userWithoutPassword
+        });
+    } catch (error) {
+        console.error('Erreur lors de l\'inscription:', error);
+        res.status(500).json({
+            error: 'Erreur interne du serveur'
+        });
+    }
 };
 
-exports.login = (req, res, next) => {
-    const {email, password} = req.body;
-    console.log(email)
-    User.findOne({where :{
-        email: email,
-    }})
-    .then(user => {
-        if(!user){
-           return res.status(401).json({message: 'User Not Found!'})
-        }
-        bcrypt.compare(password, user.password)
-        .then(valid => {
-            if(!valid){
-               return res.status(401).json({message: 'Password Not Valid!'});
-            }
-            res.status(200).json({
-    userId: user.id,
-    username: user.name,
-    role: user.role,  // on peut aussi l'envoyer directement si tu veux l'utiliser côté frontend
-    token: jwt.sign({
-        userId: user.id,
-        username: user.name,
-        role: user.role, // AJOUT ICI
-        profileImg: user.profileImg
-    },
-    'RANDOM_SECRET_KEY',
-    {expiresIn: '24h'}
-    ) 
-})
+exports.login = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
 
-        })
-        .catch(error => res.status(500).json({error}))
-    })
-    .catch(error => res.status(500).json({error}))
+        // Validation des inputs
+        if (!email || !password) {
+            return res.status(400).json({
+                error: 'Email et mot de passe requis'
+            });
+        }
+
+        // Rechercher l'utilisateur par email
+        const user = await User.findOne({ 
+            where: { email: email.toLowerCase().trim() }
+        });
+
+        if (!user) {
+            // Message générique pour éviter l'énumération d'utilisateurs
+            return res.status(401).json({
+                error: 'Identifiants invalides'
+            });
+        }
+
+        // Vérifier si le compte est actif
+        if (!user.isActive) {
+            return res.status(403).json({
+                error: 'Compte désactivé. Contactez l\'administrateur.'
+            });
+        }
+
+        // Vérifier le mot de passe
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+            return res.status(401).json({
+                error: 'Identifiants invalides'
+            });
+        }
+
+        // Créer le token JWT sécurisé
+        const tokenPayload = {
+            userId: user.id,
+            username: user.name,
+            role: user.role,
+            profileImg: user.profileImg,
+            iat: Math.floor(Date.now() / 1000) // Timestamp de création
+        };
+
+        const token = jwt.sign(
+            tokenPayload,
+            jwtConfig.secret,
+            { expiresIn: jwtConfig.expiresIn }
+        );
+
+        // Réponse de connexion réussie
+        res.status(200).json({
+            message: 'Connexion réussie',
+            userId: user.id,
+            username: user.name,
+            role: user.role,
+            profileImg: user.profileImg,
+            token: token
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de la connexion:', error);
+        res.status(500).json({
+            error: 'Erreur interne du serveur'
+        });
+    }
 }
 
 exports.getUser = (req, res, next) => {

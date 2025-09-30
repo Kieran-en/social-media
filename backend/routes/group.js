@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
-const upload = require('../middlewares/multer-config');
+const { upload, handleMulterError } = require('../middlewares/multer-config');
 const groupCtrl = require('../controllers/groupController');
 
 // Créer un groupe avec image
-router.post('/', auth, upload.single('profileImg'), groupCtrl.createGroup);
+router.post('/', auth, upload.single('profileImg'), handleMulterError, groupCtrl.createGroup);
 
 // Test route pour vérifier que l'endpoint fonctionne
 router.get('/search/test', auth, (req, res) => {
@@ -42,7 +42,7 @@ router.get('/search', auth, groupCtrl.searchGroups);
 router.get('/', auth, groupCtrl.getUserGroups);
 
 // Modifier un groupe
-router.put('/:id', auth, upload.single('profileImg'), groupCtrl.updateGroup);
+router.put('/:id', auth, upload.single('profileImg'), handleMulterError, groupCtrl.updateGroup);
 
 // Suspendre un groupe
 router.put('/:id/suspend', auth, groupCtrl.suspendGroup);
@@ -60,7 +60,7 @@ router.get('/:id', auth, groupCtrl.getGroupById);
 router.get('/:id/posts', auth, groupCtrl.getGroupPosts);
 
 // Créer un post au nom d'un groupe (responsables et admins seulement)
-router.post('/:id/posts', auth, upload.single('image'), groupCtrl.createGroupPost);
+router.post('/:id/posts', auth, upload.single('image'), handleMulterError, groupCtrl.createGroupPost);
 
 // Récupérer les membres d'un groupe
 router.get('/:id/members', auth, groupCtrl.getGroupMembers);

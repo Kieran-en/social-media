@@ -1,40 +1,103 @@
 const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
+
 const app = express();
+
+// Configuration de sécurité
+const { cors: corsConfig, rateLimit: rateLimitConfig } = require('./config/security');
+
+// Routes
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 const userRoutes = require('./routes/user');
-const likeRoutes = require('./routes/like')
-const followRoutes = require('./routes/follow')
-const messageRoutes = require('./routes/message')
-const conversationRoutes = require('./routes/conversation')
+const likeRoutes = require('./routes/like');
+const followRoutes = require('./routes/follow');
+const messageRoutes = require('./routes/message');
+const conversationRoutes = require('./routes/conversation');
 const userAdminRoutes = require('./routes/userAdmin');
-const mysql = require('mysql');
-const path = require('path');
-const db = require('./config');
-const cors = require('cors');
-const User = require('./models/User');
-const Post = require('./models/Post');
-const Event = require('./models/Event');
-const sequelize = require('sequelize');
 const groupRoutes = require('./routes/group');
 const groupMessageRoutes = require('./routes/groupMessage');
-const Group = require('./models/Group');
-const GroupMember = require('./models/GroupMember');
-const GroupMessage = require('./models/GroupMessage');
 const eventRoutes = require('./routes/eventRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 
+// Base de données
+const db = require('./config');
 
+// Modèles (pour les associations)
+const User = require('./models/User');
+const Post = require('./models/Post');
+const Event = require('./models/Event');
+const Group = require('./models/Group');
+const GroupMember = require('./models/GroupMember');
+const GroupMessage = require('./models/GroupMessage');
 
+// ========================= MIDDLEWARES DE SÉCURITÉ =========================
 
+// Headers de sécurité avec Helmet
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:", "http:"],
+      scriptSrc: ["'self'"],
+      connectSrc: ["'self'", "ws:", "wss:"],
+      mediaSrc: ["'self'"]
+    }
+  },
+  crossOriginEmbedderPolicy: false, // Permet l'upload d'images
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+
+// Rate limiting global
+const globalLimiter = rateLimit({
+  ...rateLimitConfig,
+  message: rateLimitConfig.message
+});
+app.use('/api/', globalLimiter);
+
+// Rate limiting strict pour l'authentification
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 tentatives par IP
+  message: {
+    error: 'Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes.',
+    retryAfter: '15 minutes'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true // Ne compte que les échecs
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/signup', authLimiter);
+
+// Configuration CORS sécurisée
+app.use(cors(corsConfig));
+
+// Headers de sécurité personnalisés
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  // Empêcher le sniffing MIME
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  
+  // Protection XSS
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  
+  // Empêcher l'embedding dans des iframes
+  res.setHeader('X-Frame-Options', 'DENY');
+  
+  // Politique de référent stricte
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  
+  // Permissions Policy
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  
   next();
 });
-
-app.use(cors());
 
 app.use(express.json());
 //app.use(bodyParser.text());
